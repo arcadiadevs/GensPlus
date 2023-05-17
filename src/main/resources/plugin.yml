@@ -1,0 +1,10 @@
+name: GenX
+version: '${project.version}'
+main: xyz.arcadiadevs.genx.GenX
+api-version: 1.19
+
+commands:
+  getitem:
+    description: Get the generator item
+    usage: /getitem
+    permission: genx.getitem

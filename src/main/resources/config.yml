@@ -1,0 +1,11 @@
+generators:
+  - name: "generator1"
+    tier: 1
+    speed: 10
+    spawnItem: "DIAMOND"
+    blockType: "DIAMOND_BLOCK"
+  - name: "generator2"
+    tier: 1
+    speed: 10
+    spawnItem: "STONE"
+    blockType: "STONE"
