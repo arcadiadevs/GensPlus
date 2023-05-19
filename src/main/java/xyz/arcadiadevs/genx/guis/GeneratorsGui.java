@@ -13,11 +13,8 @@ import xyz.arcadiadevs.genx.utils.ChatUtil;
 
 public class GeneratorsGui {
 
-  public GeneratorsGui() {
-    super();
-  }
 
-  public void open(Player player) {
+  public static void open(Player player) {
     final var instance = GenX.getInstance();
     final var config = instance.getConfig();
 

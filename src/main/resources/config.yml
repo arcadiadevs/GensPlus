@@ -4,6 +4,13 @@ generators-gui:
   title: "Generators"
   rows: 5
 
+  default-lore:
+    - "&7Tier: &a%tier%"
+    - "&7Speed: &a%speed%"
+    - "&7Spawn Item: &a%spawnItem%"
+    - "&7Block Type: &a%blockType%"
+    - "&7Status: &a%status%"
+
 generators:
   - name: "generator1"
     tier: 1
@@ -15,3 +22,4 @@ generators:
     speed: 10
     spawnItem: "STONE"
     blockType: "STONE"
+    lore: "%default%"

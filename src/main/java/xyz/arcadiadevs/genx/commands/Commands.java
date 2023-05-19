@@ -42,8 +42,7 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("generators")) {
-      final var gui = new GeneratorsGui();
-      gui.open(player);
+      GeneratorsGui.open(player);
     }
 
     if (command.getName().equalsIgnoreCase("genx")) {
