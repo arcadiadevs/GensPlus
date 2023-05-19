@@ -91,6 +91,10 @@ public final class GenX extends JavaPlugin {
             String spawnItem = (String) generator.get("spawnItem");
             String blockType = (String) generator.get("blockType");
 
+            if (generators.stream().anyMatch(g -> g.tier() == tier)) {
+                throw new RuntimeException("Duplicate tier found: " + tier);
+            }
+
             ItemStack spawnItemStack = XMaterial.matchXMaterial(spawnItem).orElseThrow().parseItem();
             ItemStack blockTypeStack = XMaterial.matchXMaterial(blockType).orElseThrow().parseItem();
 

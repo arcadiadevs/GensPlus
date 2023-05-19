@@ -34,9 +34,7 @@ public class BlockBreak implements Listener {
       return;
     }
 
-    Generator generator = generatorsData.getGenerator(1);
-
-    // TODO: get generator that has been destroyed
+    Generator generator = generatorsData.getGenerator(block.generator());
 
     generator.dropItem(event.getPlayer(), event);
 
