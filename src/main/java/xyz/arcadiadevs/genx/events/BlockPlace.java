@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.genx.objects.BlockData;
 import xyz.arcadiadevs.genx.objects.Generator;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
+import xyz.arcadiadevs.genx.utils.ChatUtil;
 
 public class BlockPlace implements Listener {
 
@@ -57,6 +58,8 @@ public class BlockPlace implements Listener {
             event.getBlock().getWorld().getName()
         )
     );
+
+    ChatUtil.sendMessage(event.getPlayer(), "&aYou have placed a &eTier " + tier + " &agenerator.");
   }
 
 }

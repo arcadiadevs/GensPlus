@@ -5,8 +5,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import xyz.arcadiadevs.genx.GenX;
+import xyz.arcadiadevs.genx.guis.GeneratorsGui;
 import xyz.arcadiadevs.genx.objects.Generator;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
+import xyz.arcadiadevs.genx.utils.ChatUtil;
 
 public class Commands implements CommandExecutor {
 
@@ -18,22 +21,47 @@ public class Commands implements CommandExecutor {
 
   @Override
   public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
-                           @NotNull String s, @NotNull String[] strings) {
-    // Make command /getgen <tier> which gives the player the generator item
+      @NotNull String s, @NotNull String[] strings) {
 
-    if (strings.length < 1) {
+    if (!(commandSender instanceof Player player)) {
       return false;
     }
 
-    int tier = Integer.parseInt(strings[0]);
+    if (command.getName().equalsIgnoreCase("getitem")) {
 
-    Generator generator = generatorsData.getGenerator(tier);
+      if (strings.length < 1) {
+        return true;
+      }
 
-    generator.giveItem((Player) commandSender);
+      int tier = Integer.parseInt(strings[0]);
 
-    commandSender.sendMessage("You got a generator of tier " + tier);
+      Generator generator = generatorsData.getGenerator(tier);
+      generator.giveItem(player);
+
+      player.sendMessage("You got a generator of tier " + tier);
+    }
+
+    if (command.getName().equalsIgnoreCase("generators")) {
+      final var gui = new GeneratorsGui();
+      gui.open(player);
+    }
+
+    if (command.getName().equalsIgnoreCase("genx")) {
+      if (strings.length == 0) {
+        ChatUtil.sendMessage(player, "&9GenX> This server is running GenX version &a" + GenX.getInstance().getDescription().getVersion());
+        return true;
+      }
+
+      if (strings[0].equalsIgnoreCase("reload")) {
+        final var instance = GenX.getInstance();
+        instance.reloadConfig();
+
+        player.sendMessage("Configuration reloaded.");
+      }
+    }
 
     return true;
   }
+
 
 }

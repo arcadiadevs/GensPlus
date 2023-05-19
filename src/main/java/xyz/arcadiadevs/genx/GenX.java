@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.samjakob.spigui.SpiGUI;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.genx.commands.Commands;
+import xyz.arcadiadevs.genx.events.BlockBreak;
 import xyz.arcadiadevs.genx.events.BlockPlace;
 import xyz.arcadiadevs.genx.objects.BlockData;
 import xyz.arcadiadevs.genx.objects.Generator;
@@ -35,6 +37,9 @@ public final class GenX extends JavaPlugin {
     @Getter
     private GeneratorsData generatorsData;
 
+    @Getter
+    private SpiGUI spiGui;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -48,11 +53,14 @@ public final class GenX extends JavaPlugin {
             .setPrettyPrinting()
             .create();
 
+        spiGui = new SpiGUI(this);
+
         generatorsData = loadGeneratorsData();
 
         blockData = loadBlockDataFromJson();
 
         getServer().getPluginManager().registerEvents(new BlockPlace(blockData, generatorsData), this);
+        getServer().getPluginManager().registerEvents(new BlockBreak(blockData, generatorsData), this);
 
         // Run block data save task every 5 minutes
         new DataSaveTask(this, blockData)
@@ -62,7 +70,9 @@ public final class GenX extends JavaPlugin {
         new SpawnerTask(blockData, generatorsData)
             .runTaskTimerAsynchronously(this, 0, 20);
 
+        getCommand("genx").setExecutor(new Commands(generatorsData));
         getCommand("getitem").setExecutor(new Commands(generatorsData));
+        getCommand("generators").setExecutor(new Commands(generatorsData));
     }
 
     @Override

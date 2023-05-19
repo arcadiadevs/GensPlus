@@ -8,3 +8,11 @@ commands:
     description: Get the generator item
     usage: /getitem
     permission: genx.getitem
+  generators:
+    description: List all generators in gui
+    usage: /generators
+    permission: genx.generators
+  genx:
+    description: Main command
+    usage: /genx
+    permission: genx.genx

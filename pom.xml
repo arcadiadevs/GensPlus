@@ -106,5 +106,10 @@
             <artifactId>gson-record-type-adapter-factory</artifactId>
             <version>v0.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.SamJakob</groupId>
+            <artifactId>SpiGUI</artifactId>
+            <version>1.2.3</version>
+        </dependency>
     </dependencies>
 </project>

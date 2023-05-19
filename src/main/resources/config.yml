@@ -1,3 +1,9 @@
+generators-gui:
+  enabled: true
+
+  title: "Generators"
+  rows: 5
+
 generators:
   - name: "generator1"
     tier: 1
