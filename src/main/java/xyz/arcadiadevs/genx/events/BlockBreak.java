@@ -1,45 +1,40 @@
 package xyz.arcadiadevs.genx.events;
 
-import java.util.List;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import xyz.arcadiadevs.genx.objects.BlockData;
-import xyz.arcadiadevs.genx.objects.Generator;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
+import xyz.arcadiadevs.genx.objects.LocationsData;
 import xyz.arcadiadevs.genx.utils.ChatUtil;
 
 public class BlockBreak implements Listener {
 
-  private final List<BlockData> blockData;
+  private final LocationsData locationsData;
 
   private final GeneratorsData generatorsData;
 
-  public BlockBreak(List<BlockData> blockData, GeneratorsData generatorsData) {
-    this.blockData = blockData;
+  public BlockBreak(LocationsData blockData, GeneratorsData generatorsData) {
+    this.locationsData = blockData;
     this.generatorsData = generatorsData;
   }
 
   @EventHandler
   public void onBlockBreak(BlockBreakEvent event) {
-    BlockData block = blockData.stream()
-        .filter(b -> b.x() == event.getBlock().getX()
-            && b.y() == event.getBlock().getY()
-            && b.z() == event.getBlock().getZ()
-            && b.world().equals(event.getBlock().getWorld().getName()))
-        .findFirst()
-        .orElse(null);
+    LocationsData.GeneratorLocation block = locationsData.getLocationData(event.getBlock());
 
     if (block == null) {
       return;
     }
 
-    Generator generator = generatorsData.getGenerator(block.generator());
+    GeneratorsData.Generator generator = generatorsData.getGenerator(block.getGenerator());
 
     generator.dropItem(event.getPlayer(), event);
 
-    blockData.remove(block);
+    locationsData.remove(block);
+
     ChatUtil.sendMessage(event.getPlayer(), "&aYou have broken a generator block!");
   }
+
+
 
 }

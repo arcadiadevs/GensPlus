@@ -5,19 +5,18 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.objects.BlockData;
-import xyz.arcadiadevs.genx.objects.Generator;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
+import xyz.arcadiadevs.genx.objects.LocationsData;
 
 public class SpawnerTask extends BukkitRunnable {
 
-  private final List<BlockData> blockData;
+  private final List<LocationsData.GeneratorLocation> blockData;
 
   private final GeneratorsData generatorsData;
 
-  private HashMap<Generator, Long> genNextSpawn;
+  private HashMap<GeneratorsData.Generator, Long> genNextSpawn;
 
-  public SpawnerTask(List<BlockData> blockData, GeneratorsData generatorsData) {
+  public SpawnerTask(List<LocationsData.GeneratorLocation> blockData, GeneratorsData generatorsData) {
     this.blockData = blockData;
     this.generatorsData = generatorsData;
 
@@ -27,24 +26,24 @@ public class SpawnerTask extends BukkitRunnable {
   private void initialize() {
     genNextSpawn = new HashMap<>();
 
-    for (Generator generator : generatorsData.generators()) {
+    for (GeneratorsData.Generator generator : generatorsData.generators()) {
       genNextSpawn.put(generator, System.currentTimeMillis() + generator.speed());
     }
   }
 
   @Override
   public void run() {
-    for (Generator generator : generatorsData.generators()) {
+    for (GeneratorsData.Generator generator : generatorsData.generators()) {
       if (genNextSpawn.get(generator) > System.currentTimeMillis()) {
         return;
       }
 
-      List<BlockData> blocksToSpawn = blockData.stream()
-          .filter(block -> block.generator() == generator.tier())
+      List<LocationsData.GeneratorLocation> blocksToSpawn = blockData.stream()
+          .filter(block -> block.getGenerator() == generator.tier())
           .toList();
 
       Bukkit.getScheduler().runTask(GenX.getInstance(), () -> {
-        for (BlockData block : blocksToSpawn) {
+        for (LocationsData.GeneratorLocation block : blocksToSpawn) {
           block.spawn();
         }
       });

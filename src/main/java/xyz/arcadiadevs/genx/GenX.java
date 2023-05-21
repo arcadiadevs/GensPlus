@@ -12,15 +12,16 @@ import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.genx.commands.Commands;
 import xyz.arcadiadevs.genx.events.BlockBreak;
 import xyz.arcadiadevs.genx.events.BlockPlace;
-import xyz.arcadiadevs.genx.objects.BlockData;
-import xyz.arcadiadevs.genx.objects.Generator;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
+import xyz.arcadiadevs.genx.objects.LocationsData;
 import xyz.arcadiadevs.genx.tasks.DataSaveTask;
 import xyz.arcadiadevs.genx.tasks.SpawnerTask;
 
@@ -32,13 +33,17 @@ public final class GenX extends JavaPlugin {
     @Getter
     private Gson gson;
 
-    private List<BlockData> blockData;
+    @Getter
+    private LocationsData locationsData;
 
     @Getter
     private GeneratorsData generatorsData;
 
     @Getter
     private SpiGUI spiGui;
+
+    @Getter
+    private Economy econ = null;
 
     @Override
     public void onEnable() {
@@ -47,6 +52,8 @@ public final class GenX extends JavaPlugin {
         saveResource("block_data.json", false);
 
         instance = this;
+
+        setupEconomy();
 
         gson = new GsonBuilder()
             .registerTypeAdapterFactory(RecordTypeAdapterFactory.DEFAULT)
@@ -57,37 +64,52 @@ public final class GenX extends JavaPlugin {
 
         generatorsData = loadGeneratorsData();
 
-        blockData = loadBlockDataFromJson();
+        locationsData = new LocationsData(loadBlockDataFromJson());
 
-        getServer().getPluginManager().registerEvents(new BlockPlace(blockData, generatorsData), this);
-        getServer().getPluginManager().registerEvents(new BlockBreak(blockData, generatorsData), this);
+        getServer().getPluginManager().registerEvents(new BlockPlace(locationsData), this);
+        getServer().getPluginManager().registerEvents(new BlockBreak(locationsData, generatorsData), this);
 
         // Run block data save task every 5 minutes
-        new DataSaveTask(this, blockData)
+        new DataSaveTask(this)
             .runTaskTimerAsynchronously(this, 0, 20);
 
         // Run spawner task every second
-        new SpawnerTask(blockData, generatorsData)
+        new SpawnerTask(locationsData.getGenerators(), generatorsData)
             .runTaskTimerAsynchronously(this, 0, 20);
 
-        getCommand("genx").setExecutor(new Commands(generatorsData));
-        getCommand("getitem").setExecutor(new Commands(generatorsData));
-        getCommand("generators").setExecutor(new Commands(generatorsData));
+        getCommand("genx").setExecutor(new Commands(this, generatorsData));
+        getCommand("getitem").setExecutor(new Commands(this, generatorsData));
+        getCommand("generators").setExecutor(new Commands(this, generatorsData));
     }
 
     @Override
     public void onDisable() {
+        new DataSaveTask(this).runTask(this);
+    }
 
+    private void setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            throw new RuntimeException("Vault not found");
+        }
+
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+
+        if (rsp == null) {
+            throw new RuntimeException("No economy plugin found. Please install one, for example EssentialsX.");
+        }
+
+        econ = rsp.getProvider();
     }
 
     private GeneratorsData loadGeneratorsData() {
-        List<Generator> generators = new ArrayList<>();
+        List<GeneratorsData.Generator> generators = new ArrayList<>();
         List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");
 
         for (Map<?, ?> generator : generatorsConfig) {
             String name = (String) generator.get("name");
             int tier = (int) generator.get("tier");
             int speed = (int) generator.get("speed");
+            double price = (double) generator.get("price");
             String spawnItem = (String) generator.get("spawnItem");
             String blockType = (String) generator.get("blockType");
 
@@ -116,15 +138,15 @@ public final class GenX extends JavaPlugin {
 
             blockTypeStack.setItemMeta(blockTypeMeta);
 
-            generators.add(new Generator(name, tier, speed, spawnItemStack, blockTypeStack));
+            generators.add(new GeneratorsData.Generator(name, tier, price, speed, spawnItemStack, blockTypeStack));
         }
 
         return new GeneratorsData(generators);
     }
 
-    private List<BlockData> loadBlockDataFromJson() {
+    private List<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
         try (FileReader reader = new FileReader(getDataFolder() + "/block_data.json")) {
-            return gson.fromJson(reader, new TypeToken<List<BlockData>>(){}.getType());
+            return gson.fromJson(reader, new TypeToken<List<LocationsData.GeneratorLocation>>(){}.getType());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

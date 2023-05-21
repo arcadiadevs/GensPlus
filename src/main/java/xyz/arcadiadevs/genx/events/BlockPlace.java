@@ -6,19 +6,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.arcadiadevs.genx.objects.BlockData;
-import xyz.arcadiadevs.genx.objects.Generator;
-import xyz.arcadiadevs.genx.objects.GeneratorsData;
+import xyz.arcadiadevs.genx.objects.LocationsData;
 import xyz.arcadiadevs.genx.utils.ChatUtil;
 
 public class BlockPlace implements Listener {
 
-  private final List<BlockData> blockData;
-  private final GeneratorsData generatorsData;
+  private final LocationsData locationsData;
 
-  public BlockPlace(List<BlockData> blockData, GeneratorsData generatorsData) {
-    this.blockData = blockData;
-    this.generatorsData = generatorsData;
+  public BlockPlace(LocationsData locationsData) {
+    this.locationsData = locationsData;
   }
 
   @EventHandler
@@ -48,8 +44,8 @@ public class BlockPlace implements Listener {
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
 
-    blockData.add(
-        new BlockData(
+    locationsData.addLocation(
+        new LocationsData.GeneratorLocation(
             event.getPlayer().getUniqueId().toString(),
             tier,
             event.getBlock().getX(),

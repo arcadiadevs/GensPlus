@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.objects.Generator;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
 import xyz.arcadiadevs.genx.utils.ChatUtil;
 
 public class GeneratorsGui {
-
 
   public static void open(Player player) {
     final var instance = GenX.getInstance();
@@ -25,7 +23,8 @@ public class GeneratorsGui {
     final var rows = config.getInt("generators-gui.rows");
     final var menu = instance
         .getSpiGui()
-        .create(ChatUtil.translate(config.getString("generators-gui.title")),
+        .create(
+            ChatUtil.translate(config.getString("generators-gui.title")),
             rows
         );
 
@@ -33,7 +32,7 @@ public class GeneratorsGui {
     menu.setBlockDefaultInteractions(true);
 
     GeneratorsData generatorsData = instance.getGeneratorsData();
-    for (Generator generator : generatorsData.getGenerators()) {
+    for (GeneratorsData.Generator generator : generatorsData.getGenerators()) {
       final var material = XMaterial.matchXMaterial(generator.blockType()).parseItem();
 
       List<String> lore = new ArrayList<>(List.of(

@@ -2,6 +2,12 @@ name: GenX
 version: '${project.version}'
 main: xyz.arcadiadevs.genx.GenX
 api-version: 1.19
+authors:
+  - Cuftica
+  - OpenSource
+
+depend:
+  - Vault
 
 commands:
   getitem:
