@@ -21,7 +21,7 @@ public class DataSaveTask extends BukkitRunnable {
 
   private void saveBlockDataToJson() {
     try (FileWriter writer = new FileWriter(instance.getDataFolder() + "/block_data.json")) {
-      instance.getGson().toJson(instance.getGeneratorsData().getGenerators(), writer);
+      instance.getGson().toJson(instance.getLocationsData().getGenerators(), writer);
     } catch (IOException e) {
       e.printStackTrace();
     }

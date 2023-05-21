@@ -49,8 +49,6 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
           getGeneratorObject().spawnItem()
       );
 
-
-
       // TODO: remove item in 5 minutes
     }
 
