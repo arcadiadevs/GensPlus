@@ -2,6 +2,7 @@ package xyz.arcadiadevs.genx.guis;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.samjakob.spigui.buttons.SGButton;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -36,7 +37,6 @@ public class UpgradeGui {
 
     menu.addButton(new SGButton(itemStack).withListener(event -> {
       upgradeGenerator(player, generator);
-      event.getWhoClicked().sendMessage(ChatUtil.translate("Successfully upgraded"));
       player.closeInventory();
     }));
 
@@ -66,6 +66,8 @@ public class UpgradeGui {
       player.sendMessage(ChatUtil.translate("An error occurred"));
       return;
     }
+
+    ChatUtil.sendMessage(player, "&aYou have upgraded your generator to level " + next.generator());
 
     instance.getLocationsData().remove(generator);
     instance.getLocationsData().addLocation(next);

@@ -23,7 +23,7 @@ public record GeneratorsData(@Getter List<Generator> generators) {
         .orElseThrow();
   }
 
-  public record Generator(String name, int tier, double price, int speed, ItemStack spawnItem, ItemStack blockType) {
+  public record Generator(String name, int tier, double price, int speed, ItemStack spawnItem, ItemStack blockType, List<String> lore) {
 
     public void giveItem(Player player) {
       player.getInventory().addItem(blockType);

@@ -25,6 +25,7 @@ import xyz.arcadiadevs.genx.objects.GeneratorsData;
 import xyz.arcadiadevs.genx.objects.LocationsData;
 import xyz.arcadiadevs.genx.tasks.DataSaveTask;
 import xyz.arcadiadevs.genx.tasks.SpawnerTask;
+import xyz.arcadiadevs.genx.utils.ChatUtil;
 
 public final class GenX extends JavaPlugin {
 
@@ -48,7 +49,10 @@ public final class GenX extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
         saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         saveResource("block_data.json", false);
 
@@ -114,6 +118,15 @@ public final class GenX extends JavaPlugin {
             double price = (double) generator.get("price");
             String spawnItem = (String) generator.get("spawnItem");
             String blockType = (String) generator.get("blockType");
+            List<String> lore = ((List<String>) generator.get("lore")).isEmpty() ? getConfig().getStringList("default-lore") : (List<String>) generator.get("lore");
+
+            lore = lore.stream()
+                .map(s -> s.replace("%tier%", String.valueOf(tier)))
+                .map(s -> s.replace("%speed%", String.valueOf(speed)))
+                .map(s -> s.replace("%price%", String.valueOf(price)))
+                .map(s -> s.replace("%spawnItem%", spawnItem))
+                .map(s -> s.replace("%blockType%", blockType))
+                .map(ChatUtil::translate).toList();
 
             if (generators.stream().anyMatch(g -> g.tier() == tier)) {
                 throw new RuntimeException("Duplicate tier found: " + tier);
@@ -134,13 +147,15 @@ public final class GenX extends JavaPlugin {
 
             List<String> blockTypeLore = new ArrayList<>();
 
-            blockTypeLore.add("Generator tier " + tier);
+            blockTypeLore.add(ChatUtil.translate("&8Generator tier " + tier));
+            blockTypeLore.addAll(lore);
 
+            blockTypeMeta.setDisplayName(ChatUtil.translate(name));
             blockTypeMeta.setLore(blockTypeLore);
 
             blockTypeStack.setItemMeta(blockTypeMeta);
 
-            generators.add(new GeneratorsData.Generator(name, tier, price, speed, spawnItemStack, blockTypeStack));
+            generators.add(new GeneratorsData.Generator(name, tier, price, speed, spawnItemStack, blockTypeStack, lore));
         }
 
         return new GeneratorsData(generators);

@@ -11,6 +11,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import xyz.arcadiadevs.genx.GenX;
+import xyz.arcadiadevs.genx.utils.TimeUtil;
 
 public record LocationsData(@Getter List<GeneratorLocation> generators) {
 
@@ -48,8 +49,7 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
           location.clone().add(0.5, 1, 0.5),
           getGeneratorObject().spawnItem()
       );
-
-      // TODO: remove item in 5 minutes
+      Bukkit.getScheduler().runTaskLater(GenX.getInstance(), item::remove, TimeUtil.parseDespawnTime(GenX.getInstance().getConfig().getString("item-despawn-time")));
     }
 
     public GeneratorsData.Generator getGeneratorObject() {
@@ -65,6 +65,5 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
     }
 
   }
-
 
 }

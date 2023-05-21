@@ -1,15 +1,42 @@
+# Specify the time after which the item will despawn from the time it was spawned.
+# The despawn time can be specified in the following format variations:
+# - "1h" for 1 hour
+# - "5m" for 5 minutes
+# - "1h 5m" for 1 hour and 5 minutes
+item-despawn-time: "5m"
+
 generators-gui:
   enabled: true
 
   title: "Generators"
   rows: 5
 
-  default-lore:
-    - "&7Tier: &a%tier%"
-    - "&7Speed: &a%speed%"
-    - "&7Spawn Item: &a%spawnItem%"
-    - "&7Block Type: &a%blockType%"
-    - "&7Status: &a%status%"
+events:
+  drop-event:
+    enabled: true
+    multiplier: 2
+
+  sell-event:
+    enabled: true
+    multiplier: 2
+
+  speed-event:
+    enabled: true
+    multiplier: 2
+
+# If lore is not specified, the default lore will be used.
+# The default lore can be specified in the following format:
+# - %tier%" equals to the generator's tier
+# - %speed%" is the generator's speed of spawning items
+# - %price%" is the price of generator
+# - %spawnItem%" equals to what item will generator spawn
+# - %blockType%" equals to block type of generator
+default-lore:
+  - "&7Tier: &a%tier%"
+  - "&7Speed: &a%speed%"
+  - "&7Price: &a%price%"
+  - "&7Spawn Item: &a%spawnItem%"
+  - "&7Block Type: &a%blockType%"
 
 generators:
   - name: "generator1"
@@ -18,9 +45,11 @@ generators:
     speed: 10
     spawnItem: "DIAMOND"
     blockType: "DIAMOND_BLOCK"
+    lore: []
   - name: "generator2"
     tier: 2
     price: 1000.0
     speed: 10
     spawnItem: "STONE"
     blockType: "STONE"
+    lore: []
