@@ -2,7 +2,7 @@ package xyz.arcadiadevs.genx.utils;
 
 public class TimeUtil {
 
-  public static long parseDespawnTime(String despawnTime) {
+  public static long parseTime(String despawnTime) {
     long totalTicks = 0;
 
     String[] parts = despawnTime.split("\\s+");

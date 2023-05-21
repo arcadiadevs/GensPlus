@@ -12,6 +12,10 @@ generators-gui:
   rows: 5
 
 events:
+
+  time-between-events: "1h"
+  event-duration: "2m"
+
   drop-event:
     enabled: true
     multiplier: 2

@@ -40,6 +40,10 @@ public class Commands implements CommandExecutor {
       player.sendMessage("You got a generator of tier " + tier);
     }
 
+    if (command.getName().equalsIgnoreCase("sell")) {
+
+    }
+
     if (command.getName().equalsIgnoreCase("generators")) {
       GeneratorsGui.open(player);
     }

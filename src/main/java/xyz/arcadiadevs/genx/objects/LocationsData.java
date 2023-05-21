@@ -1,8 +1,8 @@
 package xyz.arcadiadevs.genx.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -11,6 +11,9 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import xyz.arcadiadevs.genx.GenX;
+import xyz.arcadiadevs.genx.objects.events.DropEvent;
+import xyz.arcadiadevs.genx.objects.events.Event;
+import xyz.arcadiadevs.genx.tasks.EventLoop;
 import xyz.arcadiadevs.genx.utils.TimeUtil;
 
 public record LocationsData(@Getter List<GeneratorLocation> generators) {
@@ -45,11 +48,18 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
         return;
       }
 
-      Item item = location.getWorld().dropItemNaturally(
-          location.clone().add(0.5, 1, 0.5),
-          getGeneratorObject().spawnItem()
-      );
-      Bukkit.getScheduler().runTaskLater(GenX.getInstance(), item::remove, TimeUtil.parseDespawnTime(GenX.getInstance().getConfig().getString("item-despawn-time")));
+      List<Item> items = new ArrayList<>();
+
+      for (int i = 0; i < (EventLoop.getActiveEvent() instanceof DropEvent event ? event.getMultiplier() : 1); i++) {
+        Item item = location.getWorld().dropItemNaturally(
+            location.clone().add(0.5, 1, 0.5),
+            getGeneratorObject().spawnItem()
+        );
+        items.add(item);
+      }
+
+      Bukkit.getScheduler().runTaskLater(GenX.getInstance(), () -> items.forEach(Item::remove),
+          TimeUtil.parseTime(GenX.getInstance().getConfig().getString("item-despawn-time")));
     }
 
     public GeneratorsData.Generator getGeneratorObject() {

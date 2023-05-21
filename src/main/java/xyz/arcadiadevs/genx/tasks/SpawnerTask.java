@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.genx.GenX;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
 import xyz.arcadiadevs.genx.objects.LocationsData;
+import xyz.arcadiadevs.genx.objects.events.SpeedEvent;
 
 public class SpawnerTask extends BukkitRunnable {
 
@@ -48,7 +49,10 @@ public class SpawnerTask extends BukkitRunnable {
         }
       });
 
-      genNextSpawn.put(generator, System.currentTimeMillis() + generator.speed() * 1000L);
+      long multiplier = (long) (EventLoop.getActiveEvent() instanceof SpeedEvent
+          ? EventLoop.getActiveEvent().getMultiplier()
+          : 1.0);
+      genNextSpawn.put(generator, System.currentTimeMillis() + generator.speed() / multiplier * 1000L);
     }
   }
 

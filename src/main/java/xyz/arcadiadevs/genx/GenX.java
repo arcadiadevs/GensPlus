@@ -23,9 +23,15 @@ import xyz.arcadiadevs.genx.events.BlockPlace;
 import xyz.arcadiadevs.genx.events.ClickEvent;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
 import xyz.arcadiadevs.genx.objects.LocationsData;
+import xyz.arcadiadevs.genx.objects.events.DropEvent;
+import xyz.arcadiadevs.genx.objects.events.Event;
+import xyz.arcadiadevs.genx.objects.events.SellEvent;
+import xyz.arcadiadevs.genx.objects.events.SpeedEvent;
 import xyz.arcadiadevs.genx.tasks.DataSaveTask;
+import xyz.arcadiadevs.genx.tasks.EventLoop;
 import xyz.arcadiadevs.genx.tasks.SpawnerTask;
 import xyz.arcadiadevs.genx.utils.ChatUtil;
+import xyz.arcadiadevs.genx.utils.TimeUtil;
 
 public final class GenX extends JavaPlugin {
 
@@ -46,6 +52,9 @@ public final class GenX extends JavaPlugin {
 
     @Getter
     private Economy econ = null;
+
+    @Getter
+    private List<Event> events;
 
     @Override
     public void onEnable() {
@@ -71,6 +80,8 @@ public final class GenX extends JavaPlugin {
 
         locationsData = new LocationsData(loadBlockDataFromJson());
 
+        events = loadEvents();
+
         getServer().getPluginManager().registerEvents(new BlockPlace(locationsData), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(locationsData, generatorsData), this);
         getServer().getPluginManager().registerEvents(new ClickEvent(locationsData, generatorsData), this);
@@ -82,6 +93,12 @@ public final class GenX extends JavaPlugin {
         // Run spawner task every second
         new SpawnerTask(locationsData.getGenerators(), generatorsData)
             .runTaskTimerAsynchronously(this, 0, 20);
+
+        new EventLoop(this, events)
+            .runTaskLaterAsynchronously(
+                this,
+                TimeUtil.parseTime(getConfig().getString("events.time-between-events"))
+            );
 
         getCommand("genx").setExecutor(new Commands(this, generatorsData));
         getCommand("getitem").setExecutor(new Commands(this, generatorsData));
@@ -105,6 +122,14 @@ public final class GenX extends JavaPlugin {
         }
 
         econ = rsp.getProvider();
+    }
+
+    private ArrayList<Event> loadEvents() {
+        return new ArrayList<>() {{
+            add(new DropEvent(getConfig().getLong("events.drop-event.multiplier")));
+            add(new SellEvent(getConfig().getLong("events.sell-event.multiplier")));
+            add(new SpeedEvent(getConfig().getLong("events.speed-event.multiplier")));
+        }};
     }
 
     private GeneratorsData loadGeneratorsData() {
