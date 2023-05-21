@@ -33,7 +33,6 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
         .orElse(null);
   }
 
-  @Getter
   public record GeneratorLocation(String playerId, int generator, int x, int y, int z,
                                   String world) {
 
@@ -60,8 +59,11 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
     }
 
     public GeneratorLocation getNextTier() {
-      // TODO: Check if next tier exists else return null
       return new GeneratorLocation(playerId, generator + 1, x, y, z, world);
+    }
+
+    public Block getBlock() {
+      return Bukkit.getWorld(world).getBlockAt(x, y, z);
     }
 
   }

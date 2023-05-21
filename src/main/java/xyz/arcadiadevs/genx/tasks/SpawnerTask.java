@@ -39,7 +39,7 @@ public class SpawnerTask extends BukkitRunnable {
       }
 
       List<LocationsData.GeneratorLocation> blocksToSpawn = blockData.stream()
-          .filter(block -> block.getGenerator() == generator.tier())
+          .filter(block -> block.generator() == generator.tier())
           .toList();
 
       Bukkit.getScheduler().runTask(GenX.getInstance(), () -> {

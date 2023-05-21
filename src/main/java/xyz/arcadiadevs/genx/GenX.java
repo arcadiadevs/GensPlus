@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.genx.commands.Commands;
 import xyz.arcadiadevs.genx.events.BlockBreak;
 import xyz.arcadiadevs.genx.events.BlockPlace;
+import xyz.arcadiadevs.genx.events.ClickEvent;
 import xyz.arcadiadevs.genx.objects.GeneratorsData;
 import xyz.arcadiadevs.genx.objects.LocationsData;
 import xyz.arcadiadevs.genx.tasks.DataSaveTask;
@@ -68,6 +69,7 @@ public final class GenX extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new BlockPlace(locationsData), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(locationsData, generatorsData), this);
+        getServer().getPluginManager().registerEvents(new ClickEvent(locationsData, generatorsData), this);
 
         // Run block data save task every 5 minutes
         new DataSaveTask(this)

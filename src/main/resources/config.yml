@@ -14,12 +14,13 @@ generators-gui:
 generators:
   - name: "generator1"
     tier: 1
+    price: 1000.0
     speed: 10
     spawnItem: "DIAMOND"
     blockType: "DIAMOND_BLOCK"
   - name: "generator2"
-    tier: 1
+    tier: 2
+    price: 1000.0
     speed: 10
     spawnItem: "STONE"
     blockType: "STONE"
-    lore: "%default%"

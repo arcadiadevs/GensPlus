@@ -13,8 +13,9 @@ import xyz.arcadiadevs.genx.utils.ChatUtil;
 
 public class UpgradeGui {
 
+  private static final GenX instance = GenX.getInstance();
+
   public static void open(Player player, LocationsData.GeneratorLocation generator) {
-    final GenX instance = GenX.getInstance();
     final FileConfiguration config = instance.getConfig();
 
     if (!config.getBoolean("generators-gui.enabled")) {
@@ -34,37 +35,43 @@ public class UpgradeGui {
     final ItemStack itemStack = XMaterial.EMERALD_BLOCK.parseItem();
 
     menu.addButton(new SGButton(itemStack).withListener(event -> {
-      GeneratorsData.Generator current = generator.getGeneratorObject();
-      LocationsData.GeneratorLocation next = generator.getNextTier();
-      GeneratorsData.Generator nextGenerator = next.getGeneratorObject();
-
-      if (nextGenerator == null) {
-        event.getWhoClicked().sendMessage(ChatUtil.translate("You have reached the maximum level"));
-        return;
-      }
-
-      double upgradePrice = instance.getGeneratorsData().getUpgradePrice(current, next.generator());
-
-      if (upgradePrice > instance.getEcon().getBalance(player)) {
-        event.getWhoClicked().sendMessage(ChatUtil.translate("You don't have enough money"));
-        return;
-      }
-
-      EconomyResponse response = instance.getEcon().withdrawPlayer(player, upgradePrice);
-
-      if (!response.transactionSuccess()) {
-        event.getWhoClicked().sendMessage(ChatUtil.translate("An error occurred"));
-        return;
-      }
-
-      instance.getLocationsData().remove(generator);
-
-      instance.getLocationsData().addLocation(next);
-
+      upgradeGenerator(player, generator);
       event.getWhoClicked().sendMessage(ChatUtil.translate("Successfully upgraded"));
+      player.closeInventory();
     }));
 
     player.openInventory(menu.getInventory());
   }
+
+  private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation generator) {
+    GeneratorsData.Generator current = generator.getGeneratorObject();
+    LocationsData.GeneratorLocation next = generator.getNextTier();
+    GeneratorsData.Generator nextGenerator = next.getGeneratorObject();
+
+    if (nextGenerator == null) {
+      player.sendMessage(ChatUtil.translate("You have reached the maximum level"));
+      return;
+    }
+
+    double upgradePrice = instance.getGeneratorsData().getUpgradePrice(current, next.generator());
+
+    if (upgradePrice > instance.getEcon().getBalance(player)) {
+      player.sendMessage(ChatUtil.translate("You don't have enough money"));
+      return;
+    }
+
+    EconomyResponse response = instance.getEcon().withdrawPlayer(player, upgradePrice);
+
+    if (!response.transactionSuccess()) {
+      player.sendMessage(ChatUtil.translate("An error occurred"));
+      return;
+    }
+
+    instance.getLocationsData().remove(generator);
+    instance.getLocationsData().addLocation(next);
+    generator.getBlock().setType(nextGenerator.blockType().getType());
+
+  }
+
 
 }

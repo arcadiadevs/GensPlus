@@ -26,7 +26,7 @@ public class BlockBreak implements Listener {
       return;
     }
 
-    GeneratorsData.Generator generator = generatorsData.getGenerator(block.getGenerator());
+    GeneratorsData.Generator generator = generatorsData.getGenerator(block.generator());
 
     generator.dropItem(event.getPlayer(), event);
 
