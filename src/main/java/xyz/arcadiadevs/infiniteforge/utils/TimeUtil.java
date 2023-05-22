@@ -8,10 +8,10 @@ public class TimeUtil {
   @Getter @Setter
   private static long newTime;
 
-  public static long parseTime(String despawnTime) {
+  public static long parseTime(String time) {
     long totalTicks = 0;
 
-    String[] parts = despawnTime.split("\\s+");
+    String[] parts = time.split("\\s+");
 
     for (String part : parts) {
       char unit = part.charAt(part.length() - 1);
@@ -30,6 +30,13 @@ public class TimeUtil {
     }
 
     return totalTicks;
+  }
+
+  public static String ticksToTime(long ticks) {
+    long seconds = ticks / 20L;
+    long minutes = seconds / 60L;
+    long hours = minutes / 60L;
+    return String.format("%02d:%02d:%02d", hours, minutes % 60, seconds % 60);
   }
 
 }
