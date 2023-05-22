@@ -22,7 +22,7 @@ public class Commands implements CommandExecutor {
 
   @Override
   public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
-                           @NotNull String s, @NotNull String[] strings) {
+      @NotNull String s, @NotNull String[] strings) {
     if (!(commandSender instanceof Player player)) {
       return false;
     }
@@ -38,10 +38,6 @@ public class Commands implements CommandExecutor {
       generator.giveItem(player);
 
       player.sendMessage("You got a generator of tier " + tier);
-    }
-
-    if (command.getName().equalsIgnoreCase("sell")) {
-
     }
 
     if (command.getName().equalsIgnoreCase("generators")) {

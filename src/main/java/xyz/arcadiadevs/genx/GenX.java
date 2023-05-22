@@ -125,12 +125,19 @@ public final class GenX extends JavaPlugin {
     }
 
     private ArrayList<Event> loadEvents() {
-        return new ArrayList<>() {{
-            add(new DropEvent(getConfig().getLong("events.drop-event.multiplier")));
-            add(new SellEvent(getConfig().getLong("events.sell-event.multiplier")));
-            add(new SpeedEvent(getConfig().getLong("events.speed-event.multiplier")));
-        }};
+        ArrayList<Event> events = new ArrayList<>();
+        if (getConfig().getBoolean("events.drop-event.enabled")) {
+            events.add(new DropEvent(getConfig().getLong("events.drop-event.multiplier")));
+        }
+        if (getConfig().getBoolean("events.sell-event.enabled")) {
+            events.add(new SellEvent(getConfig().getLong("events.sell-event.multiplier")));
+        }
+        if (getConfig().getBoolean("events.speed-event.enabled")) {
+            events.add(new SpeedEvent(getConfig().getLong("events.speed-event.multiplier")));
+        }
+        return events;
     }
+
 
     private GeneratorsData loadGeneratorsData() {
         List<GeneratorsData.Generator> generators = new ArrayList<>();

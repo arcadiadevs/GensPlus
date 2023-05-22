@@ -9,11 +9,14 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 import xyz.arcadiadevs.genx.GenX;
 import xyz.arcadiadevs.genx.objects.events.DropEvent;
 import xyz.arcadiadevs.genx.objects.events.Event;
 import xyz.arcadiadevs.genx.tasks.EventLoop;
+import xyz.arcadiadevs.genx.utils.ChatUtil;
 import xyz.arcadiadevs.genx.utils.TimeUtil;
 
 public record LocationsData(@Getter List<GeneratorLocation> generators) {
