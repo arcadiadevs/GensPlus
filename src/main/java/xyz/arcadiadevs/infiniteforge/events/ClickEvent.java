@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.genx.events;
+package xyz.arcadiadevs.infiniteforge.events;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -6,9 +6,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import xyz.arcadiadevs.genx.guis.UpgradeGui;
-import xyz.arcadiadevs.genx.objects.GeneratorsData;
-import xyz.arcadiadevs.genx.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.guis.UpgradeGui;
+import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 
 public class ClickEvent implements Listener {
 
@@ -41,7 +41,7 @@ public class ClickEvent implements Listener {
       return;
     }
 
-    UpgradeGui.open(player, generatorLocation);
+    UpgradeGui.open(player, generatorLocation, generatorsData);
   }
 
 }

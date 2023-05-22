@@ -1,13 +1,13 @@
-package xyz.arcadiadevs.genx.tasks;
+package xyz.arcadiadevs.infiniteforge.tasks;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Random;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.objects.events.Event;
-import xyz.arcadiadevs.genx.utils.TimeUtil;
+import xyz.arcadiadevs.infiniteforge.objects.events.Event;
+import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
 public class EventLoop extends BukkitRunnable {
 
@@ -30,6 +30,10 @@ public class EventLoop extends BukkitRunnable {
 
     activeEvent = events.get(randomNumber);
 
+    TimeUtil.setNewTime(TimeUtil.parseTime(plugin
+        .getConfig()
+        .getString("events.event-duration")));
+
     new BukkitRunnable() {
       public void run() {
 
@@ -42,6 +46,10 @@ public class EventLoop extends BukkitRunnable {
                     .getConfig()
                     .getString("events.time-between-events"))
             );
+        TimeUtil.setNewTime(TimeUtil.parseTime(plugin
+                .getConfig()
+                .getString("events.time-between-events")));
+
         cancel();
       }
 

@@ -1,41 +1,48 @@
-package xyz.arcadiadevs.genx.guis;
+package xyz.arcadiadevs.infiniteforge.guis;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.samjakob.spigui.buttons.SGButton;
-import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.objects.GeneratorsData;
-import xyz.arcadiadevs.genx.objects.LocationsData;
-import xyz.arcadiadevs.genx.utils.ChatUtil;
+import org.bukkit.inventory.meta.ItemMeta;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
+import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.utils.GuiUtil;
 
 public class UpgradeGui {
 
-  private static final GenX instance = GenX.getInstance();
+  private static final InfiniteForge instance = InfiniteForge.getInstance();
 
-  public static void open(Player player, LocationsData.GeneratorLocation generator) {
+  public static void open(Player player, LocationsData.GeneratorLocation generator, GeneratorsData generatorsData) {
     final FileConfiguration config = instance.getConfig();
 
     if (!config.getBoolean("generators-gui.enabled")) {
       return;
     }
 
+    final var rows = 3;
     final var menu = instance
         .getSpiGui()
         .create(
             ChatUtil.translate(config.getString("generators-gui.title")),
-            3
+            rows
         );
 
-    menu.setAutomaticPaginationEnabled(true);
+    menu.setAutomaticPaginationEnabled(false);
     menu.setBlockDefaultInteractions(true);
 
-    final ItemStack itemStack = XMaterial.EMERALD_BLOCK.parseItem();
+    final ItemStack itemStack = generator.getNextTier().getGeneratorObject().blockType();
+    final ItemMeta itemMeta = itemStack.getItemMeta();
+    final Economy economy = instance.getEcon();
 
-    menu.addButton(new SGButton(itemStack).withListener(event -> {
+    GuiUtil.fillHalfInventory(menu, rows);
+
+
+    menu.setButton(0, 13, new SGButton(itemStack).withListener(event -> {
       upgradeGenerator(player, generator);
       player.closeInventory();
     }));

@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.genx.objects.events;
+package xyz.arcadiadevs.infiniteforge.objects.events;
 
 import lombok.Getter;
 

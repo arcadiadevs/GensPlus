@@ -1,13 +1,13 @@
-package xyz.arcadiadevs.genx.tasks;
+package xyz.arcadiadevs.infiniteforge.tasks;
 
 import java.util.HashMap;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.objects.GeneratorsData;
-import xyz.arcadiadevs.genx.objects.LocationsData;
-import xyz.arcadiadevs.genx.objects.events.SpeedEvent;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
+import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.objects.events.SpeedEvent;
 
 public class SpawnerTask extends BukkitRunnable {
 
@@ -43,7 +43,7 @@ public class SpawnerTask extends BukkitRunnable {
           .filter(block -> block.generator() == generator.tier())
           .toList();
 
-      Bukkit.getScheduler().runTask(GenX.getInstance(), () -> {
+      Bukkit.getScheduler().runTask(InfiniteForge.getInstance(), () -> {
         for (LocationsData.GeneratorLocation block : blocksToSpawn) {
           block.spawn();
         }

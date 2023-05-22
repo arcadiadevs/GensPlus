@@ -1,6 +1,12 @@
-package xyz.arcadiadevs.genx.utils;
+package xyz.arcadiadevs.infiniteforge.utils;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class TimeUtil {
+
+  @Getter @Setter
+  private static long newTime;
 
   public static long parseTime(String despawnTime) {
     long totalTicks = 0;
@@ -25,6 +31,5 @@ public class TimeUtil {
 
     return totalTicks;
   }
-
 
 }

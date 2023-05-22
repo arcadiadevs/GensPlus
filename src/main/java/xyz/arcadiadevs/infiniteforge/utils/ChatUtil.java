@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.genx.utils;
+package xyz.arcadiadevs.infiniteforge.utils;
 
 import java.util.List;
 import java.util.stream.Collectors;

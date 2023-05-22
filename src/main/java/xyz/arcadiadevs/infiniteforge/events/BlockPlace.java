@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.genx.events;
+package xyz.arcadiadevs.infiniteforge.events;
 
 import java.util.List;
 import org.bukkit.event.EventHandler;
@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.arcadiadevs.genx.objects.LocationsData;
-import xyz.arcadiadevs.genx.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
 public class BlockPlace implements Listener {
 

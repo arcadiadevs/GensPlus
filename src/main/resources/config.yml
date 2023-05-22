@@ -39,13 +39,15 @@ default-lore:
   - "&7Tier: &a%tier%"
   - "&7Speed: &a%speed%"
   - "&7Price: &a%price%"
+  - "&7Sell Price: &a%sellprice%"
   - "&7Spawn Item: &a%spawnItem%"
   - "&7Block Type: &a%blockType%"
 
 generators:
   - name: "generator1"
     tier: 1
-    price: 1000.0
+    price: 500.0
+    sellprice: 50.0
     speed: 10
     spawnItem: "DIAMOND"
     blockType: "DIAMOND_BLOCK"
@@ -53,7 +55,8 @@ generators:
   - name: "generator2"
     tier: 2
     price: 1000.0
-    speed: 10
+    sellprice: 100.0
+    speed: 5
     spawnItem: "STONE"
     blockType: "STONE"
     lore: []

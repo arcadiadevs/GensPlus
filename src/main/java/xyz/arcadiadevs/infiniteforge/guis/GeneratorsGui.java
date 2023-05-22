@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.genx.guis;
+package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.samjakob.spigui.buttons.SGButton;
@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
-import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.objects.GeneratorsData;
-import xyz.arcadiadevs.genx.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
+import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
 public class GeneratorsGui {
 
   public static void open(Player player) {
-    final var instance = GenX.getInstance();
+    final var instance = InfiniteForge.getInstance();
     final var config = instance.getConfig();
 
     if (!config.getBoolean("generators-gui.enabled")) {

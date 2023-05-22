@@ -1,6 +1,6 @@
-name: GenX
+name: InfiniteForge
 version: '${project.version}'
-main: xyz.arcadiadevs.genx.GenX
+main: xyz.arcadiadevs.infiniteforge.InfiniteForge
 api-version: 1.19
 authors:
   - Cuftica
@@ -13,12 +13,16 @@ commands:
   getitem:
     description: Get the generator item
     usage: /getitem
-    permission: genx.getitem
+    permission: infiniteforge.getitem
   generators:
     description: List all generators in gui
     usage: /generators
-    permission: genx.generators
-  genx:
+    permission: infiniteforge.generators
+  infiniteforge:
     description: Main command
-    usage: /genx
-    permission: genx.genx
+    usage: /infiniteforge
+    permission: infiniteforge.infiniteforge
+  selldrops:
+    description: Sell all drops in inventory
+    usage: /selldrops
+    permission: infiniteforge.selldrops

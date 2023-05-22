@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.genx.objects;
+package xyz.arcadiadevs.infiniteforge.objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,15 +9,11 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
-import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.objects.events.DropEvent;
-import xyz.arcadiadevs.genx.objects.events.Event;
-import xyz.arcadiadevs.genx.tasks.EventLoop;
-import xyz.arcadiadevs.genx.utils.ChatUtil;
-import xyz.arcadiadevs.genx.utils.TimeUtil;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
+import xyz.arcadiadevs.infiniteforge.objects.events.DropEvent;
+import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
+import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
 public record LocationsData(@Getter List<GeneratorLocation> generators) {
 
@@ -51,6 +47,7 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
         return;
       }
 
+
       List<Item> items = new ArrayList<>();
 
       for (int i = 0; i < (EventLoop.getActiveEvent() instanceof DropEvent event ? event.getMultiplier() : 1); i++) {
@@ -61,12 +58,12 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
         items.add(item);
       }
 
-      Bukkit.getScheduler().runTaskLater(GenX.getInstance(), () -> items.forEach(Item::remove),
-          TimeUtil.parseTime(GenX.getInstance().getConfig().getString("item-despawn-time")));
+      Bukkit.getScheduler().runTaskLater(InfiniteForge.getInstance(), () -> items.forEach(Item::remove),
+          TimeUtil.parseTime(InfiniteForge.getInstance().getConfig().getString("item-despawn-time")));
     }
 
     public GeneratorsData.Generator getGeneratorObject() {
-      return GenX.getInstance().getGeneratorsData().getGenerator(generator);
+      return InfiniteForge.getInstance().getGeneratorsData().getGenerator(generator);
     }
 
     public GeneratorLocation getNextTier() {

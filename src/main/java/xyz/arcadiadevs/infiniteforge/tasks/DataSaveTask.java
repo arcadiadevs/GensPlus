@@ -1,16 +1,15 @@
-package xyz.arcadiadevs.genx.tasks;
+package xyz.arcadiadevs.infiniteforge.tasks;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 
 public class DataSaveTask extends BukkitRunnable {
 
-  private final GenX instance;
+  private final InfiniteForge instance;
 
-  public DataSaveTask(GenX instance) {
+  public DataSaveTask(InfiniteForge instance) {
     this.instance = instance;
   }
 

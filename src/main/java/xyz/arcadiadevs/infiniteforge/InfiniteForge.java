@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.genx;
+package xyz.arcadiadevs.infiniteforge;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.google.gson.Gson;
@@ -8,6 +8,7 @@ import com.samjakob.spigui.SpiGUI;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
@@ -17,26 +18,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.arcadiadevs.genx.commands.Commands;
-import xyz.arcadiadevs.genx.events.BlockBreak;
-import xyz.arcadiadevs.genx.events.BlockPlace;
-import xyz.arcadiadevs.genx.events.ClickEvent;
-import xyz.arcadiadevs.genx.objects.GeneratorsData;
-import xyz.arcadiadevs.genx.objects.LocationsData;
-import xyz.arcadiadevs.genx.objects.events.DropEvent;
-import xyz.arcadiadevs.genx.objects.events.Event;
-import xyz.arcadiadevs.genx.objects.events.SellEvent;
-import xyz.arcadiadevs.genx.objects.events.SpeedEvent;
-import xyz.arcadiadevs.genx.tasks.DataSaveTask;
-import xyz.arcadiadevs.genx.tasks.EventLoop;
-import xyz.arcadiadevs.genx.tasks.SpawnerTask;
-import xyz.arcadiadevs.genx.utils.ChatUtil;
-import xyz.arcadiadevs.genx.utils.TimeUtil;
+import xyz.arcadiadevs.infiniteforge.commands.Commands;
+import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
+import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
+import xyz.arcadiadevs.infiniteforge.events.ClickEvent;
+import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.objects.events.DropEvent;
+import xyz.arcadiadevs.infiniteforge.objects.events.Event;
+import xyz.arcadiadevs.infiniteforge.objects.events.SellEvent;
+import xyz.arcadiadevs.infiniteforge.objects.events.SpeedEvent;
+import xyz.arcadiadevs.infiniteforge.tasks.DataSaveTask;
+import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
+import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
-public final class GenX extends JavaPlugin {
+public final class InfiniteForge extends JavaPlugin {
 
     @Getter
-    public static GenX instance;
+    public static InfiniteForge instance;
 
     @Getter
     private Gson gson;
@@ -99,10 +100,12 @@ public final class GenX extends JavaPlugin {
                 this,
                 TimeUtil.parseTime(getConfig().getString("events.time-between-events"))
             );
+        TimeUtil.setNewTime(TimeUtil.parseTime(getConfig().getString("events.time-between-events")));
 
-        getCommand("genx").setExecutor(new Commands(this, generatorsData));
+        getCommand("infiniteforge").setExecutor(new Commands(this, generatorsData));
         getCommand("getitem").setExecutor(new Commands(this, generatorsData));
         getCommand("generators").setExecutor(new Commands(this, generatorsData));
+        getCommand("selldrops").setExecutor(new Commands(this, generatorsData));
     }
 
     @Override
@@ -148,6 +151,7 @@ public final class GenX extends JavaPlugin {
             int tier = (int) generator.get("tier");
             int speed = (int) generator.get("speed");
             double price = (double) generator.get("price");
+            double sellPrice = (double) generator.get("sellprice");
             String spawnItem = (String) generator.get("spawnItem");
             String blockType = (String) generator.get("blockType");
             List<String> lore = ((List<String>) generator.get("lore")).isEmpty() ? getConfig().getStringList("default-lore") : (List<String>) generator.get("lore");
@@ -156,6 +160,7 @@ public final class GenX extends JavaPlugin {
                 .map(s -> s.replace("%tier%", String.valueOf(tier)))
                 .map(s -> s.replace("%speed%", String.valueOf(speed)))
                 .map(s -> s.replace("%price%", String.valueOf(price)))
+                .map(s -> s.replace("%sellprice%", String.valueOf(sellPrice)))
                 .map(s -> s.replace("%spawnItem%", spawnItem))
                 .map(s -> s.replace("%blockType%", blockType))
                 .map(ChatUtil::translate).toList();
@@ -172,11 +177,13 @@ public final class GenX extends JavaPlugin {
             }
 
             ItemMeta blockTypeMeta = blockTypeStack.getItemMeta();
+            ItemMeta spawnItemMeta = spawnItemStack.getItemMeta();
 
-            if (blockTypeMeta == null) {
+            if (blockTypeMeta == null || spawnItemMeta == null) {
                 throw new RuntimeException("Invalid item meta");
             }
 
+            // set lore for generator block
             List<String> blockTypeLore = new ArrayList<>();
 
             blockTypeLore.add(ChatUtil.translate("&8Generator tier " + tier));
@@ -187,7 +194,14 @@ public final class GenX extends JavaPlugin {
 
             blockTypeStack.setItemMeta(blockTypeMeta);
 
-            generators.add(new GeneratorsData.Generator(name, tier, price, speed, spawnItemStack, blockTypeStack, lore));
+            // set lore for spawned item
+            spawnItemMeta.setDisplayName(ChatUtil.translate(name));
+            spawnItemMeta.setLore(
+                Collections.singletonList(ChatUtil.translate("&8Generator drop tier " + tier)));
+
+            spawnItemStack.setItemMeta(spawnItemMeta);
+
+            generators.add(new GeneratorsData.Generator(name, tier, price, sellPrice, speed, spawnItemStack, blockTypeStack, lore));
         }
 
         return new GeneratorsData(generators);

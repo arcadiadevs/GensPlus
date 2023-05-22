@@ -1,11 +1,11 @@
-package xyz.arcadiadevs.genx.events;
+package xyz.arcadiadevs.infiniteforge.events;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import xyz.arcadiadevs.genx.objects.GeneratorsData;
-import xyz.arcadiadevs.genx.objects.LocationsData;
-import xyz.arcadiadevs.genx.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
 public class BlockBreak implements Listener {
 

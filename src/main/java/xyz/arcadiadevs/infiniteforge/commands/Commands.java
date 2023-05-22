@@ -1,21 +1,22 @@
-package xyz.arcadiadevs.genx.commands;
+package xyz.arcadiadevs.infiniteforge.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import xyz.arcadiadevs.genx.GenX;
-import xyz.arcadiadevs.genx.guis.GeneratorsGui;
-import xyz.arcadiadevs.genx.objects.GeneratorsData;
-import xyz.arcadiadevs.genx.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
+import xyz.arcadiadevs.infiniteforge.guis.GeneratorsGui;
+import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.utils.SellUtil;
 
 public class Commands implements CommandExecutor {
 
-  private final GenX instance;
+  private final InfiniteForge instance;
   private final GeneratorsData generatorsData;
 
-  public Commands(GenX instance, GeneratorsData generatorsData) {
+  public Commands(InfiniteForge instance, GeneratorsData generatorsData) {
     this.instance = instance;
     this.generatorsData = generatorsData;
   }
@@ -44,10 +45,15 @@ public class Commands implements CommandExecutor {
       GeneratorsGui.open(player);
     }
 
-    if (command.getName().equalsIgnoreCase("genx")) {
+    if (command.getName().equalsIgnoreCase("selldrops")) {
+      SellUtil sellUtil = new SellUtil(generatorsData, player);
+      sellUtil.sell();
+    }
+
+    if (command.getName().equalsIgnoreCase("infiniteforge")) {
       if (strings.length == 0) {
-        ChatUtil.sendMessage(player, "&9GenX> This server is running GenX version &a" +
-            GenX.getInstance().getDescription().getVersion());
+        ChatUtil.sendMessage(player, "&9InfiniteForge> This server is running InfiniteForge version &a" +
+            InfiniteForge.getInstance().getDescription().getVersion());
         return true;
       }
 

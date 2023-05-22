@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.genx.objects.events;
+package xyz.arcadiadevs.infiniteforge.objects.events;
 
 public class DropEvent extends Event {
 
