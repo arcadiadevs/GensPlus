@@ -52,8 +52,9 @@ public class Commands implements CommandExecutor {
 
     if (command.getName().equalsIgnoreCase("infiniteforge")) {
       if (strings.length == 0) {
-        ChatUtil.sendMessage(player, "&9InfiniteForge> This server is running InfiniteForge version &a" +
-            InfiniteForge.getInstance().getDescription().getVersion());
+        ChatUtil.sendMessage(player,
+            "&9InfiniteForge> This server is running InfiniteForge version &a"
+                + InfiniteForge.getInstance().getDescription().getVersion());
         return true;
       }
 

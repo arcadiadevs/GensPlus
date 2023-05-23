@@ -48,10 +48,11 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
         return;
       }
 
-
       List<Item> items = new ArrayList<>();
 
-      for (int i = 0; i < (EventLoop.getActiveEvent() instanceof DropEvent event ? event.getMultiplier() : 1); i++) {
+      for (int i = 0;
+          i < (EventLoop.getActiveEvent() instanceof DropEvent event ? event.getMultiplier() : 1);
+          i++) {
         Item item = location.getWorld().dropItemNaturally(
             location.clone().add(0.5, 1, 0.5),
             getGeneratorObject().spawnItem()
@@ -59,8 +60,10 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
         items.add(item);
       }
 
-      Bukkit.getScheduler().runTaskLater(InfiniteForge.getInstance(), () -> items.forEach(Item::remove),
-          TimeUtil.parseTime(InfiniteForge.getInstance().getConfig().getString("item-despawn-time")));
+      Bukkit.getScheduler()
+          .runTaskLater(InfiniteForge.getInstance(), () -> items.forEach(Item::remove),
+              TimeUtil.parseTime(
+                  InfiniteForge.getInstance().getConfig().getString("item-despawn-time")));
     }
 
     public GeneratorsData.Generator getGeneratorObject() {

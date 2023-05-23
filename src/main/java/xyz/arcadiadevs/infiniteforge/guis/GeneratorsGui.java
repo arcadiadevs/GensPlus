@@ -47,7 +47,9 @@ public class GeneratorsGui {
         continue;
       }
 
-      List<String> lore = ((List<String>) matchingGeneratorConfig.get("lore")).isEmpty() ? config.getStringList("default-lore") : (List<String>) matchingGeneratorConfig.get("lore");
+      List<String> lore =
+          ((List<String>) matchingGeneratorConfig.get("lore")).isEmpty() ? config.getStringList(
+              "default-lore") : (List<String>) matchingGeneratorConfig.get("lore");
 
       lore = lore.stream()
           .map(s -> s.replace("%tier%", String.valueOf(generator.tier())))

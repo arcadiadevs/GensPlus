@@ -31,10 +31,10 @@ public class EventLoop extends BukkitRunnable {
     activeEvent = events.get(randomNumber);
 
     eventModel.reset();
-    eventModel.setDuration(System.currentTimeMillis() +
-        TimeUtil.parseTimeMillis(plugin
-        .getConfig()
-        .getString("events.event-duration")));
+    eventModel.setDuration(System.currentTimeMillis()
+        + TimeUtil.parseTimeMillis(plugin
+            .getConfig()
+            .getString("events.event-duration")));
 
     new BukkitRunnable() {
       public void run() {
@@ -50,10 +50,10 @@ public class EventLoop extends BukkitRunnable {
             );
 
         eventModel.reset();
-        eventModel.setTimeBetweenEvents(System.currentTimeMillis() +
-            TimeUtil.parseTimeMillis(plugin
-            .getConfig()
-            .getString("events.time-between-events")));
+        eventModel.setTimeBetweenEvents(System.currentTimeMillis()
+            + TimeUtil.parseTimeMillis(plugin
+                .getConfig()
+                .getString("events.time-between-events")));
 
         cancel();
       }

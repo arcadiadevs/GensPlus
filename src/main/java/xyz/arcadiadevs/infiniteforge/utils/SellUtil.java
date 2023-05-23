@@ -70,7 +70,9 @@ public class SellUtil {
       final var economy = InfiniteForge.getInstance().getEcon();
 
       economy.depositPlayer(player, totalSellAmount * multiplier);
-      ChatUtil.sendMessage(player, "&9InfiniteForge> &aYou sold generator drops for " + (economy.format(totalSellAmount * multiplier)) + "!");
+      ChatUtil.sendMessage(player,
+          "&9InfiniteForge> &aYou sold generator drops for " + (economy.format(
+              totalSellAmount * multiplier)) + "!");
 
     } else {
       ChatUtil.sendMessage(player, "&9InfiniteForge> &cYou do not have anything to sell!");

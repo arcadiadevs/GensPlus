@@ -1,8 +1,5 @@
 package xyz.arcadiadevs.infiniteforge.utils;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class TimeUtil {
 
   public static long parseTime(String time) {
@@ -47,8 +44,10 @@ public class TimeUtil {
 
       switch (unit) {
         case 's' -> totalMillis += value * 1000L; // 1000 milliseconds per second
-        case 'm' -> totalMillis += value * 1000L * 60L; // 1000 milliseconds per second, 60 seconds per minute
-        case 'h' -> totalMillis += value * 1000L * 60L * 60L; // 1000 milliseconds per second, 60 seconds per minute, 60 minutes per hour
+        case 'm' -> totalMillis +=
+            value * 1000L * 60L; // 1000 milliseconds per second, 60 seconds per minute
+        case 'h' -> totalMillis += value * 1000L * 60L
+            * 60L; // 1000 milliseconds per second, 60 seconds per minute, 60 minutes per hour
 
         // You can add additional cases for other units if needed (e.g., 'd' for days)
         default ->

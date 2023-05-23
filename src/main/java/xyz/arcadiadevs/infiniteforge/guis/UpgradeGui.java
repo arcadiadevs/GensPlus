@@ -17,7 +17,8 @@ public class UpgradeGui {
 
   private static final InfiniteForge instance = InfiniteForge.getInstance();
 
-  public static void open(Player player, LocationsData.GeneratorLocation generator, GeneratorsData generatorsData) {
+  public static void open(Player player, LocationsData.GeneratorLocation generator,
+      GeneratorsData generatorsData) {
     final FileConfiguration config = instance.getConfig();
 
     if (!config.getBoolean("generators-gui.enabled")) {
@@ -36,11 +37,8 @@ public class UpgradeGui {
     menu.setBlockDefaultInteractions(true);
 
     final ItemStack itemStack = generator.getNextTier().getGeneratorObject().blockType();
-    final ItemMeta itemMeta = itemStack.getItemMeta();
-    final Economy economy = instance.getEcon();
 
     GuiUtil.fillHalfInventory(menu, rows);
-
 
     menu.setButton(0, 13, new SGButton(itemStack).withListener(event -> {
       upgradeGenerator(player, generator);

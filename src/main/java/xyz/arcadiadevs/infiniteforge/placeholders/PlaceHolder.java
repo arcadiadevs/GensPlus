@@ -52,5 +52,4 @@ public class PlaceHolder extends PlaceholderExpansion {
   }
 
 
-
 }

@@ -17,7 +17,8 @@ public class SpawnerTask extends BukkitRunnable {
 
   private HashMap<GeneratorsData.Generator, Long> genNextSpawn;
 
-  public SpawnerTask(List<LocationsData.GeneratorLocation> blockData, GeneratorsData generatorsData) {
+  public SpawnerTask(List<LocationsData.GeneratorLocation> blockData,
+      GeneratorsData generatorsData) {
     this.blockData = blockData;
     this.generatorsData = generatorsData;
 
@@ -52,7 +53,8 @@ public class SpawnerTask extends BukkitRunnable {
       long multiplier = (long) (EventLoop.getActiveEvent() instanceof SpeedEvent
           ? EventLoop.getActiveEvent().getMultiplier()
           : 1.0);
-      genNextSpawn.put(generator, System.currentTimeMillis() + generator.speed() / multiplier * 1000L);
+      genNextSpawn.put(generator,
+          System.currentTimeMillis() + generator.speed() / multiplier * 1000L);
     }
   }
 

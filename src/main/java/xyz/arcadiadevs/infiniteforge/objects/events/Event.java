@@ -8,7 +8,8 @@ public abstract class Event {
   @Getter
   protected final long multiplier;
 
-  @Getter @Setter
+  @Getter
+  @Setter
   protected String name;
 
   public Event(long multiplier, String name) {
