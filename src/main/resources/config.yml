@@ -18,14 +18,17 @@ events:
 
   drop-event:
     enabled: true
+    name: "Drop Event"
     multiplier: 2
 
   sell-event:
     enabled: true
+    name: "Sell Event"
     multiplier: 2
 
   speed-event:
     enabled: true
+    name: "Speed Event"
     multiplier: 2
 
 # If lore is not specified, the default lore will be used.

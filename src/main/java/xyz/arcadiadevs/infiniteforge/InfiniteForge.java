@@ -22,12 +22,14 @@ import xyz.arcadiadevs.infiniteforge.commands.Commands;
 import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
 import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
 import xyz.arcadiadevs.infiniteforge.events.ClickEvent;
+import xyz.arcadiadevs.infiniteforge.model.EventModel;
 import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 import xyz.arcadiadevs.infiniteforge.objects.events.DropEvent;
 import xyz.arcadiadevs.infiniteforge.objects.events.Event;
 import xyz.arcadiadevs.infiniteforge.objects.events.SellEvent;
 import xyz.arcadiadevs.infiniteforge.objects.events.SpeedEvent;
+import xyz.arcadiadevs.infiniteforge.placeholders.PlaceHolder;
 import xyz.arcadiadevs.infiniteforge.tasks.DataSaveTask;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
@@ -57,6 +59,9 @@ public final class InfiniteForge extends JavaPlugin {
     @Getter
     private List<Event> events;
 
+    @Getter
+    private EventModel eventModel;
+
     @Override
     public void onEnable() {
 
@@ -69,6 +74,10 @@ public final class InfiniteForge extends JavaPlugin {
         instance = this;
 
         setupEconomy();
+
+        if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
+            new PlaceHolder().register();
+        }
 
         gson = new GsonBuilder()
             .registerTypeAdapterFactory(RecordTypeAdapterFactory.DEFAULT)
@@ -83,6 +92,8 @@ public final class InfiniteForge extends JavaPlugin {
 
         events = loadEvents();
 
+        eventModel = new EventModel();
+
         getServer().getPluginManager().registerEvents(new BlockPlace(locationsData), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(locationsData, generatorsData), this);
         getServer().getPluginManager().registerEvents(new ClickEvent(locationsData, generatorsData), this);
@@ -95,12 +106,13 @@ public final class InfiniteForge extends JavaPlugin {
         new SpawnerTask(locationsData.getGenerators(), generatorsData)
             .runTaskTimerAsynchronously(this, 0, 20);
 
-        new EventLoop(this, events)
+        new EventLoop(this, events, eventModel)
             .runTaskLaterAsynchronously(
                 this,
                 TimeUtil.parseTime(getConfig().getString("events.time-between-events"))
             );
-        TimeUtil.setNewTime(TimeUtil.parseTime(getConfig().getString("events.time-between-events")));
+        eventModel.setTimeBetweenEvents(System.currentTimeMillis() +
+            (TimeUtil.parseTimeMillis(getConfig().getString("events.time-between-events")) * 60L * 1000L));
 
         getCommand("infiniteforge").setExecutor(new Commands(this, generatorsData));
         getCommand("getitem").setExecutor(new Commands(this, generatorsData));
@@ -130,17 +142,16 @@ public final class InfiniteForge extends JavaPlugin {
     private ArrayList<Event> loadEvents() {
         ArrayList<Event> events = new ArrayList<>();
         if (getConfig().getBoolean("events.drop-event.enabled")) {
-            events.add(new DropEvent(getConfig().getLong("events.drop-event.multiplier")));
+            events.add(new DropEvent(getConfig().getLong("events.drop-event.multiplier"), getConfig().getString("events.drop-event.name")));
         }
         if (getConfig().getBoolean("events.sell-event.enabled")) {
-            events.add(new SellEvent(getConfig().getLong("events.sell-event.multiplier")));
+            events.add(new SellEvent(getConfig().getLong("events.sell-event.multiplier"), getConfig().getString("events.sell-event.name")));
         }
         if (getConfig().getBoolean("events.speed-event.enabled")) {
-            events.add(new SpeedEvent(getConfig().getLong("events.speed-event.multiplier")));
+            events.add(new SpeedEvent(getConfig().getLong("events.speed-event.multiplier"), getConfig().getString("events.speed-event.name")));
         }
         return events;
     }
-
 
     private GeneratorsData loadGeneratorsData() {
         List<GeneratorsData.Generator> generators = new ArrayList<>();
