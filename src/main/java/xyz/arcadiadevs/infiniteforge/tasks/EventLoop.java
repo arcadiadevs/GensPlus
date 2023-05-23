@@ -9,6 +9,11 @@ import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.objects.events.Event;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
+/**
+ * The EventLoop class is a BukkitRunnable task responsible for managing events in a loop. It
+ * randomly selects and activates events, and transitions between events based on the specified
+ * durations.
+ */
 public class EventLoop extends BukkitRunnable {
 
   @Getter
@@ -16,11 +21,25 @@ public class EventLoop extends BukkitRunnable {
   private final Plugin plugin;
   private final List<Event> events;
 
+  /**
+   * Constructs a new EventLoop with the given plugin and list of events.
+   *
+   * @param plugin The plugin instance.
+   * @param events The list of events to cycle through.
+   */
   public EventLoop(Plugin plugin, List<Event> events) {
     this.plugin = plugin;
     this.events = events;
+    activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
+        System.currentTimeMillis() + TimeUtil.parseTimeMillis(plugin
+            .getConfig()
+            .getString("events.time-between-events")));
   }
 
+  /**
+   * Executes the event loop task. It randomly selects an event, activates it, and transitions to
+   * the next event based on the specified durations.
+   */
   @Override
   public void run() {
     Random random = new Random();
@@ -28,13 +47,13 @@ public class EventLoop extends BukkitRunnable {
 
     activeEvent = new ActiveEvent(events.get(randomNumber), System.currentTimeMillis(),
         System.currentTimeMillis()
-            + TimeUtil.parseTime(plugin.getConfig().getString("events.event-duration")));
+            + TimeUtil.parseTimeMillis(plugin.getConfig().getString("events.event-duration")));
 
     new BukkitRunnable() {
       public void run() {
 
         activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
-            System.currentTimeMillis() + TimeUtil.parseTime(plugin
+            System.currentTimeMillis() + TimeUtil.parseTimeMillis(plugin
                 .getConfig()
                 .getString("events.time-between-events")));
 
@@ -53,4 +72,5 @@ public class EventLoop extends BukkitRunnable {
         TimeUtil.parseTime(plugin.getConfig().getString("events.event-duration"))
     );
   }
+
 }

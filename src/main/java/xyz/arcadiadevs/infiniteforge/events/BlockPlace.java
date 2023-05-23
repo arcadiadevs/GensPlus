@@ -9,14 +9,29 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
+/**
+ * The BlockPlace class is responsible for handling block place events related to generator blocks
+ * in InfiniteForge. It listens for BlockPlaceEvents and performs actions when a generator block is
+ * placed.
+ */
 public class BlockPlace implements Listener {
 
   private final LocationsData locationsData;
 
+  /**
+   * Constructs a BlockPlace object with the specified LocationsData.
+   *
+   * @param locationsData The LocationsData object containing information about block locations.
+   */
   public BlockPlace(LocationsData locationsData) {
     this.locationsData = locationsData;
   }
 
+  /**
+   * Handles the BlockPlaceEvent triggered when a player places a block.
+   *
+   * @param event The BlockPlaceEvent object representing the block place event.
+   */
   @EventHandler
   public void onBlockPlace(BlockPlaceEvent event) {
     ItemStack item = event.getItemInHand();
@@ -44,6 +59,7 @@ public class BlockPlace implements Listener {
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
 
+    // Add the generator block location to the data
     locationsData.addLocation(
         new LocationsData.GeneratorLocation(
             event.getPlayer().getUniqueId().toString(),
@@ -55,6 +71,7 @@ public class BlockPlace implements Listener {
         )
     );
 
+    // Send a notification to the player
     ChatUtil.sendMessage(event.getPlayer(), "&aYou have placed a &eTier " + tier + " &agenerator.");
   }
 

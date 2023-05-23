@@ -1,7 +1,17 @@
 package xyz.arcadiadevs.infiniteforge.utils;
 
+/**
+ * The TimeUtil class provides utility methods for time-related operations.
+ */
 public class TimeUtil {
 
+  /**
+   * Parses a time string into the corresponding number of ticks.
+   *
+   * @param time The time string to parse.
+   * @return The number of ticks.
+   * @throws IllegalArgumentException if an invalid unit is specified in the time string.
+   */
   public static long parseTime(String time) {
     long totalTicks = 0;
 
@@ -26,6 +36,12 @@ public class TimeUtil {
     return totalTicks;
   }
 
+  /**
+   * Converts the specified number of ticks into a formatted time string in the format "HH:MM:SS".
+   *
+   * @param ticks The number of ticks to convert.
+   * @return The formatted time string.
+   */
   public static String ticksToTime(long ticks) {
     long seconds = ticks / 20L;
     long minutes = seconds / 60L;
@@ -33,6 +49,13 @@ public class TimeUtil {
     return String.format("%02d:%02d:%02d", hours, minutes % 60, seconds % 60);
   }
 
+  /**
+   * Parses a time string into the corresponding number of milliseconds.
+   *
+   * @param time The time string to parse.
+   * @return The number of milliseconds.
+   * @throws IllegalArgumentException if an invalid unit is specified in the time string.
+   */
   public static long parseTimeMillis(String time) {
     long totalMillis = 0;
 
@@ -58,6 +81,12 @@ public class TimeUtil {
     return totalMillis;
   }
 
+  /**
+   * Converts the specified number of milliseconds into a formatted time string in the format "HH:MM:SS".
+   *
+   * @param millis The number of milliseconds to convert.
+   * @return The formatted time string.
+   */
   public static String millisToTime(long millis) {
     long seconds = millis / 1000L;
     long minutes = seconds / 60L;

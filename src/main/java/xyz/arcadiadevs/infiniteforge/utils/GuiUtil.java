@@ -5,8 +5,17 @@ import com.samjakob.spigui.SGMenu;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 
+/**
+ * The GuiUtil class provides utility methods for GUI-related operations.
+ */
 public class GuiUtil {
 
+  /**
+   * Adds a border to the specified SGMenu with the given number of rows.
+   *
+   * @param menu The SGMenu to add the border to.
+   * @param rows The number of rows in the menu.
+   */
   public static void addBorder(SGMenu menu, int rows) {
 
     for (int i = 0; i < 9; i++) {
@@ -38,6 +47,12 @@ public class GuiUtil {
     }
   }
 
+  /**
+   * Fills the specified SGMenu with gray stained glass panes.
+   *
+   * @param menu The SGMenu to fill.
+   * @param rows The number of rows in the menu.
+   */
   public static void fillInventory(SGMenu menu, int rows) {
     for (int i = 0; i < rows * 9; i++) {
       menu.setButton(
@@ -47,8 +62,15 @@ public class GuiUtil {
     }
   }
 
+  /**
+   * Fills half of the specified SGMenu with green and red stained glass panes. The left half of the
+   * menu will have red panes, the right half will have green panes, and the top and bottom rows
+   * will have a combination of red and green panes.
+   *
+   * @param menu The SGMenu to fill.
+   * @param rows The number of rows in the menu.
+   */
   public static void fillHalfInventory(SGMenu menu, int rows) {
-    int half = (int) Math.floor((double) rows * 9 / 2);
     final var greenGlassPane = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
     final var redGlassPane = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
 

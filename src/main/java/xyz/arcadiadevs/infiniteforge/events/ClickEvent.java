@@ -10,16 +10,34 @@ import xyz.arcadiadevs.infiniteforge.guis.UpgradeGui;
 import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 
+/**
+ * The ClickEvent class is responsible for handling player click events related to generator blocks
+ * in InfiniteForge. It listens for PlayerInteractEvents and triggers the opening of the upgrade GUI
+ * when a generator block is right-clicked while sneaking.
+ */
 public class ClickEvent implements Listener {
 
   private final LocationsData locationsData;
   private final GeneratorsData generatorsData;
 
+  /**
+   * Constructs a ClickEvent object with the specified LocationsData and GeneratorsData.
+   *
+   * @param locationsData  The LocationsData object containing information about block locations.
+   * @param generatorsData The GeneratorsData object containing information about generators.
+   */
   public ClickEvent(LocationsData locationsData, GeneratorsData generatorsData) {
     this.locationsData = locationsData;
     this.generatorsData = generatorsData;
   }
 
+  /**
+   * Handles the PlayerInteractEvent triggered when a player interacts with a block. If the block is
+   * a generator block and the player is sneaking and right-clicks the block, it opens the upgrade
+   * GUI.
+   *
+   * @param event The PlayerInteractEvent object representing the player's interaction event.
+   */
   @EventHandler
   public void onBlockClick(PlayerInteractEvent event) {
     Block block = event.getClickedBlock();
@@ -35,13 +53,17 @@ public class ClickEvent implements Listener {
 
     LocationsData.GeneratorLocation generatorLocation = locationsData.getLocationData(block);
 
+    if (generatorLocation == null) {
+      return;
+    }
+
     GeneratorsData.Generator generator = generatorsData.getGenerator(generatorLocation.generator());
 
     if (generator == null) {
       return;
     }
 
-    UpgradeGui.open(player, generatorLocation, generatorsData);
+    // Open the upgrade GUI for the generator block
+    UpgradeGui.open(player, generatorLocation);
   }
-
 }

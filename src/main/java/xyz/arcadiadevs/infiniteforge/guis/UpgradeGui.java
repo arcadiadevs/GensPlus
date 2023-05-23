@@ -1,24 +1,31 @@
 package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.samjakob.spigui.buttons.SGButton;
-import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.GuiUtil;
 
+/**
+ * The UpgradeGui class provides functionality for opening the upgrade GUI for generators in
+ * InfiniteForge. It allows players to upgrade their generators to the next tier.
+ */
 public class UpgradeGui {
 
   private static final InfiniteForge instance = InfiniteForge.getInstance();
 
-  public static void open(Player player, LocationsData.GeneratorLocation generator,
-      GeneratorsData generatorsData) {
+  /**
+   * Opens the upgrade GUI for the specified player and generator.
+   *
+   * @param player         The Player object for whom the GUI is being opened.
+   * @param generator      The GeneratorLocation representing the generator to be upgraded.
+   */
+  public static void open(Player player, LocationsData.GeneratorLocation generator) {
     final FileConfiguration config = instance.getConfig();
 
     if (!config.getBoolean("generators-gui.enabled")) {
@@ -26,12 +33,10 @@ public class UpgradeGui {
     }
 
     final var rows = 3;
-    final var menu = instance
-        .getSpiGui()
-        .create(
-            ChatUtil.translate(config.getString("generators-gui.title")),
-            rows
-        );
+    final var menu = instance.getSpiGui().create(
+        ChatUtil.translate(config.getString("generators-gui.title")),
+        rows
+    );
 
     menu.setAutomaticPaginationEnabled(false);
     menu.setBlockDefaultInteractions(true);
@@ -48,6 +53,12 @@ public class UpgradeGui {
     player.openInventory(menu.getInventory());
   }
 
+  /**
+   * Upgrades the specified generator to the next tier for the given player.
+   *
+   * @param player    The Player object who is upgrading the generator.
+   * @param generator The GeneratorLocation representing the generator to be upgraded.
+   */
   private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation generator) {
     GeneratorsData.Generator current = generator.getGeneratorObject();
     LocationsData.GeneratorLocation next = generator.getNextTier();
@@ -77,8 +88,6 @@ public class UpgradeGui {
     instance.getLocationsData().remove(generator);
     instance.getLocationsData().addLocation(next);
     generator.getBlock().setType(nextGenerator.blockType().getType());
-
   }
-
-
 }
+

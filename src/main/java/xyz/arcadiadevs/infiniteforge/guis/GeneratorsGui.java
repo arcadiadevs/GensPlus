@@ -11,8 +11,17 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
+/**
+ * The GeneratorsGui class provides functionality for opening the generators GUI in InfiniteForge.
+ * It displays a GUI menu containing buttons representing different generators.
+ */
 public class GeneratorsGui {
 
+  /**
+   * Opens the generators GUI for the specified player.
+   *
+   * @param player The Player object for whom the GUI is being opened.
+   */
   public static void open(Player player) {
     final var instance = InfiniteForge.getInstance();
     final var config = instance.getConfig();
@@ -22,12 +31,10 @@ public class GeneratorsGui {
     }
 
     final var rows = config.getInt("generators-gui.rows");
-    final var menu = instance
-        .getSpiGui()
-        .create(
-            ChatUtil.translate(config.getString("generators-gui.title")),
-            rows
-        );
+    final var menu = instance.getSpiGui().create(
+        ChatUtil.translate(config.getString("generators-gui.title")),
+        rows
+    );
 
     menu.setAutomaticPaginationEnabled(true);
     menu.setBlockDefaultInteractions(true);
@@ -47,9 +54,9 @@ public class GeneratorsGui {
         continue;
       }
 
-      List<String> lore =
-          ((List<String>) matchingGeneratorConfig.get("lore")).isEmpty() ? config.getStringList(
-              "default-lore") : (List<String>) matchingGeneratorConfig.get("lore");
+      List<String> lore = ((List<String>) matchingGeneratorConfig.get("lore")).isEmpty()
+          ? config.getStringList("default-lore")
+          : (List<String>) matchingGeneratorConfig.get("lore");
 
       lore = lore.stream()
           .map(s -> s.replace("%tier%", String.valueOf(generator.tier())))
@@ -69,11 +76,8 @@ public class GeneratorsGui {
         event.setCancelled(true);
         event.getWhoClicked().sendMessage(ChatUtil.translate("message"));
       }));
-
     }
 
     player.openInventory(menu.getInventory());
-
   }
-
 }

@@ -11,17 +11,28 @@ import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.objects.events.SellEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 
+/**
+ * The SellUtil class provides utility methods for selling generator drops in InfiniteForge.
+ * It contains a static method to sell generator drops for a player.
+ */
 public class SellUtil {
 
-  public static void sell(Player player, GeneratorsData.Generator generator) {
+  /**
+   * Sells generator drops for a player.
+   *
+   * @param player The player who wants to sell their generator drops.
+   */
+  public static void sell(Player player) {
     int totalSellAmount = 0;
     final HashMap<Player, Integer> sellAmounts = new HashMap<>();
     final ActiveEvent event = EventLoop.getActiveEvent();
 
-    long multiplier = (long) (event.getEvent() instanceof SellEvent
-        ? event.getEvent().getMultiplier()
+    // Determine the sell multiplier based on the active event
+    long multiplier = (long) (event.event() instanceof SellEvent
+        ? event.event().getMultiplier()
         : 1.0);
 
+    // Iterate through the player's inventory to find generator drops
     for (int i = 0; i < player.getInventory().getSize(); i++) {
       ItemStack item = player.getInventory().getItem(i);
 
@@ -47,7 +58,12 @@ public class SellUtil {
 
       String firstLine = lore.get(0);
 
+      // Check if the item is a generator drop
       if (firstLine.contains("Generator drop tier")) {
+        int tier = Integer.parseInt(firstLine.split(" ")[3]);
+        final GeneratorsData generatorsData = InfiniteForge.getInstance().getGeneratorsData();
+        final var generator = generatorsData.getGenerator(tier);
+
         final int itemAmount = item.getAmount();
         final double sellPrice = generator.sellPrice();
         int sellAmount = (int) (sellPrice * itemAmount * multiplier);
@@ -57,6 +73,7 @@ public class SellUtil {
       }
     }
 
+    // Perform the selling operation if there are generator drops to sell
     if (totalSellAmount > 0) {
       final var economy = InfiniteForge.getInstance().getEcon();
 
@@ -70,7 +87,6 @@ public class SellUtil {
     }
 
     sellAmounts.remove(player);
-
   }
 
 }

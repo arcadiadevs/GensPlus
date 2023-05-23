@@ -35,28 +35,53 @@ import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
+/**
+ * The main plugin class for InfiniteForge.
+ */
 public final class InfiniteForge extends JavaPlugin {
 
+  /**
+   * Gets the instance of the InfiniteForge plugin.
+   */
   @Getter
   public static InfiniteForge instance;
 
+  /**
+   * Gets the Gson instance used for JSON serialization/deserialization.
+   */
   @Getter
   private Gson gson;
 
+  /**
+   * Gets the data handler for locations.
+   */
   @Getter
   private LocationsData locationsData;
 
+  /**
+   * Gets the data handler for generators.
+   */
   @Getter
   private GeneratorsData generatorsData;
 
+  /**
+   * Gets the SpiGUI instance for GUI management.
+   */
   @Getter
   private SpiGUI spiGui;
 
+  /**
+   * Gets the economy plugin instance.
+   */
   @Getter
   private Economy econ = null;
 
+  /**
+   * Gets the list of events.
+   */
   @Getter
   private List<Event> events;
+
 
   @Override
   public void onEnable() {
@@ -114,6 +139,12 @@ public final class InfiniteForge extends JavaPlugin {
     new DataSaveTask(this).runTask(this);
   }
 
+
+  /**
+   * Sets up the economy plugin for handling currency.
+   *
+   * @throws RuntimeException if Vault or an economy plugin is not found.
+   */
   private void setupEconomy() {
     if (getServer().getPluginManager().getPlugin("Vault") == null) {
       throw new RuntimeException("Vault not found");
@@ -130,6 +161,11 @@ public final class InfiniteForge extends JavaPlugin {
     econ = rsp.getProvider();
   }
 
+  /**
+   * Loads the list of events based on the plugin configuration.
+   *
+   * @return The list of events.
+   */
   private ArrayList<Event> loadEvents() {
     ArrayList<Event> events = new ArrayList<>();
     if (getConfig().getBoolean("events.drop-event.enabled")) {
@@ -147,7 +183,13 @@ public final class InfiniteForge extends JavaPlugin {
     return events;
   }
 
-  @SuppressWarnings("unchecked")
+  /**
+   * Loads the generators data from the plugin configuration.
+   *
+   * @return The generators data.
+   * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
+   *                          encountered.
+   */
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
     List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");
@@ -215,6 +257,12 @@ public final class InfiniteForge extends JavaPlugin {
     return new GeneratorsData(generators);
   }
 
+  /**
+   * Loads the block data from the JSON file.
+   *
+   * @return The list of generator locations.
+   * @throws RuntimeException if an I/O error occurs while reading the JSON file.
+   */
   private List<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
     try (FileReader reader = new FileReader(getDataFolder() + "/block_data.json")) {
       return gson.fromJson(reader, new TypeToken<List<LocationsData.GeneratorLocation>>() {

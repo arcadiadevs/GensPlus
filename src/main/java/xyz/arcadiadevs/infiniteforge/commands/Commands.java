@@ -11,16 +11,36 @@ import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.SellUtil;
 
+/**
+ * The Commands class implements the CommandExecutor interface to handle custom commands in
+ * InfiniteForge. It provides functionality for various commands related to generators and the
+ * plugin itself.
+ */
 public class Commands implements CommandExecutor {
 
   private final InfiniteForge instance;
   private final GeneratorsData generatorsData;
 
+  /**
+   * Constructs a Commands object with the specified InfiniteForge instance and GeneratorsData.
+   *
+   * @param instance       The InfiniteForge instance.
+   * @param generatorsData The GeneratorsData object containing information about generators.
+   */
   public Commands(InfiniteForge instance, GeneratorsData generatorsData) {
     this.instance = instance;
     this.generatorsData = generatorsData;
   }
 
+  /**
+   * Executes a command issued by a CommandSender.
+   *
+   * @param commandSender The CommandSender who issued the command.
+   * @param command       The Command object representing the executed command.
+   * @param s             The label of the command.
+   * @param strings       The arguments provided with the command.
+   * @return true if the command was handled successfully, false otherwise.
+   */
   @Override
   public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
       @NotNull String s, @NotNull String[] strings) {
@@ -46,7 +66,7 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      SellUtil.sell(player, );
+      SellUtil.sell(player);
     }
 
     if (command.getName().equalsIgnoreCase("infiniteforge")) {
@@ -66,6 +86,4 @@ public class Commands implements CommandExecutor {
 
     return true;
   }
-
-
 }
