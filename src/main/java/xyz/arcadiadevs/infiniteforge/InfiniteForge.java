@@ -22,7 +22,6 @@ import xyz.arcadiadevs.infiniteforge.commands.Commands;
 import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
 import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
 import xyz.arcadiadevs.infiniteforge.events.ClickEvent;
-import xyz.arcadiadevs.infiniteforge.model.EventModel;
 import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 import xyz.arcadiadevs.infiniteforge.objects.events.DropEvent;
@@ -59,19 +58,14 @@ public final class InfiniteForge extends JavaPlugin {
   @Getter
   private List<Event> events;
 
-  @Getter
-  private EventModel eventModel;
-
   @Override
   public void onEnable() {
 
+    instance = this;
+
     saveDefaultConfig();
-    getConfig().options().copyDefaults(true);
-    saveConfig();
 
     saveResource("block_data.json", false);
-
-    instance = this;
 
     setupEconomy();
 
@@ -90,8 +84,7 @@ public final class InfiniteForge extends JavaPlugin {
 
     events = loadEvents();
 
-    eventModel = new EventModel();
-
+    // Register events
     getServer().getPluginManager().registerEvents(new BlockPlace(locationsData), this);
     getServer().getPluginManager()
         .registerEvents(new BlockBreak(locationsData, generatorsData), this);
@@ -105,13 +98,11 @@ public final class InfiniteForge extends JavaPlugin {
     new SpawnerTask(locationsData.getGenerators(), generatorsData).runTaskTimerAsynchronously(this,
         0, 20);
 
-    new EventLoop(this, events, eventModel).runTaskLaterAsynchronously(this,
+    // Start event loop
+    new EventLoop(this, events).runTaskLaterAsynchronously(this,
         TimeUtil.parseTime(getConfig().getString("events.time-between-events")));
 
-    eventModel.setTimeBetweenEvents(System.currentTimeMillis() + (
-        TimeUtil.parseTimeMillis(getConfig().getString("events.time-between-events")) * 60L
-            * 1000L));
-
+    // Register commands
     getCommand("infiniteforge").setExecutor(new Commands(this, generatorsData));
     getCommand("getitem").setExecutor(new Commands(this, generatorsData));
     getCommand("generators").setExecutor(new Commands(this, generatorsData));
@@ -156,6 +147,7 @@ public final class InfiniteForge extends JavaPlugin {
     return events;
   }
 
+  @SuppressWarnings("unchecked")
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
     List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");

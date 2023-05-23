@@ -5,4 +5,5 @@ public class SellEvent extends Event {
   public SellEvent(long multiplier, String name) {
     super(multiplier, name);
   }
+
 }

@@ -46,8 +46,7 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      SellUtil sellUtil = new SellUtil(generatorsData, player);
-      sellUtil.sell();
+      SellUtil.sell(player, );
     }
 
     if (command.getName().equalsIgnoreCase("infiniteforge")) {

@@ -3,7 +3,7 @@ package xyz.arcadiadevs.infiniteforge.placeholders;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
-import xyz.arcadiadevs.infiniteforge.model.EventModel;
+import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
@@ -36,17 +36,15 @@ public class PlaceHolder extends PlaceholderExpansion {
 
   @Override
   public String onRequest(OfflinePlayer player, String params) {
-    EventModel eventModel = new EventModel();
+    final ActiveEvent activeEvent = EventLoop.getActiveEvent();
+
     return switch (params) {
-      case "event_time_between_events" -> {
-        final long time = eventModel.getTimeBetweenEvents() - System.currentTimeMillis();
+      case "event_timer" -> {
+        final long time = activeEvent.getEndTime() - System.currentTimeMillis();
         yield TimeUtil.millisToTime(time);
       }
-      case "event_duration" -> {
-        final long time = eventModel.getDuration() - System.currentTimeMillis();
-        yield TimeUtil.millisToTime(time);
-      }
-      case "event_name" -> EventLoop.getActiveEvent().getName();
+      case "event_name" ->
+          activeEvent.getEvent() == null ? "No Events" : activeEvent.getEvent().getName();
       default -> throw new IllegalStateException("Unexpected value: " + params);
     };
   }

@@ -7,25 +7,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.objects.events.SellEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 
 public class SellUtil {
 
-  private final GeneratorsData generatorsData;
-  private final Player player;
-
-  public SellUtil(GeneratorsData generatorsData, Player player) {
-    this.generatorsData = generatorsData;
-    this.player = player;
-  }
-
-  public void sell() {
+  public static void sell(Player player, GeneratorsData.Generator generator) {
     int totalSellAmount = 0;
     final HashMap<Player, Integer> sellAmounts = new HashMap<>();
-    long multiplier = (long) (EventLoop.getActiveEvent() instanceof SellEvent
-        ? EventLoop.getActiveEvent().getMultiplier()
+    final ActiveEvent event = EventLoop.getActiveEvent();
+
+    long multiplier = (long) (event.getEvent() instanceof SellEvent
+        ? event.getEvent().getMultiplier()
         : 1.0);
+
     for (int i = 0; i < player.getInventory().getSize(); i++) {
       ItemStack item = player.getInventory().getItem(i);
 
@@ -52,11 +48,6 @@ public class SellUtil {
       String firstLine = lore.get(0);
 
       if (firstLine.contains("Generator drop tier")) {
-
-        int tier = Integer.parseInt(firstLine.split(" ")[3]);
-
-        final var generator = generatorsData.getGenerator(tier);
-
         final int itemAmount = item.getAmount();
         final double sellPrice = generator.sellPrice();
         int sellAmount = (int) (sellPrice * itemAmount * multiplier);

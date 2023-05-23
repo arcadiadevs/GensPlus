@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.objects.events.DropEvent;
@@ -50,9 +49,10 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
 
       List<Item> items = new ArrayList<>();
 
-      for (int i = 0;
-          i < (EventLoop.getActiveEvent() instanceof DropEvent event ? event.getMultiplier() : 1);
-          i++) {
+      long itemsToDrop = EventLoop.getActiveEvent().getEvent() instanceof DropEvent event
+          ? event.getMultiplier() : 1;
+
+      for (int i = 0; i < itemsToDrop; i++) {
         Item item = location.getWorld().dropItemNaturally(
             location.clone().add(0.5, 1, 0.5),
             getGeneratorObject().spawnItem()
