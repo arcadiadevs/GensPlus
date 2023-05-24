@@ -1,6 +1,10 @@
 package xyz.arcadiadevs.infiniteforge;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.github.unldenis.hologram.HologramPool;
+import com.github.unldenis.hologram.IHologramPool;
+import com.github.unldenis.hologram.InteractiveHologramPool;
+import com.github.unldenis.hologram.placeholder.Placeholders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -14,6 +18,8 @@ import java.util.Map;
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -81,7 +87,6 @@ public final class InfiniteForge extends JavaPlugin {
    */
   @Getter
   private List<Event> events;
-
 
   @Override
   public void onEnable() {
