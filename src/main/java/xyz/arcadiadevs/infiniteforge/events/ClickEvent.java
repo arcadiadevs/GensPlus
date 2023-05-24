@@ -24,7 +24,7 @@ public class ClickEvent implements Listener {
    * Constructs a ClickEvent object with the specified LocationsData and GeneratorsData.
    *
    * @param locationsData  The LocationsData object containing information about block locations.
-   * @param generatorsData The GeneratorsData object containing information about generators.
+   * @param generatorsData The GeneratorsData object containing information about locations.
    */
   public ClickEvent(LocationsData locationsData, GeneratorsData generatorsData) {
     this.locationsData = locationsData;

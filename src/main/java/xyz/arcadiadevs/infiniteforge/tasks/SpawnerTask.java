@@ -11,7 +11,7 @@ import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.objects.events.SpeedEvent;
 
 /**
- * The SpawnerTask class is a BukkitRunnable task responsible for spawning items from generators at
+ * The SpawnerTask class is a BukkitRunnable task responsible for spawning items from locations at
  * regular intervals. It tracks the next spawn time for each generator and spawns items based on
  * their speed.
  */

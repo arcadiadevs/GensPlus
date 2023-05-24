@@ -120,7 +120,7 @@ public final class InfiniteForge extends JavaPlugin {
     new DataSaveTask(this).runTaskTimerAsynchronously(this, 0, 20);
 
     // Run spawner task every second
-    new SpawnerTask(locationsData.getGenerators(), generatorsData).runTaskTimerAsynchronously(this,
+    new SpawnerTask(locationsData.getLocations(), generatorsData).runTaskTimerAsynchronously(this,
         0, 20);
 
     // Start event loop
@@ -184,9 +184,9 @@ public final class InfiniteForge extends JavaPlugin {
   }
 
   /**
-   * Loads the generators data from the plugin configuration.
+   * Loads the locations data from the plugin configuration.
    *
-   * @return The generators data.
+   * @return The locations data.
    * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
    *                          encountered.
    */

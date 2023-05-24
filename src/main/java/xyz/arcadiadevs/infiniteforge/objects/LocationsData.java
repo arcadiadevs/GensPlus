@@ -1,11 +1,14 @@
 package xyz.arcadiadevs.infiniteforge.objects;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -20,7 +23,7 @@ import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
  * a list of generator locations and provides methods to add, remove, and retrieve location
  * information.
  */
-public record LocationsData(@Getter List<GeneratorLocation> generators) {
+public record LocationsData(@Getter List<GeneratorLocation> locations) {
 
   /**
    * Adds a generator location to the list.
@@ -28,7 +31,7 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
    * @param generator The generator location to add.
    */
   public void addLocation(GeneratorLocation generator) {
-    generators.add(generator);
+    locations.add(generator);
   }
 
   /**
@@ -37,7 +40,7 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
    * @param generator The generator location to remove.
    */
   public void remove(GeneratorLocation generator) {
-    generators.remove(generator);
+    locations.remove(generator);
   }
 
   /**
@@ -48,13 +51,48 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
    */
   @Nullable
   public GeneratorLocation getLocationData(Block block) {
-    return generators.stream()
+    return locations.stream()
         .filter(b -> b.x() == block.getX()
             && b.y() == block.getY()
             && b.z() == block.getZ()
             && b.world().equals(block.getWorld().getName()))
         .findFirst()
         .orElse(null);
+  }
+
+  public Location getCenter(GeneratorLocation location) {
+    HashSet<Block> connectedBlocks = new HashSet<>();
+
+    traverseBlocks(location.getBlock(), location.generator(), connectedBlocks);
+
+    connectedBlocks.forEach(block -> block.setType(Material.REDSTONE_BLOCK));
+
+    return null;
+  }
+
+  private void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks) {
+    if (block == null) {
+      return;
+    }
+
+    boolean found = locations.stream()
+        .anyMatch(location -> location.generator() == tier
+            && location.getLocation().equals(block.getLocation()));
+
+    if (!found) {
+      return;
+    }
+
+    // Add the block to the set of connected blocks
+    connectedBlocks.add(block);
+
+    // Check adjacent blocks
+    traverseBlocks(block.getRelative(1, 0, 0), tier, connectedBlocks);
+    traverseBlocks(block.getRelative(-1, 0, 0), tier, connectedBlocks);
+    traverseBlocks(block.getRelative(0, 1, 0), tier, connectedBlocks);
+    traverseBlocks(block.getRelative(0, -1, 0), tier, connectedBlocks);
+    traverseBlocks(block.getRelative(0, 0, 1), tier, connectedBlocks);
+    traverseBlocks(block.getRelative(0, 0, -1), tier, connectedBlocks);
   }
 
   /**
@@ -111,6 +149,10 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
      */
     public GeneratorLocation getNextTier() {
       return new GeneratorLocation(playerId, generator + 1, x, y, z, world);
+    }
+
+    public Location getLocation() {
+      return new Location(Bukkit.getWorld(world), x, y, z);
     }
 
     /**

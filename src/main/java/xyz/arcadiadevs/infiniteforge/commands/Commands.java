@@ -13,7 +13,7 @@ import xyz.arcadiadevs.infiniteforge.utils.SellUtil;
 
 /**
  * The Commands class implements the CommandExecutor interface to handle custom commands in
- * InfiniteForge. It provides functionality for various commands related to generators and the
+ * InfiniteForge. It provides functionality for various commands related to locations and the
  * plugin itself.
  */
 public class Commands implements CommandExecutor {
@@ -25,7 +25,7 @@ public class Commands implements CommandExecutor {
    * Constructs a Commands object with the specified InfiniteForge instance and GeneratorsData.
    *
    * @param instance       The InfiniteForge instance.
-   * @param generatorsData The GeneratorsData object containing information about generators.
+   * @param generatorsData The GeneratorsData object containing information about locations.
    */
   public Commands(InfiniteForge instance, GeneratorsData generatorsData) {
     this.instance = instance;

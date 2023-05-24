@@ -15,9 +15,9 @@ commands:
     usage: /getitem
     permission: infiniteforge.getitem
   generators:
-    description: List all generators in gui
-    usage: /generators
-    permission: infiniteforge.generators
+    description: List all locations in gui
+    usage: /locations
+    permission: infiniteforge.locations
   infiniteforge:
     description: Main command
     usage: /infiniteforge

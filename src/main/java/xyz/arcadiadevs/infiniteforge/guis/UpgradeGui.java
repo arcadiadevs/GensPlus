@@ -12,8 +12,8 @@ import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.GuiUtil;
 
 /**
- * The UpgradeGui class provides functionality for opening the upgrade GUI for generators in
- * InfiniteForge. It allows players to upgrade their generators to the next tier.
+ * The UpgradeGui class provides functionality for opening the upgrade GUI for locations in
+ * InfiniteForge. It allows players to upgrade their locations to the next tier.
  */
 public class UpgradeGui {
 

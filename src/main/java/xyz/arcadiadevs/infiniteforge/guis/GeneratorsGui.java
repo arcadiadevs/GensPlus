@@ -12,13 +12,13 @@ import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
 /**
- * The GeneratorsGui class provides functionality for opening the generators GUI in InfiniteForge.
- * It displays a GUI menu containing buttons representing different generators.
+ * The GeneratorsGui class provides functionality for opening the locations GUI in InfiniteForge.
+ * It displays a GUI menu containing buttons representing different locations.
  */
 public class GeneratorsGui {
 
   /**
-   * Opens the generators GUI for the specified player.
+   * Opens the locations GUI for the specified player.
    *
    * @param player The Player object for whom the GUI is being opened.
    */
@@ -26,13 +26,13 @@ public class GeneratorsGui {
     final var instance = InfiniteForge.getInstance();
     final var config = instance.getConfig();
 
-    if (!config.getBoolean("generators-gui.enabled")) {
+    if (!config.getBoolean("locations-gui.enabled")) {
       return;
     }
 
-    final var rows = config.getInt("generators-gui.rows");
+    final var rows = config.getInt("locations-gui.rows");
     final var menu = instance.getSpiGui().create(
-        ChatUtil.translate(config.getString("generators-gui.title")),
+        ChatUtil.translate(config.getString("locations-gui.title")),
         rows
     );
 

@@ -21,7 +21,7 @@ public class BlockBreak implements Listener {
    * Constructs a BlockBreak object with the specified LocationsData and GeneratorsData.
    *
    * @param locationsData  The LocationsData object containing information about block locations.
-   * @param generatorsData The GeneratorsData object containing information about generators.
+   * @param generatorsData The GeneratorsData object containing information about locations.
    */
   public BlockBreak(LocationsData locationsData, GeneratorsData generatorsData) {
     this.locationsData = locationsData;

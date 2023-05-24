@@ -59,17 +59,19 @@ public class BlockPlace implements Listener {
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
 
-    // Add the generator block location to the data
-    locationsData.addLocation(
-        new LocationsData.GeneratorLocation(
-            event.getPlayer().getUniqueId().toString(),
-            tier,
-            event.getBlock().getX(),
-            event.getBlock().getY(),
-            event.getBlock().getZ(),
-            event.getBlock().getWorld().getName()
-        )
+    LocationsData.GeneratorLocation location = new LocationsData.GeneratorLocation(
+        event.getPlayer().getUniqueId().toString(),
+        tier,
+        event.getBlock().getX(),
+        event.getBlock().getY(),
+        event.getBlock().getZ(),
+        event.getBlock().getWorld().getName()
     );
+
+    // Add the generator block location to the data
+    locationsData.addLocation(location);
+
+    locationsData.getCenter(location);
 
     // Send a notification to the player
     ChatUtil.sendMessage(event.getPlayer(), "&aYou have placed a &eTier " + tier + " &agenerator.");

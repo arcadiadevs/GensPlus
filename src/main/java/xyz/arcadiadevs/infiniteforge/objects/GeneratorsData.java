@@ -3,13 +3,14 @@ package xyz.arcadiadevs.infiniteforge.objects;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.Getter;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * The GeneratorsData class represents the data for generators in InfiniteForge. It contains a list
- * of generators and provides methods to retrieve generator information and calculate upgrade
+ * The GeneratorsData class represents the data for locations in InfiniteForge. It contains a list
+ * of locations and provides methods to retrieve generator information and calculate upgrade
  * prices.
  */
 public record GeneratorsData(@Getter List<Generator> generators) {
