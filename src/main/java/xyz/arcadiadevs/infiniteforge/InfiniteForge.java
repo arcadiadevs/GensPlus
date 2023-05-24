@@ -1,6 +1,9 @@
 package xyz.arcadiadevs.infiniteforge;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.github.unldenis.hologram.HologramPool;
+import com.github.unldenis.hologram.IHologramPool;
+import com.github.unldenis.hologram.placeholder.Placeholders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -45,6 +48,12 @@ public final class InfiniteForge extends JavaPlugin {
    */
   @Getter
   public static InfiniteForge instance;
+
+  @Getter
+  private IHologramPool hologramPool;
+
+  @Getter
+  private Placeholders placeholders;
 
   /**
    * Gets the Gson instance used for JSON serialization/deserialization.
@@ -94,6 +103,8 @@ public final class InfiniteForge extends JavaPlugin {
 
     setupEconomy();
 
+    initHolograms();
+
     if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
       new PlaceHolder().register();
     }
@@ -110,7 +121,8 @@ public final class InfiniteForge extends JavaPlugin {
     events = loadEvents();
 
     // Register events
-    getServer().getPluginManager().registerEvents(new BlockPlace(locationsData), this);
+    getServer().getPluginManager()
+        .registerEvents(new BlockPlace(locationsData, hologramPool, this), this);
     getServer().getPluginManager()
         .registerEvents(new BlockBreak(locationsData, generatorsData), this);
     getServer().getPluginManager()
@@ -120,7 +132,7 @@ public final class InfiniteForge extends JavaPlugin {
     new DataSaveTask(this).runTaskTimerAsynchronously(this, 0, 20);
 
     // Run spawner task every second
-    new SpawnerTask(locationsData.getGenerators(), generatorsData).runTaskTimerAsynchronously(this,
+    new SpawnerTask(locationsData.getLocations(), generatorsData).runTaskTimerAsynchronously(this,
         0, 20);
 
     // Start event loop
@@ -139,6 +151,10 @@ public final class InfiniteForge extends JavaPlugin {
     new DataSaveTask(this).runTask(this);
   }
 
+  private void initHolograms() {
+    hologramPool = new HologramPool(this, 70);
+    placeholders = new Placeholders();
+  }
 
   /**
    * Sets up the economy plugin for handling currency.
