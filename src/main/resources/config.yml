@@ -16,6 +16,11 @@ events:
   time-between-events: "1h"
   event-duration: "2m"
 
+  broadcast:
+    enabled: true
+    event-started: "&a&lEVENT> &7%event% has started!"
+    event-ended: "&a&lEVENT> &7%event% has ended!"
+
   drop-event:
     enabled: true
     name: "Drop Event"

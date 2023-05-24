@@ -2,8 +2,11 @@ package xyz.arcadiadevs.infiniteforge.utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 
 /**
  * The ChatUtil class provides utility methods for handling chat-related operations.
@@ -39,6 +42,17 @@ public class ChatUtil {
    */
   public static void sendMessage(CommandSender sender, String message) {
     sender.sendMessage(translate(message));
+  }
+
+  /**
+   * Sends a translated broadcast message to all online players.
+   *
+   * @param message The message to broadcast.
+   */
+  public static void sendBroadcast(String message, boolean force) {
+    if (force || (InfiniteForge.getInstance().getConfig().getBoolean("events.broadcast.enabled"))) {
+      Bukkit.getServer().broadcastMessage(translate(message));
+    }
   }
 
 }

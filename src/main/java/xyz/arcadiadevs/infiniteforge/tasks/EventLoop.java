@@ -7,6 +7,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.objects.events.Event;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
 /**
@@ -49,8 +50,16 @@ public class EventLoop extends BukkitRunnable {
         System.currentTimeMillis()
             + TimeUtil.parseTimeMillis(plugin.getConfig().getString("events.event-duration")));
 
+    ChatUtil.sendBroadcast(
+        plugin.getConfig().getString("events.broadcast.event-started")
+            .replace("%event%", activeEvent.event().getName()), false);
+
     new BukkitRunnable() {
       public void run() {
+
+        ChatUtil.sendBroadcast(
+            plugin.getConfig().getString("events.broadcast.event-ended")
+                .replace("%event%", activeEvent.event().getName()), false);
 
         activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
             System.currentTimeMillis() + TimeUtil.parseTimeMillis(plugin
