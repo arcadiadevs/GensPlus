@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 
 /**
  * The HologramsData class is responsible for storing hologram data for InfiniteForge.
@@ -43,16 +42,13 @@ public class HologramsData {
   /**
    * Retrieves the hologram data for the specified block.
    *
-   * @param block The block to find the hologram data for.
+   * @param uuid The block to find the hologram data for.
    * @return The HologramsData.Holograms object associated with the block, or null if not found.
    */
   @Nullable
-  public IfHologram getHologramData(Block block) {
+  public IfHologram getHologramData(UUID uuid) {
     return holograms.stream()
-        .filter(h -> h.getX() == block.getX()
-            && h.getY() == block.getY()
-            && h.getZ() == block.getZ()
-            && h.getWorld().equals(block.getWorld().getName()))
+        .filter(b -> b.getUuid().equals(uuid))
         .findFirst()
         .orElse(null);
   }
@@ -72,7 +68,7 @@ public class HologramsData {
     private final int z;
     private final String world;
     private final String itemStack;
-    private Hologram hologram;
+    private transient Hologram hologram;
 
     /**
      * Constructs a Holograms object with the specified name, x, y, z, world, itemStack, and

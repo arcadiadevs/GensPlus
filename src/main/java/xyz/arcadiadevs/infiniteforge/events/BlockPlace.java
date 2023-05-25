@@ -82,25 +82,26 @@ public class BlockPlace implements Listener {
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
 
-    LocationsData.GeneratorLocation location = new LocationsData.GeneratorLocation(
+    LocationsData.GeneratorLocation tempLocation = new LocationsData.GeneratorLocation(
         event.getPlayer().getUniqueId().toString(),
         tier,
         event.getBlock().getX(),
         event.getBlock().getY(),
         event.getBlock().getZ(),
-        event.getBlock().getWorld().getName()
+        event.getBlock().getWorld().getName(),
+        null
     );
 
-    locationsData.addLocation(location);
+    locationsData.addLocation(tempLocation);
 
-    Location centerLocation = locationsData.getCenter(location);
+    Location centerLocation = locationsData.getCenter(tempLocation);
 
     Line line = new Line(instance);
-    TextLine textLine = new TextLine(line, location.getGeneratorObject().name(),
+    TextLine textLine = new TextLine(line, tempLocation.getGeneratorObject().name(),
         instance.getPlaceholders());
 
     Material material = XMaterial.matchXMaterial(
-            location.getGeneratorObject().blockType().getType().toString())
+            tempLocation.getGeneratorObject().blockType().getType().toString())
         .orElseThrow(() -> new RuntimeException("Invalid item stack"))
         .parseItem()
         .getType();
@@ -116,17 +117,30 @@ public class BlockPlace implements Listener {
 
     pool.takeCareOf(hologram);
 
-    hologramsData.addHologramData(
-        new IfHologram(
-            location.getGeneratorObject().name(),
-            event.getBlock().getX(),
-            event.getBlock().getY(),
-            event.getBlock().getZ(),
-            event.getBlock().getWorld().getName(),
-            location.getGeneratorObject().blockType().getType().toString(),
-            hologram
-        )
+    IfHologram ifHologram = new IfHologram(
+        tempLocation.getGeneratorObject().name(),
+        centerLocation.getBlockX(),
+        centerLocation.getBlockY(),
+        centerLocation.getBlockZ(),
+        centerLocation.getWorld().getName(),
+        tempLocation.getGeneratorObject().blockType().getType().toString(),
+        hologram
     );
+
+    hologramsData.addHologramData(ifHologram);
+
+    LocationsData.GeneratorLocation location = new LocationsData.GeneratorLocation(
+        event.getPlayer().getUniqueId().toString(),
+        tier,
+        event.getBlock().getX(),
+        event.getBlock().getY(),
+        event.getBlock().getZ(),
+        event.getBlock().getWorld().getName(),
+        ifHologram.getUuid()
+    );
+
+    locationsData.remove(tempLocation);
+    locationsData.addLocation(location);
 
     // Send a notification to the player
     ChatUtil.sendMessage(event.getPlayer(), "&aYou have placed a &eTier " + tier + " &agenerator.");

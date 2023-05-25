@@ -108,7 +108,7 @@ public final class InfiniteForge extends JavaPlugin {
    * Gets the list of holograms.
    */
   @Getter
-  private HologramsData holograms;
+  private HologramsData hologramsData;
 
   @Override
   public void onEnable() {
@@ -137,13 +137,19 @@ public final class InfiniteForge extends JavaPlugin {
 
     events = loadEvents();
 
-    holograms = loadHolograms();
+    hologramsData = loadHolograms();
 
     // Register events
     getServer().getPluginManager()
-        .registerEvents(new BlockPlace(locationsData, hologramPool, holograms, this), this);
+        .registerEvents(new BlockPlace(locationsData, hologramPool, hologramsData, this), this);
     getServer().getPluginManager()
-        .registerEvents(new BlockBreak(locationsData, generatorsData, holograms), this);
+        .registerEvents(
+            new BlockBreak(
+                locationsData,
+                generatorsData,
+                hologramsData,
+                hologramPool
+            ), this);
     getServer().getPluginManager()
         .registerEvents(new ClickEvent(locationsData, generatorsData), this);
 

@@ -134,7 +134,7 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
    * contains properties such as player ID, generator tier, coordinates, and world.
    */
   public record GeneratorLocation(String playerId, int generator, int x, int y, int z,
-                                  String world) {
+                                  String world, UUID hologramUuid) {
 
     /**
      * Spawns the generator at the location. This method drops the generator items naturally in the
@@ -182,7 +182,7 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
      * @return The GeneratorLocation object representing the next tier generator location.
      */
     public GeneratorLocation getNextTier() {
-      return new GeneratorLocation(playerId, generator + 1, x, y, z, world);
+      return new GeneratorLocation(playerId, generator + 1, x, y, z, world, hologramUuid);
     }
 
     /**
