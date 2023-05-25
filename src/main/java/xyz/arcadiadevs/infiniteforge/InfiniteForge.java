@@ -197,7 +197,7 @@ public final class InfiniteForge extends JavaPlugin {
       }.getType());
 
       for (Holograms hologram : hologramsList) {
-        
+
       }
 
     } catch (IOException e) {
