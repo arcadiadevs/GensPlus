@@ -1,7 +1,9 @@
 package xyz.arcadiadevs.infiniteforge.objects;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -20,7 +22,7 @@ import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
  * a list of generator locations and provides methods to add, remove, and retrieve location
  * information.
  */
-public record LocationsData(@Getter List<GeneratorLocation> generators) {
+public record LocationsData(@Getter List<GeneratorLocation> locations) {
 
   /**
    * Adds a generator location to the list.
@@ -28,7 +30,7 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
    * @param generator The generator location to add.
    */
   public void addLocation(GeneratorLocation generator) {
-    generators.add(generator);
+    locations.add(generator);
   }
 
   /**
@@ -37,7 +39,7 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
    * @param generator The generator location to remove.
    */
   public void remove(GeneratorLocation generator) {
-    generators.remove(generator);
+    locations.remove(generator);
   }
 
   /**
@@ -48,13 +50,83 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
    */
   @Nullable
   public GeneratorLocation getLocationData(Block block) {
-    return generators.stream()
+    return locations.stream()
         .filter(b -> b.x() == block.getX()
             && b.y() == block.getY()
             && b.z() == block.getZ()
             && b.world().equals(block.getWorld().getName()))
         .findFirst()
         .orElse(null);
+  }
+
+  public Location getCenter(GeneratorLocation location) {
+    HashSet<Block> connectedBlocks = new HashSet<>();
+
+    traverseBlocks(location.getBlock(), location.generator(), connectedBlocks, 0);
+
+    double minX = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+    double maxX = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+
+    for (Block block : connectedBlocks) {
+      Location loc = block.getLocation();
+      int x = loc.getBlockX();
+      int z = loc.getBlockZ();
+
+      minX = Math.min(minX, x);
+      minZ = Math.min(minZ, z);
+      maxX = Math.max(maxX, x);
+      maxZ = Math.max(maxZ, z);
+    }
+
+    double centerX = (minX + maxX) / 2;
+    double centerZ = (minZ + maxZ) / 2;
+
+    // I need to block with the highest Y value
+    double centerY = connectedBlocks.stream()
+        .map(Block::getY)
+        .max(Integer::compareTo)
+        .orElse(0);
+
+    // Retrieve the block at the calculated center coordinates
+    return new Location(location.getLocation().getWorld(), centerX + 0.5, centerY + 2,
+        centerZ + 0.5);
+  }
+
+  private void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks, int depth) {
+    if (depth++ > 1000) {
+      System.out.println("Depth is greater than 1000!");
+      return;
+    }
+
+    if (block == null) {
+      return;
+    }
+
+    if (connectedBlocks.contains(block)) {
+      return;
+    }
+
+    System.out.println(
+        "Traversing block at " + block.getX() + ", " + block.getY() + ", " + block.getZ());
+
+    boolean found = locations.stream()
+        .anyMatch(location -> location.generator() == tier
+            && location.getLocation().equals(block.getLocation()));
+
+    if (!found) {
+      return;
+    }
+
+    // Add the block to the set of connected blocks
+    connectedBlocks.add(block);
+
+    // Check adjacent blocks
+    traverseBlocks(block.getRelative(1, 0, 0), tier, connectedBlocks, depth);
+    traverseBlocks(block.getRelative(-1, 0, 0), tier, connectedBlocks, depth);
+    traverseBlocks(block.getRelative(0, 1, 0), tier, connectedBlocks, depth);
+    traverseBlocks(block.getRelative(0, -1, 0), tier, connectedBlocks, depth);
+    traverseBlocks(block.getRelative(0, 0, 1), tier, connectedBlocks, depth);
+    traverseBlocks(block.getRelative(0, 0, -1), tier, connectedBlocks, depth);
   }
 
   /**
@@ -120,6 +192,10 @@ public record LocationsData(@Getter List<GeneratorLocation> generators) {
      */
     public Block getBlock() {
       return Bukkit.getWorld(world).getBlockAt(x, y, z);
+    }
+
+    public Location getLocation() {
+      return new Location(Bukkit.getWorld(world), x, y, z);
     }
 
   }
