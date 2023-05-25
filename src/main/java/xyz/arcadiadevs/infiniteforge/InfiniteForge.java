@@ -1,8 +1,16 @@
 package xyz.arcadiadevs.infiniteforge;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.HologramPool;
 import com.github.unldenis.hologram.IHologramPool;
+import com.github.unldenis.hologram.animation.Animation;
+import com.github.unldenis.hologram.line.ItemLine;
+import com.github.unldenis.hologram.line.Line;
+import com.github.unldenis.hologram.line.TextLine;
+import com.github.unldenis.hologram.line.animated.ItemALine;
+import com.github.unldenis.hologram.line.animated.StandardAnimatedLine;
+import com.github.unldenis.hologram.line.hologram.TextItemStandardLoader;
 import com.github.unldenis.hologram.placeholder.Placeholders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,6 +25,9 @@ import java.util.Map;
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -26,6 +37,8 @@ import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
 import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
 import xyz.arcadiadevs.infiniteforge.events.ClickEvent;
 import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.objects.HologramsData;
+import xyz.arcadiadevs.infiniteforge.objects.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 import xyz.arcadiadevs.infiniteforge.objects.events.DropEvent;
 import xyz.arcadiadevs.infiniteforge.objects.events.Event;
@@ -95,7 +108,7 @@ public final class InfiniteForge extends JavaPlugin {
    * Gets the list of holograms.
    */
   @Getter
-  private List<Holograms> holograms;
+  private HologramsData holograms;
 
   @Override
   public void onEnable() {
@@ -108,8 +121,6 @@ public final class InfiniteForge extends JavaPlugin {
     saveResource("holograms.json", false);
 
     setupEconomy();
-
-    initHolograms();
 
     if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
       new PlaceHolder().register();
@@ -130,9 +141,9 @@ public final class InfiniteForge extends JavaPlugin {
 
     // Register events
     getServer().getPluginManager()
-        .registerEvents(new BlockPlace(locationsData, hologramPool, this), this);
+        .registerEvents(new BlockPlace(locationsData, hologramPool, holograms, this), this);
     getServer().getPluginManager()
-        .registerEvents(new BlockBreak(locationsData, generatorsData), this);
+        .registerEvents(new BlockBreak(locationsData, generatorsData, holograms), this);
     getServer().getPluginManager()
         .registerEvents(new ClickEvent(locationsData, generatorsData), this);
 
@@ -157,11 +168,6 @@ public final class InfiniteForge extends JavaPlugin {
   @Override
   public void onDisable() {
     new DataSaveTask(this).runTask(this);
-  }
-
-  private void initHolograms() {
-    hologramPool = new HologramPool(this, 70);
-    placeholders = new Placeholders();
   }
 
   /**
@@ -207,15 +213,47 @@ public final class InfiniteForge extends JavaPlugin {
     return events;
   }
 
-  private List<Holograms> loadHolograms() {
+  private HologramsData loadHolograms() {
+    hologramPool = new HologramPool(this, 70);
+    placeholders = new Placeholders();
+
     try (FileReader reader = new FileReader(getDataFolder() + "/holograms.json")) {
-      List<Holograms> hologramsList = gson.fromJson(reader, new TypeToken<List<Holograms>>() {
-      }.getType());
+      List<IfHologram> hologramsList = gson.fromJson(reader,
+          new TypeToken<List<IfHologram>>() {
+          }.getType());
 
-      for (Holograms hologram : hologramsList) {
+      for (IfHologram hologramObject : hologramsList) {
+        Line line = new Line(instance);
+        TextLine textLine = new TextLine(line, hologramObject.getName(),
+            instance.getPlaceholders());
 
+        Line line2 = new Line(instance);
+        Material material = XMaterial.matchXMaterial(hologramObject.getItemStack())
+            .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+            .parseItem()
+            .getType();
+
+        ItemLine itemLine = new ItemLine(line2, new ItemStack(material));
+        ItemALine itemAline = new ItemALine(itemLine, new StandardAnimatedLine(line2));
+
+        Location centerLocation = new Location(
+            Bukkit.getWorld(hologramObject.getWorld()),
+            hologramObject.getX(),
+            hologramObject.getY(),
+            hologramObject.getZ()
+        );
+
+        Hologram hologram = new Hologram(instance, centerLocation, new TextItemStandardLoader());
+        hologram.load(textLine, itemAline);
+
+        itemAline.setAnimation(Animation.AnimationType.CIRCLE, hologram);
+
+        hologramPool.takeCareOf(hologram);
+
+        hologramObject.setHologram(hologram);
       }
 
+      return new HologramsData(hologramsList);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.infiniteforge.events;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.IHologramPool;
 import com.github.unldenis.hologram.animation.Animation;
@@ -9,7 +10,6 @@ import com.github.unldenis.hologram.line.TextLine;
 import com.github.unldenis.hologram.line.animated.ItemALine;
 import com.github.unldenis.hologram.line.animated.StandardAnimatedLine;
 import com.github.unldenis.hologram.line.hologram.TextItemStandardLoader;
-import com.github.unldenis.hologram.placeholder.Placeholders;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,8 +18,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
+import xyz.arcadiadevs.infiniteforge.objects.HologramsData;
+import xyz.arcadiadevs.infiniteforge.objects.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
@@ -33,16 +34,20 @@ public class BlockPlace implements Listener {
   private final LocationsData locationsData;
   private final IHologramPool pool;
   private final InfiniteForge instance;
+  private final HologramsData hologramsData;
 
   /**
    * Constructs a BlockPlace object with the specified LocationsData.
    *
    * @param locationsData The LocationsData object containing information about block locations.
    */
-  public BlockPlace(LocationsData locationsData, IHologramPool pool, InfiniteForge instance) {
+  public BlockPlace(LocationsData locationsData, IHologramPool pool, HologramsData hologramsData,
+      InfiniteForge instance
+  ) {
     this.locationsData = locationsData;
     this.pool = pool;
     this.instance = instance;
+    this.hologramsData = hologramsData;
   }
 
   /**
@@ -86,33 +91,42 @@ public class BlockPlace implements Listener {
         event.getBlock().getWorld().getName()
     );
 
-    // Add the generator block location to the data
     locationsData.addLocation(location);
 
     Location centerLocation = locationsData.getCenter(location);
 
-    // create new line structure (armorstand)
     Line line = new Line(instance);
-    // compose an TextLine hologram
-    TextLine textLine = new TextLine(line, "Hiasd", instance.getPlaceholders());
+    TextLine textLine = new TextLine(line, location.getGeneratorObject().name(),
+        instance.getPlaceholders());
 
-    // create new line structure (armorstand)
+    Material material = XMaterial.matchXMaterial(
+            location.getGeneratorObject().blockType().getType().toString())
+        .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+        .parseItem()
+        .getType();
+
     Line line2 = new Line(instance);
-    // compose this second ItemLine hologram
-    ItemLine itemLine = new ItemLine(line2, new ItemStack(Material.GOLD_BLOCK));
-    // compose this second ItemAnimatedLine hologram
+    ItemLine itemLine = new ItemLine(line2, new ItemStack(material));
     ItemALine itemAline = new ItemALine(itemLine, new StandardAnimatedLine(line2));
 
-    // append to hologram that will make all the hard work for you
-    // the TextItemStandardLoader loader will load lines(text or item) one below the other.
     Hologram hologram = new Hologram(instance, centerLocation, new TextItemStandardLoader());
-    // remember to call this method or hologram will not be visible
     hologram.load(textLine, itemAline);
 
-    // start animation
     itemAline.setAnimation(Animation.AnimationType.CIRCLE, hologram);
 
     pool.takeCareOf(hologram);
+
+    hologramsData.addHologramData(
+        new IfHologram(
+            location.getGeneratorObject().name(),
+            event.getBlock().getX(),
+            event.getBlock().getY(),
+            event.getBlock().getZ(),
+            event.getBlock().getWorld().getName(),
+            location.getGeneratorObject().blockType().getType().toString(),
+            hologram
+        )
+    );
 
     // Send a notification to the player
     ChatUtil.sendMessage(event.getPlayer(), "&aYou have placed a &eTier " + tier + " &agenerator.");
