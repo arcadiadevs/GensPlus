@@ -116,6 +116,8 @@ public final class InfiniteForge extends JavaPlugin {
 
     events = loadEvents();
 
+    holograms = loadHolograms();
+
     // Register events
     getServer().getPluginManager().registerEvents(new BlockPlace(locationsData), this);
     getServer().getPluginManager()
@@ -145,7 +147,6 @@ public final class InfiniteForge extends JavaPlugin {
   public void onDisable() {
     new DataSaveTask(this).runTask(this);
   }
-
 
   /**
    * Sets up the economy plugin for handling currency.
@@ -188,6 +189,20 @@ public final class InfiniteForge extends JavaPlugin {
           getConfig().getString("events.speed-event.name")));
     }
     return events;
+  }
+
+  private List<Holograms> loadHolograms() {
+    try (FileReader reader = new FileReader(getDataFolder() + "/holograms.json")) {
+      List<Holograms> hologramsList = gson.fromJson(reader, new TypeToken<List<Holograms>>() {
+      }.getType());
+
+      for (Holograms hologram : hologramsList) {
+        
+      }
+
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**
