@@ -59,13 +59,21 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
         .orElse(null);
   }
 
+  /**
+   * Retrieves the generator location data for the specified block.
+   *
+   * @param location The block to find the generator location for.
+   * @return The GeneratorLocation object associated with the block, or null if not found.
+   */
   public Location getCenter(GeneratorLocation location) {
     HashSet<Block> connectedBlocks = new HashSet<>();
 
     traverseBlocks(location.getBlock(), location.generator(), connectedBlocks, 0);
 
-    double minX = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
-    double maxX = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+    double minX = Integer.MAX_VALUE;
+    double minZ = Integer.MAX_VALUE;
+    double maxX = Integer.MIN_VALUE;
+    double maxZ = Integer.MIN_VALUE;
 
     for (Block block : connectedBlocks) {
       Location loc = block.getLocation();
@@ -92,7 +100,50 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
         centerZ + 0.5);
   }
 
-  private void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks, int depth) {
+  /**
+   * Retrieves the generator location data for the specified block.
+   *
+   * @param connectedBlocks The block to find the generator location for.
+   * @return The GeneratorLocation object associated with the block, or null if not found.
+   */
+  public Location getCenter(Set<Block> connectedBlocks) {
+    double minX = Integer.MAX_VALUE;
+    double minZ = Integer.MAX_VALUE;
+    double maxX = Integer.MIN_VALUE;
+    double maxZ = Integer.MIN_VALUE;
+
+    for (Block block : connectedBlocks) {
+      Location loc = block.getLocation();
+      int x = loc.getBlockX();
+      int z = loc.getBlockZ();
+
+      minX = Math.min(minX, x);
+      minZ = Math.min(minZ, z);
+      maxX = Math.max(maxX, x);
+      maxZ = Math.max(maxZ, z);
+    }
+
+    double centerX = (minX + maxX) / 2;
+    double centerZ = (minZ + maxZ) / 2;
+
+    // Find the block with the highest Y value
+    int highestY = connectedBlocks.stream()
+        .mapToInt(Block::getY)
+        .max()
+        .orElse(0);
+
+    // Retrieve the block at the calculated center coordinates
+    return new Location(connectedBlocks.iterator().next().getWorld(), centerX + 0.5, highestY + 2,
+        centerZ + 0.5);
+  }
+
+
+  /**
+   * Retrieves the generator location data for the specified block.
+   *
+   * @param block The block to find the generator location for.
+   */
+  public void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks, int depth) {
     if (depth++ > 1000) {
       System.out.println("Depth is greater than 1000!");
       return;

@@ -1,6 +1,9 @@
 package xyz.arcadiadevs.infiniteforge.events;
 
 import com.github.unldenis.hologram.IHologramPool;
+import java.util.HashSet;
+import java.util.Set;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -44,16 +47,26 @@ public class BlockBreak implements Listener {
   @EventHandler
   public void onBlockBreak(BlockBreakEvent event) {
     final LocationsData.GeneratorLocation block = locationsData.getLocationData(event.getBlock());
-    final IfHologram holograms = hologramsData.getHologramData(block.hologramUuid());
-
-    GeneratorsData.Generator generator = generatorsData.getGenerator(block.generator());
 
     if (block == null) {
       return;
     }
 
+    final IfHologram holograms = hologramsData.getHologramData(block.hologramUuid());
+    GeneratorsData.Generator generator = generatorsData.getGenerator(block.generator());
+
     // Generate and drop the generator item for the player
     generator.dropItem(event.getPlayer(), event);
+
+    // Check if there are any connected blocks
+    Set<Block> connectedBlocks = new HashSet<>();
+    locationsData.traverseBlocks(event.getBlock(), block.getGeneratorObject().tier(),
+        connectedBlocks, 0);
+
+    if (!connectedBlocks.isEmpty()) {
+
+
+    }
 
     // Remove the block location from the data
     locationsData.remove(block);

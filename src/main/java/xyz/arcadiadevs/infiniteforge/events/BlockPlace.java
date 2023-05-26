@@ -10,9 +10,12 @@ import com.github.unldenis.hologram.line.TextLine;
 import com.github.unldenis.hologram.line.animated.ItemALine;
 import com.github.unldenis.hologram.line.animated.StandardAnimatedLine;
 import com.github.unldenis.hologram.line.hologram.TextItemStandardLoader;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -116,6 +119,24 @@ public class BlockPlace implements Listener {
     itemAline.setAnimation(Animation.AnimationType.CIRCLE, hologram);
 
     pool.takeCareOf(hologram);
+
+    Block placedBlock = event.getBlock();
+    Set<Block> connectedBlocks = new HashSet<>();
+    locationsData.traverseBlocks(placedBlock, tier, connectedBlocks, 0);
+
+    System.out.println(!connectedBlocks.isEmpty());
+
+    if (!connectedBlocks.isEmpty()) {
+      for (Block connectedBlock : connectedBlocks) {
+        LocationsData.GeneratorLocation previousLocation = locationsData
+            .getLocationData(connectedBlock);
+        IfHologram previousHologram = hologramsData.getHologramData(
+            previousLocation.hologramUuid());
+        if (previousHologram != null) {
+          pool.remove(previousHologram.getHologram());
+        }
+      }
+    }
 
     IfHologram ifHologram = new IfHologram(
         tempLocation.getGeneratorObject().name(),
