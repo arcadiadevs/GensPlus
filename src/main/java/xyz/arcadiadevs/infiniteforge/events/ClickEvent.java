@@ -57,7 +57,8 @@ public class ClickEvent implements Listener {
       return;
     }
 
-    GeneratorsData.Generator generator = generatorsData.getGenerator(generatorLocation.generator());
+    GeneratorsData.Generator generator =
+        generatorsData.getGenerator(generatorLocation.getGenerator());
 
     if (generator == null) {
       return;

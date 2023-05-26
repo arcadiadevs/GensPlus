@@ -26,6 +26,7 @@ import xyz.arcadiadevs.infiniteforge.objects.HologramsData;
 import xyz.arcadiadevs.infiniteforge.objects.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 
 /**
  * The BlockPlace class is responsible for handling block place events related to generator blocks
@@ -99,56 +100,48 @@ public class BlockPlace implements Listener {
 
     Location centerLocation = locationsData.getCenter(tempLocation);
 
-    Line line = new Line(instance);
-    TextLine textLine = new TextLine(line, tempLocation.getGeneratorObject().name(),
-        instance.getPlaceholders());
-
-    Material material = XMaterial.matchXMaterial(
-            tempLocation.getGeneratorObject().blockType().getType().toString())
-        .orElseThrow(() -> new RuntimeException("Invalid item stack"))
-        .parseItem()
-        .getType();
-
-    Line line2 = new Line(instance);
-    ItemLine itemLine = new ItemLine(line2, new ItemStack(material));
-    ItemALine itemAline = new ItemALine(itemLine, new StandardAnimatedLine(line2));
-
-    Hologram hologram = new Hologram(instance, centerLocation, new TextItemStandardLoader());
-    hologram.load(textLine, itemAline);
-
-    itemAline.setAnimation(Animation.AnimationType.CIRCLE, hologram);
-
-    pool.takeCareOf(hologram);
-
     Block placedBlock = event.getBlock();
     Set<Block> connectedBlocks = new HashSet<>();
     locationsData.traverseBlocks(placedBlock, tier, connectedBlocks, 0);
 
-    System.out.println(!connectedBlocks.isEmpty());
+    IfHologram ifHologram;
 
-    if (!connectedBlocks.isEmpty()) {
-      for (Block connectedBlock : connectedBlocks) {
-        LocationsData.GeneratorLocation previousLocation = locationsData
-            .getLocationData(connectedBlock);
-        IfHologram previousHologram = hologramsData.getHologramData(
-            previousLocation.hologramUuid());
-        if (previousHologram != null) {
-          pool.remove(previousHologram.getHologram());
-        }
-      }
+    if (connectedBlocks.size() > 1) {
+      Block nearBlock = connectedBlocks.stream().filter(b -> b != placedBlock).findFirst()
+          .orElseThrow(() -> new RuntimeException("No near block found"));
+      LocationsData.GeneratorLocation previousLocation = locationsData
+          .getLocationData(nearBlock);
+      ifHologram = hologramsData.getHologramData(
+          previousLocation.getHologramUuid());
+      ifHologram.getHologram().teleport(centerLocation);
+      ifHologram.setLocation(centerLocation);
+    } else {
+      Material material = XMaterial.matchXMaterial(
+              tempLocation.getGeneratorObject().blockType().getType().toString())
+          .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+          .parseItem()
+          .getType();
+
+      Hologram hologram = HologramsUtil.createHologram(
+          centerLocation,
+          tempLocation.getGeneratorObject().name(),
+          material
+      );
+
+      pool.takeCareOf(hologram);
+
+      ifHologram = new IfHologram(
+          tempLocation.getGeneratorObject().name(),
+          centerLocation.getX(),
+          centerLocation.getY(),
+          centerLocation.getZ(),
+          centerLocation.getWorld().getName(),
+          tempLocation.getGeneratorObject().blockType().getType().toString(),
+          hologram
+      );
+
+      hologramsData.addHologramData(ifHologram);
     }
-
-    IfHologram ifHologram = new IfHologram(
-        tempLocation.getGeneratorObject().name(),
-        centerLocation.getBlockX(),
-        centerLocation.getBlockY(),
-        centerLocation.getBlockZ(),
-        centerLocation.getWorld().getName(),
-        tempLocation.getGeneratorObject().blockType().getType().toString(),
-        hologram
-    );
-
-    hologramsData.addHologramData(ifHologram);
 
     LocationsData.GeneratorLocation location = new LocationsData.GeneratorLocation(
         event.getPlayer().getUniqueId().toString(),

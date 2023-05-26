@@ -1,8 +1,13 @@
 package xyz.arcadiadevs.infiniteforge.events;
 
+import com.cryptomorin.xseries.XMaterial;
+import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.IHologramPool;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +17,7 @@ import xyz.arcadiadevs.infiniteforge.objects.HologramsData;
 import xyz.arcadiadevs.infiniteforge.objects.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 
 /**
  * The BlockBreak class is responsible for handling block break events related to generator blocks
@@ -32,7 +38,7 @@ public class BlockBreak implements Listener {
    * @param generatorsData The GeneratorsData object containing information about generators.
    */
   public BlockBreak(LocationsData locationsData, GeneratorsData generatorsData,
-      HologramsData hologramsData, IHologramPool pool) {
+                    HologramsData hologramsData, IHologramPool pool) {
     this.locationsData = locationsData;
     this.generatorsData = generatorsData;
     this.hologramsData = hologramsData;
@@ -46,14 +52,15 @@ public class BlockBreak implements Listener {
    */
   @EventHandler
   public void onBlockBreak(BlockBreakEvent event) {
-    final LocationsData.GeneratorLocation block = locationsData.getLocationData(event.getBlock());
+    final Block eventBlock = event.getBlock();
+    final LocationsData.GeneratorLocation block = locationsData.getLocationData(eventBlock);
 
     if (block == null) {
       return;
     }
 
-    final IfHologram holograms = hologramsData.getHologramData(block.hologramUuid());
-    GeneratorsData.Generator generator = generatorsData.getGenerator(block.generator());
+    final IfHologram ifHologram = hologramsData.getHologramData(block.getHologramUuid());
+    GeneratorsData.Generator generator = generatorsData.getGenerator(block.getGenerator());
 
     // Generate and drop the generator item for the player
     generator.dropItem(event.getPlayer(), event);
@@ -63,15 +70,74 @@ public class BlockBreak implements Listener {
     locationsData.traverseBlocks(event.getBlock(), block.getGeneratorObject().tier(),
         connectedBlocks, 0);
 
-    if (!connectedBlocks.isEmpty()) {
+    System.out.println(connectedBlocks.size());
 
+    Block nearGenBlock = connectedBlocks.stream()
+        .filter(b -> b != eventBlock)
+        .findFirst()
+        .orElse(null);
 
+    hologramsData.removeHologramData(ifHologram);
+    pool.remove(ifHologram.getHologram());
+
+    if (nearGenBlock != null) {
+
+      connectedBlocks.stream()
+          .map(locationsData::getLocationData)
+          .forEach(location -> location.setHologramUuid(null));
+
+      Location center;
+
+      connectedBlocks.remove(eventBlock);
+
+      for (Block connectedBlock : connectedBlocks) {
+        Set<Block> blocks = new HashSet<>();
+        locationsData.traverseBlocks(connectedBlock, block.getGeneratorObject().tier(), blocks,
+            eventBlock, 0);
+
+        List<LocationsData.GeneratorLocation> generatorLocations = blocks.stream()
+            .map(locationsData::getLocationData)
+            .toList();
+
+        if (!generatorLocations.stream().allMatch(loc -> loc.getHologramUuid() == null)) {
+          System.out.println("Not all blocks are null");
+          continue;
+        }
+
+        center = locationsData.getCenter(connectedBlock.getWorld(), blocks);
+
+        Material material = XMaterial.matchXMaterial(
+                block.getGeneratorObject().blockType().getType().toString())
+            .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+            .parseItem()
+            .getType();
+
+        Hologram hologram = HologramsUtil.createHologram(
+            center,
+            block.getGeneratorObject().name(),
+            material
+        );
+
+        pool.takeCareOf(hologram);
+
+        IfHologram ifHologram1 = new IfHologram(
+            block.getGeneratorObject().name(),
+            center.getX(),
+            center.getY(),
+            center.getZ(),
+            center.getWorld().getName(),
+            block.getGeneratorObject().blockType().getType().toString(),
+            hologram
+        );
+
+        hologramsData.addHologramData(ifHologram1);
+
+        generatorLocations.forEach(loc -> loc.setHologramUuid(ifHologram1.getUuid()));
+      }
     }
 
     // Remove the block location from the data
     locationsData.remove(block);
-    hologramsData.removeHologramData(holograms);
-    pool.remove(holograms.getHologram());
 
     // Send a notification to the player
     ChatUtil.sendMessage(event.getPlayer(), "&aYou have broken a generator block!");

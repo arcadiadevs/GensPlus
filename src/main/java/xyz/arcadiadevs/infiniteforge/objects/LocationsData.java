@@ -5,9 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -51,10 +54,10 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
   @Nullable
   public GeneratorLocation getLocationData(Block block) {
     return locations.stream()
-        .filter(b -> b.x() == block.getX()
-            && b.y() == block.getY()
-            && b.z() == block.getZ()
-            && b.world().equals(block.getWorld().getName()))
+        .filter(b -> b.getX() == block.getX()
+            && b.getY() == block.getY()
+            && b.getZ() == block.getZ()
+            && b.getWorld().equals(block.getWorld().getName()))
         .findFirst()
         .orElse(null);
   }
@@ -68,8 +71,18 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
   public Location getCenter(GeneratorLocation location) {
     HashSet<Block> connectedBlocks = new HashSet<>();
 
-    traverseBlocks(location.getBlock(), location.generator(), connectedBlocks, 0);
+    traverseBlocks(location.getBlock(), location.getGenerator(), connectedBlocks, 0);
 
+    return getCenter(location.getLocation().getWorld(), connectedBlocks);
+  }
+
+  /**
+   * Retrieves the generator location data for the specified block.
+   *
+   * @param connectedBlocks The block to find the generator location for.
+   * @return The GeneratorLocation object associated with the block, or null if not found.
+   */
+  public Location getCenter(World world, Set<Block> connectedBlocks) {
     double minX = Integer.MAX_VALUE;
     double minZ = Integer.MAX_VALUE;
     double maxX = Integer.MIN_VALUE;
@@ -96,54 +109,20 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
         .orElse(0);
 
     // Retrieve the block at the calculated center coordinates
-    return new Location(location.getLocation().getWorld(), centerX + 0.5, centerY + 2,
-        centerZ + 0.5);
+    return new Location(world, centerX + 0.5, centerY + 2, centerZ + 0.5);
   }
 
-  /**
-   * Retrieves the generator location data for the specified block.
-   *
-   * @param connectedBlocks The block to find the generator location for.
-   * @return The GeneratorLocation object associated with the block, or null if not found.
-   */
-  public Location getCenter(Set<Block> connectedBlocks) {
-    double minX = Integer.MAX_VALUE;
-    double minZ = Integer.MAX_VALUE;
-    double maxX = Integer.MIN_VALUE;
-    double maxZ = Integer.MIN_VALUE;
-
-    for (Block block : connectedBlocks) {
-      Location loc = block.getLocation();
-      int x = loc.getBlockX();
-      int z = loc.getBlockZ();
-
-      minX = Math.min(minX, x);
-      minZ = Math.min(minZ, z);
-      maxX = Math.max(maxX, x);
-      maxZ = Math.max(maxZ, z);
-    }
-
-    double centerX = (minX + maxX) / 2;
-    double centerZ = (minZ + maxZ) / 2;
-
-    // Find the block with the highest Y value
-    int highestY = connectedBlocks.stream()
-        .mapToInt(Block::getY)
-        .max()
-        .orElse(0);
-
-    // Retrieve the block at the calculated center coordinates
-    return new Location(connectedBlocks.iterator().next().getWorld(), centerX + 0.5, highestY + 2,
-        centerZ + 0.5);
+  public void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks, int depth) {
+    traverseBlocks(block, tier, connectedBlocks, null, depth);
   }
-
 
   /**
    * Retrieves the generator location data for the specified block.
    *
    * @param block The block to find the generator location for.
    */
-  public void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks, int depth) {
+  public void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks, Block filter,
+                             int depth) {
     if (depth++ > 1000) {
       System.out.println("Depth is greater than 1000!");
       return;
@@ -153,15 +132,17 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
       return;
     }
 
+    if (block.equals(filter)) {
+      System.out.println("Filter match");
+      return;
+    }
+
     if (connectedBlocks.contains(block)) {
       return;
     }
 
-    System.out.println(
-        "Traversing block at " + block.getX() + ", " + block.getY() + ", " + block.getZ());
-
     boolean found = locations.stream()
-        .anyMatch(location -> location.generator() == tier
+        .anyMatch(location -> location.getGenerator() == tier
             && location.getLocation().equals(block.getLocation()));
 
     if (!found) {
@@ -172,20 +153,31 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
     connectedBlocks.add(block);
 
     // Check adjacent blocks
-    traverseBlocks(block.getRelative(1, 0, 0), tier, connectedBlocks, depth);
-    traverseBlocks(block.getRelative(-1, 0, 0), tier, connectedBlocks, depth);
-    traverseBlocks(block.getRelative(0, 1, 0), tier, connectedBlocks, depth);
-    traverseBlocks(block.getRelative(0, -1, 0), tier, connectedBlocks, depth);
-    traverseBlocks(block.getRelative(0, 0, 1), tier, connectedBlocks, depth);
-    traverseBlocks(block.getRelative(0, 0, -1), tier, connectedBlocks, depth);
+    traverseBlocks(block.getRelative(1, 0, 0), tier, connectedBlocks, filter, depth);
+    traverseBlocks(block.getRelative(-1, 0, 0), tier, connectedBlocks, filter, depth);
+    traverseBlocks(block.getRelative(0, 1, 0), tier, connectedBlocks, filter, depth);
+    traverseBlocks(block.getRelative(0, -1, 0), tier, connectedBlocks, filter, depth);
+    traverseBlocks(block.getRelative(0, 0, 1), tier, connectedBlocks,  filter, depth);
+    traverseBlocks(block.getRelative(0, 0, -1), tier, connectedBlocks, filter, depth);
   }
 
   /**
    * The GeneratorLocation record represents the location data for a generator in InfiniteForge. It
    * contains properties such as player ID, generator tier, coordinates, and world.
    */
-  public record GeneratorLocation(String playerId, int generator, int x, int y, int z,
-                                  String world, UUID hologramUuid) {
+  @Getter
+  @AllArgsConstructor
+  public static class GeneratorLocation {
+
+    private final String playerId;
+    private final Integer generator;
+    private final int x;
+    private final int y;
+    private final int z;
+    private final String world;
+
+    @Setter
+    private UUID hologramUuid;
 
     /**
      * Spawns the generator at the location. This method drops the generator items naturally in the

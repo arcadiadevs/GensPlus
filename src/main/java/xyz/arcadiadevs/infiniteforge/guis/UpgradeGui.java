@@ -22,8 +22,8 @@ public class UpgradeGui {
   /**
    * Opens the upgrade GUI for the specified player and generator.
    *
-   * @param player         The Player object for whom the GUI is being opened.
-   * @param generator      The GeneratorLocation representing the generator to be upgraded.
+   * @param player    The Player object for whom the GUI is being opened.
+   * @param generator The GeneratorLocation representing the generator to be upgraded.
    */
   public static void open(Player player, LocationsData.GeneratorLocation generator) {
     final FileConfiguration config = instance.getConfig();
@@ -69,7 +69,8 @@ public class UpgradeGui {
       return;
     }
 
-    double upgradePrice = instance.getGeneratorsData().getUpgradePrice(current, next.generator());
+    double upgradePrice =
+        instance.getGeneratorsData().getUpgradePrice(current, next.getGenerator());
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
       player.sendMessage(ChatUtil.translate("You don't have enough money"));
@@ -83,7 +84,8 @@ public class UpgradeGui {
       return;
     }
 
-    ChatUtil.sendMessage(player, "&aYou have upgraded your generator to level " + next.generator());
+    ChatUtil.sendMessage(player,
+        "&aYou have upgraded your generator to level " + next.getGenerator());
 
     instance.getLocationsData().remove(generator);
     instance.getLocationsData().addLocation(next);

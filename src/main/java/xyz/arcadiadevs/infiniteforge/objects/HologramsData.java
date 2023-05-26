@@ -12,14 +12,7 @@ import org.bukkit.Location;
 /**
  * The HologramsData class is responsible for storing hologram data for InfiniteForge.
  */
-public class HologramsData {
-
-  @Getter
-  private final List<IfHologram> holograms;
-
-  public HologramsData(List<IfHologram> holograms) {
-    this.holograms = holograms;
-  }
+public record HologramsData(@Getter List<IfHologram> holograms) {
 
   /**
    * Adds a hologram data to the list.
@@ -63,10 +56,10 @@ public class HologramsData {
 
     private final UUID uuid;
     private final String name;
-    private final int x;
-    private final int y;
-    private final int z;
-    private final String world;
+    private double x;
+    private double y;
+    private double z;
+    private String world;
     private final String itemStack;
     private transient Hologram hologram;
 
@@ -74,16 +67,16 @@ public class HologramsData {
      * Constructs a Holograms object with the specified name, x, y, z, world, itemStack, and
      * hologram.
      *
-     * @param name The name of the hologram.
-     * @param x The x coordinate of the hologram.
-     * @param y The y coordinate of the hologram.
-     * @param z The z coordinate of the hologram.
-     * @param world The world of the hologram.
+     * @param name      The name of the hologram.
+     * @param x         The x coordinate of the hologram.
+     * @param y         The y coordinate of the hologram.
+     * @param z         The z coordinate of the hologram.
+     * @param world     The world of the hologram.
      * @param itemStack The itemStack of the hologram.
-     * @param hologram The hologram.
+     * @param hologram  The hologram.
      */
-    public IfHologram(String name, int x, int y, int z, String world, String itemStack,
-        Hologram hologram) {
+    public IfHologram(String name, double x, double y, double z, String world, String itemStack,
+                      Hologram hologram) {
       this.uuid = UUID.randomUUID();
       this.name = name;
       this.x = x;
@@ -96,6 +89,13 @@ public class HologramsData {
 
     public Location getLocation() {
       return new Location(Bukkit.getWorld(world), x, y, z);
+    }
+
+    public void setLocation(Location location) {
+      this.setX(location.getX());
+      this.setY(location.getY());
+      this.setZ(location.getZ());
+      this.setWorld(location.getWorld().getName());
     }
 
   }

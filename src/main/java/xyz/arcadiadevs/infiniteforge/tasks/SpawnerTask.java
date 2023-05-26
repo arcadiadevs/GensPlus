@@ -56,7 +56,7 @@ public class SpawnerTask extends BukkitRunnable {
       }
 
       List<LocationsData.GeneratorLocation> blocksToSpawn = blockData.stream()
-          .filter(block -> block.generator() == generator.tier())
+          .filter(block -> block.getGenerator() == generator.tier())
           .toList();
 
       Bukkit.getScheduler().runTask(InfiniteForge.getInstance(), () -> {

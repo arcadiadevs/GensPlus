@@ -45,7 +45,7 @@ public class DataSaveTask extends BukkitRunnable {
 
   private void saveHologramDataToJson() {
     try (FileWriter writer = new FileWriter(instance.getDataFolder() + "/holograms.json")) {
-      instance.getGson().toJson(instance.getHologramsData().getHolograms(), writer);
+      instance.getGson().toJson(instance.getHologramsData().holograms(), writer);
     } catch (IOException e) {
       e.printStackTrace();
     }
