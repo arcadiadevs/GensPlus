@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.infiniteforge.objects.events;
+package xyz.arcadiadevs.infiniteforge.models.events;
 
 /**
  * The DropEvent class represents a drop event in InfiniteForge.

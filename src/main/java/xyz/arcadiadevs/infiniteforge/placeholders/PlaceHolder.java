@@ -3,7 +3,7 @@ package xyz.arcadiadevs.infiniteforge.placeholders;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
-import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
+import xyz.arcadiadevs.infiniteforge.models.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 

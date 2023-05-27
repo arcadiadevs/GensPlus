@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.guis.GeneratorsGui;
-import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.SellUtil;
 

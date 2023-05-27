@@ -3,13 +3,6 @@ package xyz.arcadiadevs.infiniteforge.events;
 import com.cryptomorin.xseries.XMaterial;
 import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.IHologramPool;
-import com.github.unldenis.hologram.animation.Animation;
-import com.github.unldenis.hologram.line.ItemLine;
-import com.github.unldenis.hologram.line.Line;
-import com.github.unldenis.hologram.line.TextLine;
-import com.github.unldenis.hologram.line.animated.ItemALine;
-import com.github.unldenis.hologram.line.animated.StandardAnimatedLine;
-import com.github.unldenis.hologram.line.hologram.TextItemStandardLoader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,10 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.arcadiadevs.infiniteforge.InfiniteForge;
-import xyz.arcadiadevs.infiniteforge.objects.HologramsData;
-import xyz.arcadiadevs.infiniteforge.objects.HologramsData.IfHologram;
-import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.models.HologramsData;
+import xyz.arcadiadevs.infiniteforge.models.HologramsData.IfHologram;
+import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 
@@ -37,7 +29,6 @@ public class BlockPlace implements Listener {
 
   private final LocationsData locationsData;
   private final IHologramPool pool;
-  private final InfiniteForge instance;
   private final HologramsData hologramsData;
 
   /**
@@ -45,12 +36,9 @@ public class BlockPlace implements Listener {
    *
    * @param locationsData The LocationsData object containing information about block locations.
    */
-  public BlockPlace(LocationsData locationsData, IHologramPool pool, HologramsData hologramsData,
-      InfiniteForge instance
-  ) {
+  public BlockPlace(LocationsData locationsData, IHologramPool pool, HologramsData hologramsData) {
     this.locationsData = locationsData;
     this.pool = pool;
-    this.instance = instance;
     this.hologramsData = hologramsData;
   }
 
@@ -98,49 +86,91 @@ public class BlockPlace implements Listener {
 
     locationsData.addLocation(tempLocation);
 
-    Location centerLocation = locationsData.getCenter(tempLocation);
+    IfHologram ifHologram = null;
 
-    Block placedBlock = event.getBlock();
-    Set<Block> connectedBlocks = new HashSet<>();
-    locationsData.traverseBlocks(placedBlock, tier, connectedBlocks, 0);
+    if (pool != null) {
+      Location centerLocation = locationsData.getCenter(tempLocation);
 
-    IfHologram ifHologram;
+      Block placedBlock = event.getBlock();
+      Set<Block> connectedBlocks = new HashSet<>();
+      locationsData.traverseBlocks(placedBlock, tier, connectedBlocks, 0);
 
-    if (connectedBlocks.size() > 1) {
-      Block nearBlock = connectedBlocks.stream().filter(b -> b != placedBlock).findFirst()
-          .orElseThrow(() -> new RuntimeException("No near block found"));
-      LocationsData.GeneratorLocation previousLocation = locationsData
-          .getLocationData(nearBlock);
-      ifHologram = hologramsData.getHologramData(
-          previousLocation.getHologramUuid());
-      ifHologram.getHologram().teleport(centerLocation);
-      ifHologram.setLocation(centerLocation);
-    } else {
-      Material material = XMaterial.matchXMaterial(
-              tempLocation.getGeneratorObject().blockType().getType().toString())
-          .orElseThrow(() -> new RuntimeException("Invalid item stack"))
-          .parseItem()
-          .getType();
+      List<LocationsData.GeneratorLocation> connectedObjects = connectedBlocks.stream()
+          .map(locationsData::getLocationData)
+          .toList();
 
-      Hologram hologram = HologramsUtil.createHologram(
-          centerLocation,
-          tempLocation.getGeneratorObject().name(),
-          material
-      );
+      if (connectedBlocks.size() > 1) {
+        connectedBlocks.remove(placedBlock);
 
-      pool.takeCareOf(hologram);
+        connectedObjects
+            .forEach(location -> {
+              IfHologram ifHologram1 = hologramsData.getHologramData(location.getHologramUuid());
 
-      ifHologram = new IfHologram(
-          tempLocation.getGeneratorObject().name(),
-          centerLocation.getX(),
-          centerLocation.getY(),
-          centerLocation.getZ(),
-          centerLocation.getWorld().getName(),
-          tempLocation.getGeneratorObject().blockType().getType().toString(),
-          hologram
-      );
+              if (ifHologram1 == null) {
+                return;
+              }
 
-      hologramsData.addHologramData(ifHologram);
+              pool.remove(ifHologram1.getHologram());
+              location.setHologramUuid(null);
+              hologramsData.removeHologramData(ifHologram1);
+            });
+
+        Material material = XMaterial.matchXMaterial(
+                tempLocation.getGeneratorObject().blockType().getType().toString())
+            .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+            .parseItem()
+            .getType();
+
+        Hologram hologram = HologramsUtil.createHologram(
+            centerLocation,
+            tempLocation.getGeneratorObject().name(),
+            material
+        );
+
+        pool.takeCareOf(hologram);
+
+        ifHologram = new IfHologram(
+            tempLocation.getGeneratorObject().name(),
+            centerLocation.getX(),
+            centerLocation.getY(),
+            centerLocation.getZ(),
+            centerLocation.getWorld().getName(),
+            tempLocation.getGeneratorObject().blockType().getType().toString(),
+            hologram
+        );
+
+        hologramsData.addHologramData(ifHologram);
+      } else {
+        Material material = XMaterial.matchXMaterial(
+                tempLocation.getGeneratorObject().blockType().getType().toString())
+            .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+            .parseItem()
+            .getType();
+
+        Hologram hologram = HologramsUtil.createHologram(
+            centerLocation,
+            tempLocation.getGeneratorObject().name(),
+            material
+        );
+
+        pool.takeCareOf(hologram);
+
+        ifHologram = new IfHologram(
+            tempLocation.getGeneratorObject().name(),
+            centerLocation.getX(),
+            centerLocation.getY(),
+            centerLocation.getZ(),
+            centerLocation.getWorld().getName(),
+            tempLocation.getGeneratorObject().blockType().getType().toString(),
+            hologram
+        );
+
+        hologramsData.addHologramData(ifHologram);
+      }
+
+      for (LocationsData.GeneratorLocation location : connectedObjects) {
+        location.setHologramUuid(ifHologram.getUuid());
+      }
     }
 
     LocationsData.GeneratorLocation location = new LocationsData.GeneratorLocation(
@@ -150,7 +180,7 @@ public class BlockPlace implements Listener {
         event.getBlock().getY(),
         event.getBlock().getZ(),
         event.getBlock().getWorld().getName(),
-        ifHologram.getUuid()
+        ifHologram == null ? null : ifHologram.getUuid()
     );
 
     locationsData.remove(tempLocation);

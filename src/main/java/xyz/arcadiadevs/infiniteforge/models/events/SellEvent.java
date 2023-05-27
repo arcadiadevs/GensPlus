@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.infiniteforge.objects.events;
+package xyz.arcadiadevs.infiniteforge.models.events;
 
 /**
  * The SellEvent class represents a sell event in InfiniteForge. It is a specific type of event

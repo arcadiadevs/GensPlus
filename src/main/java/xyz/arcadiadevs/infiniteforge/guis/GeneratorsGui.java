@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
-import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
 /**
@@ -22,6 +22,7 @@ public class GeneratorsGui {
    *
    * @param player The Player object for whom the GUI is being opened.
    */
+  @SuppressWarnings("unchecked")
   public static void open(Player player) {
     final var instance = InfiniteForge.getInstance();
     final var config = instance.getConfig();

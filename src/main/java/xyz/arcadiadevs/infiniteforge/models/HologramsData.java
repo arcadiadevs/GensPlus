@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.infiniteforge.objects;
+package xyz.arcadiadevs.infiniteforge.models;
 
 import com.github.unldenis.hologram.Hologram;
 import java.util.List;
@@ -90,14 +90,6 @@ public record HologramsData(@Getter List<IfHologram> holograms) {
     public Location getLocation() {
       return new Location(Bukkit.getWorld(world), x, y, z);
     }
-
-    public void setLocation(Location location) {
-      this.setX(location.getX());
-      this.setY(location.getY());
-      this.setZ(location.getZ());
-      this.setWorld(location.getWorld().getName());
-    }
-
   }
 
 }

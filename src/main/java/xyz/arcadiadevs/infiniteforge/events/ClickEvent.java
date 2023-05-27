@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import xyz.arcadiadevs.infiniteforge.guis.UpgradeGui;
-import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
-import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 
 /**
  * The ClickEvent class is responsible for handling player click events related to generator blocks

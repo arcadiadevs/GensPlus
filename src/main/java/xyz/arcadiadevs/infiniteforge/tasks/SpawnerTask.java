@@ -5,10 +5,10 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
-import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
-import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
-import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
-import xyz.arcadiadevs.infiniteforge.objects.events.SpeedEvent;
+import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.models.LocationsData;
+import xyz.arcadiadevs.infiniteforge.models.events.ActiveEvent;
+import xyz.arcadiadevs.infiniteforge.models.events.SpeedEvent;
 
 /**
  * The SpawnerTask class is a BukkitRunnable task responsible for spawning items from generators at

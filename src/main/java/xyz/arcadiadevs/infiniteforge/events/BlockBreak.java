@@ -12,10 +12,10 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
-import xyz.arcadiadevs.infiniteforge.objects.HologramsData;
-import xyz.arcadiadevs.infiniteforge.objects.HologramsData.IfHologram;
-import xyz.arcadiadevs.infiniteforge.objects.LocationsData;
+import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.models.HologramsData;
+import xyz.arcadiadevs.infiniteforge.models.HologramsData.IfHologram;
+import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 
@@ -58,81 +58,80 @@ public class BlockBreak implements Listener {
     if (block == null) {
       return;
     }
-
-    final IfHologram ifHologram = hologramsData.getHologramData(block.getHologramUuid());
     GeneratorsData.Generator generator = generatorsData.getGenerator(block.getGenerator());
 
     // Generate and drop the generator item for the player
     generator.dropItem(event.getPlayer(), event);
 
-    // Check if there are any connected blocks
-    Set<Block> connectedBlocks = new HashSet<>();
-    locationsData.traverseBlocks(event.getBlock(), block.getGeneratorObject().tier(),
-        connectedBlocks, 0);
+    if (pool != null) {
+      final IfHologram ifHologram = hologramsData.getHologramData(block.getHologramUuid());
 
-    System.out.println(connectedBlocks.size());
+      // Check if there are any connected blocks
+      Set<Block> connectedBlocks = new HashSet<>();
+      locationsData.traverseBlocks(event.getBlock(), block.getGeneratorObject().tier(),
+          connectedBlocks, 0);
 
-    Block nearGenBlock = connectedBlocks.stream()
-        .filter(b -> b != eventBlock)
-        .findFirst()
-        .orElse(null);
+      Block nearGenBlock = connectedBlocks.stream()
+          .filter(b -> b != eventBlock)
+          .findFirst()
+          .orElse(null);
 
-    hologramsData.removeHologramData(ifHologram);
-    pool.remove(ifHologram.getHologram());
+      hologramsData.removeHologramData(ifHologram);
+      pool.remove(ifHologram.getHologram());
 
-    if (nearGenBlock != null) {
+      if (nearGenBlock != null) {
 
-      connectedBlocks.stream()
-          .map(locationsData::getLocationData)
-          .forEach(location -> location.setHologramUuid(null));
-
-      Location center;
-
-      connectedBlocks.remove(eventBlock);
-
-      for (Block connectedBlock : connectedBlocks) {
-        Set<Block> blocks = new HashSet<>();
-        locationsData.traverseBlocks(connectedBlock, block.getGeneratorObject().tier(), blocks,
-            eventBlock, 0);
-
-        List<LocationsData.GeneratorLocation> generatorLocations = blocks.stream()
+        connectedBlocks.stream()
             .map(locationsData::getLocationData)
-            .toList();
+            .forEach(location -> location.setHologramUuid(null));
 
-        if (!generatorLocations.stream().allMatch(loc -> loc.getHologramUuid() == null)) {
-          System.out.println("Not all blocks are null");
-          continue;
+        Location center;
+
+        connectedBlocks.remove(eventBlock);
+
+        for (Block connectedBlock : connectedBlocks) {
+          Set<Block> blocks = new HashSet<>();
+          locationsData.traverseBlocks(connectedBlock, block.getGeneratorObject().tier(), blocks,
+              eventBlock, 0);
+
+          List<LocationsData.GeneratorLocation> generatorLocations = blocks.stream()
+              .map(locationsData::getLocationData)
+              .toList();
+
+          if (!generatorLocations.stream().allMatch(loc -> loc.getHologramUuid() == null)) {
+            continue;
+          }
+
+          center = locationsData.getCenter(connectedBlock.getWorld(), blocks);
+
+          Material material = XMaterial.matchXMaterial(
+                  block.getGeneratorObject().blockType().getType().toString())
+              .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+              .parseItem()
+              .getType();
+
+          Hologram hologram = HologramsUtil.createHologram(
+              center,
+              block.getGeneratorObject().name(),
+              material
+          );
+
+          pool.takeCareOf(hologram);
+
+          IfHologram ifHologram1 = new IfHologram(
+              block.getGeneratorObject().name(),
+              center.getX(),
+              center.getY(),
+              center.getZ(),
+              center.getWorld().getName(),
+              block.getGeneratorObject().blockType().getType().toString(),
+              hologram
+          );
+
+          hologramsData.addHologramData(ifHologram1);
+
+          generatorLocations.forEach(loc -> loc.setHologramUuid(ifHologram1.getUuid()));
         }
-
-        center = locationsData.getCenter(connectedBlock.getWorld(), blocks);
-
-        Material material = XMaterial.matchXMaterial(
-                block.getGeneratorObject().blockType().getType().toString())
-            .orElseThrow(() -> new RuntimeException("Invalid item stack"))
-            .parseItem()
-            .getType();
-
-        Hologram hologram = HologramsUtil.createHologram(
-            center,
-            block.getGeneratorObject().name(),
-            material
-        );
-
-        pool.takeCareOf(hologram);
-
-        IfHologram ifHologram1 = new IfHologram(
-            block.getGeneratorObject().name(),
-            center.getX(),
-            center.getY(),
-            center.getZ(),
-            center.getWorld().getName(),
-            block.getGeneratorObject().blockType().getType().toString(),
-            hologram
-        );
-
-        hologramsData.addHologramData(ifHologram1);
-
-        generatorLocations.forEach(loc -> loc.setHologramUuid(ifHologram1.getUuid()));
       }
     }
 

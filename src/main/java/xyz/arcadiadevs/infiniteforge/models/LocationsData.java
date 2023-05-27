@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.infiniteforge.objects;
+package xyz.arcadiadevs.infiniteforge.models;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
-import xyz.arcadiadevs.infiniteforge.objects.events.DropEvent;
+import xyz.arcadiadevs.infiniteforge.models.events.DropEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
@@ -112,6 +112,10 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
     return new Location(world, centerX + 0.5, centerY + 2, centerZ + 0.5);
   }
 
+  public void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks) {
+    traverseBlocks(block, tier, connectedBlocks, null, 0);
+  }
+
   public void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks, int depth) {
     traverseBlocks(block, tier, connectedBlocks, null, depth);
   }
@@ -157,7 +161,7 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
     traverseBlocks(block.getRelative(-1, 0, 0), tier, connectedBlocks, filter, depth);
     traverseBlocks(block.getRelative(0, 1, 0), tier, connectedBlocks, filter, depth);
     traverseBlocks(block.getRelative(0, -1, 0), tier, connectedBlocks, filter, depth);
-    traverseBlocks(block.getRelative(0, 0, 1), tier, connectedBlocks,  filter, depth);
+    traverseBlocks(block.getRelative(0, 0, 1), tier, connectedBlocks, filter, depth);
     traverseBlocks(block.getRelative(0, 0, -1), tier, connectedBlocks, filter, depth);
   }
 
@@ -165,6 +169,7 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
    * The GeneratorLocation record represents the location data for a generator in InfiniteForge. It
    * contains properties such as player ID, generator tier, coordinates, and world.
    */
+  @SuppressWarnings("checkstyle:MemberName")
   @Getter
   @AllArgsConstructor
   public static class GeneratorLocation {
@@ -184,7 +189,10 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
      * world and removes them after a certain time.
      */
     public void spawn() {
-      Location location = new Location(Bukkit.getWorld(world), x, y, z);
+      HologramsData.IfHologram hologram = getHologram();
+
+      Location location = hologram == null ? getLocation() : hologram.getLocation();
+
       Player player = Bukkit.getPlayer(UUID.fromString(playerId));
 
       if (player == null) {
@@ -214,9 +222,39 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
      * Retrieves the generator object associated with this location.
      *
      * @return The Generator object corresponding to the generator tier.
+     * @throws NullPointerException If the generator is not found.
      */
     public GeneratorsData.Generator getGeneratorObject() {
-      return InfiniteForge.getInstance().getGeneratorsData().getGenerator(generator);
+      GeneratorsData.Generator generatorObject = InfiniteForge.getInstance()
+          .getGeneratorsData()
+          .getGenerator(generator);
+
+      if (generatorObject == null) {
+        throw new NullPointerException("Generator not found");
+      }
+
+      return generatorObject;
+    }
+
+    /**
+     * Retrieves the hologram associated with this location.
+     *
+     * @return The IfHologram object corresponding to the hologram UUID.
+     * @throws NullPointerException If the hologram is not found.
+     */
+    public HologramsData.IfHologram getHologram() {
+      if (InfiniteForge.getInstance().getHologramPool() == null) {
+        return null;
+      }
+
+      HologramsData.IfHologram hologram =
+          InfiniteForge.getInstance().getHologramsData().getHologramData(hologramUuid);
+
+      if (hologram == null) {
+        throw new NullPointerException("Hologram not found");
+      }
+
+      return hologram;
     }
 
     /**
@@ -237,6 +275,11 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
       return Bukkit.getWorld(world).getBlockAt(x, y, z);
     }
 
+    /**
+     * Retrieves the location of the generator.
+     *
+     * @return The Location object representing the generator location.
+     */
     public Location getLocation() {
       return new Location(Bukkit.getWorld(world), x, y, z);
     }

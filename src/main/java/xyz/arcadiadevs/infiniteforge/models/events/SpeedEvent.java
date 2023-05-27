@@ -1,8 +1,8 @@
-package xyz.arcadiadevs.infiniteforge.objects.events;
+package xyz.arcadiadevs.infiniteforge.models.events;
 
 /**
- * The SpeedEvent class represents a speed event in InfiniteForge.
- * It is a specific type of event where players can enhance the speed of certain actions with a multiplier.
+ * The SpeedEvent class represents a speed event in InfiniteForge. It is a specific type of
+ * event where players can enhance the speed of certain actions with a multiplier.
  */
 public class SpeedEvent extends Event {
 

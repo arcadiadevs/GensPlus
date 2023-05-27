@@ -11,6 +11,9 @@ generators-gui:
   title: "Generators"
   rows: 5
 
+holograms:
+  view-distance: 300
+
 events:
 
   time-between-events: "1h"

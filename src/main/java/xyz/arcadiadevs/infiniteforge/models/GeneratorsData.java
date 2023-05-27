@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.infiniteforge.objects;
+package xyz.arcadiadevs.infiniteforge.models;
 
 import java.util.List;
 import java.util.NoSuchElementException;

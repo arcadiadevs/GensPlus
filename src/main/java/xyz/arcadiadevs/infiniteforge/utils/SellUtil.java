@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
-import xyz.arcadiadevs.infiniteforge.objects.GeneratorsData;
-import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
-import xyz.arcadiadevs.infiniteforge.objects.events.SellEvent;
+import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.models.events.ActiveEvent;
+import xyz.arcadiadevs.infiniteforge.models.events.SellEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 
 /**

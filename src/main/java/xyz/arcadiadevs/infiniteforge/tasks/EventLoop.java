@@ -5,8 +5,8 @@ import java.util.Random;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.arcadiadevs.infiniteforge.objects.events.ActiveEvent;
-import xyz.arcadiadevs.infiniteforge.objects.events.Event;
+import xyz.arcadiadevs.infiniteforge.models.events.ActiveEvent;
+import xyz.arcadiadevs.infiniteforge.models.events.Event;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
