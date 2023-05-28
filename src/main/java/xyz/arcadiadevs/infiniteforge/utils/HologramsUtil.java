@@ -21,8 +21,19 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 
+/**
+ * The HologramsUtil class is responsible for handling hologram-related tasks in InfiniteForge.
+ */
 public class HologramsUtil {
 
+  /**
+   * Creates a hologram at the specified location with the specified text.
+   *
+   * @param location The location of the hologram.
+   * @param text The text of the hologram.
+   * @param material The material of the hologram.
+   * @return The hologram created.
+   */
   public static Hologram createHologram(Location location, String text, Material material) {
     Line line = new Line(InfiniteForge.getInstance());
     TextLine textLine = new TextLine(line, text, InfiniteForge.instance.getPlaceholders());
@@ -40,20 +51,20 @@ public class HologramsUtil {
     return hologram;
   }
 
+  /**
+   * Fixes the connections between generators.
+   *
+   * @param location The location of the generator block.
+   */
   public static void fixConnections(LocationsData.GeneratorLocation location) {
-    System.out.println("======================================================================");
-    System.out.println("PROCESSING: " + location.getLocation());
-    System.out.println("BLOCK: " + location.getBlock().getType().name());
-    System.out.println("GENERATOR: " + location.getGenerator());
+    final InfiniteForge instance = InfiniteForge.getInstance();
+    final LocationsData locationsData = instance.getLocationsData();
+    final HologramsData hologramsData = instance.getHologramsData();
+    final IHologramPool hologramPool = instance.getHologramPool();
 
-    InfiniteForge instance = InfiniteForge.getInstance();
-    LocationsData locationsData = instance.getLocationsData();
-    HologramsData hologramsData = instance.getHologramsData();
-    IHologramPool hologramPool = instance.getHologramPool();
-
-    Set<Block> connectedBlocks = new HashSet<>();
+    final Set<Block> connectedBlocks = new HashSet<>();
     locationsData.traverseBlocks(location.getBlock(), location.getGenerator(), connectedBlocks);
-    List<LocationsData.GeneratorLocation> connectedLocations = connectedBlocks.stream()
+    final List<LocationsData.GeneratorLocation> connectedLocations = connectedBlocks.stream()
         .map(locationsData::getLocationData)
         .toList();
 
@@ -92,12 +103,12 @@ public class HologramsUtil {
 
   }
 
+  /**
+   * Unlinks all holograms connected to the given location.
+   *
+   * @param location the location to unlink
+   */
   public static void unlinkHolograms(LocationsData.GeneratorLocation location) {
-    System.out.println("======================================================================");
-    System.out.println("UNLINKING: " + location.getLocation());
-    System.out.println("BLOCK: " + location.getBlock().getType().name());
-    System.out.println("GENERATOR: " + location.getGenerator());
-
     InfiniteForge instance = InfiniteForge.getInstance();
     LocationsData locationsData = instance.getLocationsData();
     HologramsData hologramsData = instance.getHologramsData();
@@ -108,8 +119,6 @@ public class HologramsUtil {
     List<LocationsData.GeneratorLocation> connectedLocations = connectedBlocks.stream()
         .map(locationsData::getLocationData)
         .toList();
-
-    System.out.println("CONNECTED BLOCKS: " + connectedBlocks);
 
     connectedLocations.forEach(loc -> {
       HologramsData.IfHologram ifHologram = hologramsData.getHologramData(loc.getHologramUuid());

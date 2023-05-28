@@ -82,7 +82,8 @@ public class TimeUtil {
   }
 
   /**
-   * Converts the specified number of milliseconds into a formatted time string in the format "HH:MM:SS".
+   * Converts the specified number of milliseconds into a formatted time string in the
+   * format "HH:MM:SS".
    *
    * @param millis The number of milliseconds to convert.
    * @return The formatted time string.

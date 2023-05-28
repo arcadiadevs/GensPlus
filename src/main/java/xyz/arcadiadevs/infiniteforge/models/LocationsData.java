@@ -206,7 +206,7 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
 
       for (int i = 0; i < itemsToDrop; i++) {
         Item item = location.getWorld().dropItemNaturally(
-            location.clone().add(0.5, 1, 0.5),
+            location.clone().add(0, 1, 0),
             getGeneratorObject().spawnItem()
         );
         items.add(item);
