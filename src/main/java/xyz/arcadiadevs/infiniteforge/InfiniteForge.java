@@ -4,13 +4,6 @@ import com.cryptomorin.xseries.XMaterial;
 import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.HologramPool;
 import com.github.unldenis.hologram.IHologramPool;
-import com.github.unldenis.hologram.animation.Animation;
-import com.github.unldenis.hologram.line.ItemLine;
-import com.github.unldenis.hologram.line.Line;
-import com.github.unldenis.hologram.line.TextLine;
-import com.github.unldenis.hologram.line.animated.ItemALine;
-import com.github.unldenis.hologram.line.animated.StandardAnimatedLine;
-import com.github.unldenis.hologram.line.hologram.TextItemStandardLoader;
 import com.github.unldenis.hologram.placeholder.Placeholders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -284,30 +277,12 @@ public final class InfiniteForge extends JavaPlugin {
           }.getType());
 
       for (IfHologram hologramObject : hologramsList) {
-        Line line = new Line(instance);
-        TextLine textLine = new TextLine(line, hologramObject.getName(),
-            instance.getPlaceholders());
 
-        Line line2 = new Line(instance);
-        Material material = XMaterial.matchXMaterial(hologramObject.getItemStack())
-            .orElseThrow(() -> new RuntimeException("Invalid item stack"))
-            .parseItem()
-            .getType();
-
-        ItemLine itemLine = new ItemLine(line2, new ItemStack(material));
-        ItemALine itemAline = new ItemALine(itemLine, new StandardAnimatedLine(line2));
-
-        Location centerLocation = new Location(
-            Bukkit.getWorld(hologramObject.getWorld()),
-            hologramObject.getX(),
-            hologramObject.getY(),
-            hologramObject.getZ()
+        final Hologram hologram = HologramsUtil.createHologram(
+            hologramObject.getLocation(),
+            hologramObject.getDescription(),
+            Material.matchMaterial(hologramObject.getItemStack())
         );
-
-        Hologram hologram = new Hologram(instance, centerLocation, new TextItemStandardLoader());
-        hologram.load(textLine, itemAline);
-
-        itemAline.setAnimation(Animation.AnimationType.CIRCLE, hologram);
 
         hologramPool.takeCareOf(hologram);
 
@@ -338,9 +313,19 @@ public final class InfiniteForge extends JavaPlugin {
             .parseItem()
             .getType();
 
+        List<String> lines = instance.getConfig().getStringList("holograms.lines")
+            .stream()
+            .map(line -> line.replace("%name%", generator.name()))
+            .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))
+            .map(line -> line.replace("%speed%", String.valueOf(generator.speed())))
+            .map(line -> line.replace("%spawnItem%", generator.spawnItem().getType().toString()))
+            .map(line -> line.replace("%sellprice%", String.valueOf(generator.sellPrice())))
+            .map(ChatUtil::translate)
+            .toList();
+
         Hologram hologram = HologramsUtil.createHologram(
             centerLocation,
-            generator.name(),
+            lines,
             material
         );
 
@@ -348,6 +333,7 @@ public final class InfiniteForge extends JavaPlugin {
 
         IfHologram ifHologram = new IfHologram(
             generator.name(),
+            lines,
             centerLocation.getX(),
             centerLocation.getY(),
             centerLocation.getZ(),
@@ -372,7 +358,6 @@ public final class InfiniteForge extends JavaPlugin {
    * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
    *                          encountered.
    */
-  @SuppressWarnings("unchecked")
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
     List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");

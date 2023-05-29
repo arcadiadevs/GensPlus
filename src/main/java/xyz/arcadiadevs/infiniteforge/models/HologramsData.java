@@ -56,6 +56,7 @@ public record HologramsData(@Getter List<IfHologram> holograms) {
 
     private final UUID uuid;
     private final String name;
+    private final List<String> description;
     private double x;
     private double y;
     private double z;
@@ -75,10 +76,12 @@ public record HologramsData(@Getter List<IfHologram> holograms) {
      * @param itemStack The itemStack of the hologram.
      * @param hologram  The hologram.
      */
-    public IfHologram(String name, double x, double y, double z, String world, String itemStack,
-                      Hologram hologram) {
+    public IfHologram(String name, List<String> description, double x, double y, double z,
+        String world, String itemStack,
+        Hologram hologram) {
       this.uuid = UUID.randomUUID();
       this.name = name;
+      this.description = description;
       this.x = x;
       this.y = y;
       this.z = z;

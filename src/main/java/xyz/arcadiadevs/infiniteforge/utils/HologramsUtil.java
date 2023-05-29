@@ -10,6 +10,8 @@ import com.github.unldenis.hologram.line.TextLine;
 import com.github.unldenis.hologram.line.animated.ItemALine;
 import com.github.unldenis.hologram.line.animated.StandardAnimatedLine;
 import com.github.unldenis.hologram.line.hologram.TextItemStandardLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,26 +32,34 @@ public class HologramsUtil {
    * Creates a hologram at the specified location with the specified text.
    *
    * @param location The location of the hologram.
-   * @param text The text of the hologram.
+   * @param text     The text of the hologram.
    * @param material The material of the hologram.
    * @return The hologram created.
    */
-  public static Hologram createHologram(Location location, String text, Material material) {
+  public static Hologram createHologram(Location location, List<String> text, Material material) {
+    Hologram hologram = new Hologram(InfiniteForge.getInstance(), location,
+        new TextItemStandardLoader());
+
+    List<TextLine> textLines = new ArrayList<>();
+    for (String lineText : text) {
+      Line line1 = new Line(InfiniteForge.getInstance());
+      TextLine textLine = new TextLine(line1, lineText,
+          InfiniteForge.getInstance().getPlaceholders());
+      textLines.add(textLine);
+    }
+
     Line line = new Line(InfiniteForge.getInstance());
-    TextLine textLine = new TextLine(line, text, InfiniteForge.instance.getPlaceholders());
-
-    Line line2 = new Line(InfiniteForge.getInstance());
-    ItemLine itemLine = new ItemLine(line2, new ItemStack(material));
-    ItemALine itemAline = new ItemALine(itemLine, new StandardAnimatedLine(line2));
-
-    Hologram hologram =
-        new Hologram(InfiniteForge.getInstance(), location, new TextItemStandardLoader());
-    hologram.load(textLine, itemAline);
+    ItemLine itemLine = new ItemLine(line, new ItemStack(material));
+    ItemALine itemAline = new ItemALine(itemLine, new StandardAnimatedLine(line));
 
     itemAline.setAnimation(Animation.AnimationType.CIRCLE, hologram);
 
+    hologram.load(textLines.get(0), textLines.get(1), textLines.get(2), textLines.get(3),
+        itemAline);
+
     return hologram;
   }
+
 
   /**
    * Fixes the connections between generators.
@@ -79,9 +89,24 @@ public class HologramsUtil {
         .parseItem()
         .getType();
 
+    List<String> lines = InfiniteForge.getInstance().getConfig()
+        .getStringList("holograms.lines")
+        .stream()
+        .map(line -> line.replace("%name%", location.getGeneratorObject().name()))
+        .map(line -> line.replace("%tier%",
+            String.valueOf(location.getGeneratorObject().tier())))
+        .map(line -> line.replace("%speed%",
+            String.valueOf(location.getGeneratorObject().speed())))
+        .map(line -> line.replace("%spawnItem%",
+            location.getGeneratorObject().spawnItem().getType().toString()))
+        .map(line -> line.replace("%sellprice%",
+            String.valueOf(location.getGeneratorObject().sellPrice())))
+        .map(ChatUtil::translate)
+        .toList();
+
     Hologram hologram = HologramsUtil.createHologram(
         centerLocation,
-        location.getGeneratorObject().name(),
+        lines,
         material
     );
 
@@ -89,6 +114,7 @@ public class HologramsUtil {
 
     HologramsData.IfHologram ifHologram = new HologramsData.IfHologram(
         location.getGeneratorObject().name(),
+        lines,
         centerLocation.getX(),
         centerLocation.getY(),
         centerLocation.getZ(),

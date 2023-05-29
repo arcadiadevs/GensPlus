@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData.IfHologram;
@@ -38,7 +39,7 @@ public class BlockBreak implements Listener {
    * @param generatorsData The GeneratorsData object containing information about generators.
    */
   public BlockBreak(LocationsData locationsData, GeneratorsData generatorsData,
-                    HologramsData hologramsData, IHologramPool pool) {
+      HologramsData hologramsData, IHologramPool pool) {
     this.locationsData = locationsData;
     this.generatorsData = generatorsData;
     this.hologramsData = hologramsData;
@@ -110,9 +111,20 @@ public class BlockBreak implements Listener {
               .parseItem()
               .getType();
 
+          List<String> lines = InfiniteForge.getInstance().getConfig()
+              .getStringList("holograms.lines")
+              .stream()
+              .map(line -> line.replace("%name%", generator.name()))
+              .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))
+              .map(line -> line.replace("%speed%", String.valueOf(generator.speed())))
+              .map(line -> line.replace("%spawnItem%", generator.spawnItem().getType().toString()))
+              .map(line -> line.replace("%sellprice%", String.valueOf(generator.sellPrice())))
+              .map(ChatUtil::translate)
+              .toList();
+
           Hologram hologram = HologramsUtil.createHologram(
               center,
-              block.getGeneratorObject().name(),
+              lines,
               material
           );
 
@@ -120,6 +132,7 @@ public class BlockBreak implements Listener {
 
           IfHologram ifHologram1 = new IfHologram(
               block.getGeneratorObject().name(),
+              lines,
               center.getX(),
               center.getY(),
               center.getZ(),

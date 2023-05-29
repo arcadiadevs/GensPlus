@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
@@ -121,9 +122,24 @@ public class BlockPlace implements Listener {
             .parseItem()
             .getType();
 
+        List<String> lines = InfiniteForge.getInstance().getConfig()
+            .getStringList("holograms.lines")
+            .stream()
+            .map(line -> line.replace("%name%", tempLocation.getGeneratorObject().name()))
+            .map(line -> line.replace("%tier%",
+                String.valueOf(tempLocation.getGeneratorObject().tier())))
+            .map(line -> line.replace("%speed%",
+                String.valueOf(tempLocation.getGeneratorObject().speed())))
+            .map(line -> line.replace("%spawnItem%",
+                tempLocation.getGeneratorObject().spawnItem().getType().toString()))
+            .map(line -> line.replace("%sellprice%",
+                String.valueOf(tempLocation.getGeneratorObject().sellPrice())))
+            .map(ChatUtil::translate)
+            .toList();
+
         Hologram hologram = HologramsUtil.createHologram(
             centerLocation,
-            tempLocation.getGeneratorObject().name(),
+            lines,
             material
         );
 
@@ -131,6 +147,7 @@ public class BlockPlace implements Listener {
 
         ifHologram = new IfHologram(
             tempLocation.getGeneratorObject().name(),
+            lines,
             centerLocation.getX(),
             centerLocation.getY(),
             centerLocation.getZ(),
@@ -147,9 +164,24 @@ public class BlockPlace implements Listener {
             .parseItem()
             .getType();
 
+        List<String> lines = InfiniteForge.getInstance().getConfig()
+            .getStringList("holograms.lines")
+            .stream()
+            .map(line -> line.replace("%name%", tempLocation.getGeneratorObject().name()))
+            .map(line -> line.replace("%tier%",
+                String.valueOf(tempLocation.getGeneratorObject().tier())))
+            .map(line -> line.replace("%speed%",
+                String.valueOf(tempLocation.getGeneratorObject().speed())))
+            .map(line -> line.replace("%spawnItem%",
+                tempLocation.getGeneratorObject().spawnItem().getType().toString()))
+            .map(line -> line.replace("%sellprice%",
+                String.valueOf(tempLocation.getGeneratorObject().sellPrice())))
+            .map(ChatUtil::translate)
+            .toList();
+
         Hologram hologram = HologramsUtil.createHologram(
             centerLocation,
-            tempLocation.getGeneratorObject().name(),
+            lines,
             material
         );
 
@@ -157,6 +189,7 @@ public class BlockPlace implements Listener {
 
         ifHologram = new IfHologram(
             tempLocation.getGeneratorObject().name(),
+            lines,
             centerLocation.getX(),
             centerLocation.getY(),
             centerLocation.getZ(),

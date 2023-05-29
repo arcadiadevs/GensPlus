@@ -13,6 +13,11 @@ generators-gui:
 
 holograms:
   view-distance: 300
+  lines:
+    - "&a%name%"
+    - "&7Tier: &a%tier%"
+    - "&7Spawns each &a%speed% &7seconds &a%spawnItem%"
+    - "&7Sells for &a%sellprice%"
 
 events:
 
