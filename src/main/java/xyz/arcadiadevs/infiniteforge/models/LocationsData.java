@@ -109,7 +109,7 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
         .orElse(0);
 
     // Retrieve the block at the calculated center coordinates
-    return new Location(world, centerX + 0.5, centerY + 2, centerZ + 0.5);
+    return new Location(world, centerX + 0.5, centerY + 1, centerZ + 0.5);
   }
 
   public void traverseBlocks(Block block, int tier, Set<Block> connectedBlocks) {
@@ -225,15 +225,10 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
      * @throws NullPointerException If the generator is not found.
      */
     public GeneratorsData.Generator getGeneratorObject() {
-      GeneratorsData.Generator generatorObject = InfiniteForge.getInstance()
+
+      return InfiniteForge.getInstance()
           .getGeneratorsData()
           .getGenerator(generator);
-
-      if (generatorObject == null) {
-        throw new NullPointerException("Generator not found");
-      }
-
-      return generatorObject;
     }
 
     /**

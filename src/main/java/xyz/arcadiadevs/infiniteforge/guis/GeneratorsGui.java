@@ -22,18 +22,17 @@ public class GeneratorsGui {
    *
    * @param player The Player object for whom the GUI is being opened.
    */
-  @SuppressWarnings("unchecked")
   public static void open(Player player) {
     final var instance = InfiniteForge.getInstance();
     final var config = instance.getConfig();
 
-    if (!config.getBoolean("generators-gui.enabled")) {
+    if (!config.getBoolean("guis.generators-gui.enabled")) {
       return;
     }
 
-    final var rows = config.getInt("generators-gui.rows");
+    final var rows = config.getInt("guis.generators-gui.rows");
     final var menu = instance.getSpiGui().create(
-        ChatUtil.translate(config.getString("generators-gui.title")),
+        ChatUtil.translate(config.getString("guis.generators-gui.title")),
         rows
     );
 
@@ -63,6 +62,7 @@ public class GeneratorsGui {
           .map(s -> s.replace("%tier%", String.valueOf(generator.tier())))
           .map(s -> s.replace("%speed%", String.valueOf(generator.speed())))
           .map(s -> s.replace("%price%", String.valueOf(generator.price())))
+          .map(s -> s.replace("%sellPrice%", String.valueOf(generator.sellPrice())))
           .map(s -> s.replace("%spawnItem%", generator.spawnItem().getType().name()))
           .map(s -> s.replace("%blockType%", generator.blockType().getType().name()))
           .map(ChatUtil::translate)

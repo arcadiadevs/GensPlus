@@ -3,16 +3,64 @@
 # - "1h" for 1 hour
 # - "5m" for 5 minutes
 # - "1h 5m" for 1 hour and 5 minutes
+# - "1h 5m 5s" for 1 hour and 5 minutes 5 seconds
 item-despawn-time: "5m"
 
-generators-gui:
-  enabled: true
+guis:
+  # Gui to view generators by a command
+  generators-gui:
+    # If enabled is set to false, the command will not be registered.
+    enabled: true
 
-  title: "Generators"
-  rows: 5
+    # Title of the gui
+    title: "Generators"
+
+    # Number of rows in the gui
+    rows: 5
+
+  # Gui when upgrading generator
+  upgrade-gui:
+    # If lore is not specified, the default lore will be used.
+    # The default lore can be specified in the following format:
+    # - %tier%" equals to the generator's tier
+    # - %speed%" is the generator's speed of spawning items
+    # - %price%" is the price of generator
+    # - %sellPrice%" is the sell price of generator drop
+    # - %spawnItem%" equals to what item will generator spawn
+    # - %blockType%" equals to block type of generator
+    # - %nextTier% equals to the next tier of generator
+    # - %nextSpeed% equals to the next speed of generator
+    # - %nextPrice% equals to the next price of generator
+    # - %nextSellPrice% equals to the next sell price of generator
+    # - %nextSpawnItem% equals to the next spawn item of generator
+    # - %nextBlockType% equals to the next block type of generator
+    lore:
+      - "&eCurrent Tier: &b\\u27EB &e%tier% &b\\u27EB → &b\\u27EB &e%nextTier% &b\\u27EB"
+      - ""
+      - "&6Upgrade Details:"
+      - "&eSpeed: &b\\u27EB &e%speed% &7seconds per spawn &b\\u27EB → &b\\u27EB &e%nextSpeed% &7seconds per spawn"
+      - "&ePrice: &b\\u27EB &e%price% &b\\u27EB → &b\\u27EB &e%nextPrice% &b\\u27EB"
+      - "&eSell Price: &b\\u27EB &e%sellPrice% &b\\u27EB → &b\\u27EB &e%nextSellPrice% &b\\u27EB"
+      - "&eSpawn Item: &b\\u27EB &e%spawnItem% &b\\u27EB → &b\\u27EB &e%nextSpawnItem% &b\\u27EB"
+      - "&eBlock Type: &b\\u27EB &e%blockType% &b\\u27EB → &b\\u27EB &e%nextBlockType% &b\\u27EB"
+
+
+    # Title of the gui
+    title: "Upgrade Generator"
+
+    # Number of rows in the gui
+    rows: 3
 
 holograms:
   view-distance: 300
+
+  # Lines that will be displayed above the generator
+  # Lines can be specified in the following format:
+  # %name% will be replaced with the name of the generator
+  # %tier% will be replaced with the tier of the generator
+  # %speed% will be replaced with the speed of the generator
+  # %spawnItem% will be replaced with the item that generator spawns
+  # %sellprice% will be replaced with the sell price of the generator
   lines:
     - "&a%name%"
     - "&7Tier: &a%tier%"
@@ -20,28 +68,58 @@ holograms:
     - "&7Sells for &a%sellprice%"
 
 events:
+  # time can be specified in the following format variations:
+  # - "1h" for 1 hour
+  # - "5m" for 5 minutes
+  # - "1h 5m" for 1 hour and 5 minutes
+  # - "1h 5m 5s" for 1 hour and 5 minutes and 5 seconds
 
+  # Time duration between events
   time-between-events: "1h"
+
+  # Duration of each event
   event-duration: "2m"
 
   broadcast:
+    # If enabled is set to false, there will be no broadcast messages.
     enabled: true
-    event-started: "&a&lEVENT> &7%event% has started!"
-    event-ended: "&a&lEVENT> &7%event% has ended!"
+
+    # Message when event starts
+    # %event% will be replaced with the name of the event
+    event-started: "&a&lEVENT> &7%event% has started and will end in &e&n%time%!"
+
+    # Message when event ends
+    # %event% will be replaced with the name of the event
+    event-ended: "&a&lEVENT> &7%event% has ended and new event will be started in &e&n%time%!"
 
   drop-event:
+    # If enabled is set to false, the event will not be registered.
     enabled: true
+
+    # Name of the drop event
     name: "Drop Event"
+
+    # Multiplier for the event
     multiplier: 2
 
   sell-event:
+    # If enabled is set to false, the event will not be registered.
     enabled: true
+
+    # Name of the sell event
     name: "Sell Event"
+
+    # Multiplier for the event
     multiplier: 2
 
   speed-event:
+    # If enabled is set to false, the event will not be registered.
     enabled: true
+
+    # Name of the speed event
     name: "Speed Event"
+
+    # Multiplier for the event
     multiplier: 2
 
 # If lore is not specified, the default lore will be used.
@@ -55,10 +133,19 @@ default-lore:
   - "&7Tier: &a%tier%"
   - "&7Speed: &a%speed%"
   - "&7Price: &a%price%"
-  - "&7Sell Price: &a%sellprice%"
+  - "&7Sell Price: &a%sellPrice%"
   - "&7Spawn Item: &a%spawnItem%"
   - "&7Block Type: &a%blockType%"
 
+# generators represent the generators that will be added in the gui,
+# name is the name of the generator
+# tier is the tier of the generator (each generator must have a unique tier)
+# price is the price of the generator
+# sellprice is the sell price of the generator drop
+# speed is the speed of the generator (how often it will spawn items)
+# spawnItem is the item that generator will spawn
+# blockType is the block type of the generator
+# lore is the lore of the generator (if not specified, the default lore will be used)
 generators:
   - name: "generator1"
     tier: 1

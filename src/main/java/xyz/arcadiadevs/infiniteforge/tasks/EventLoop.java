@@ -50,16 +50,22 @@ public class EventLoop extends BukkitRunnable {
         System.currentTimeMillis()
             + TimeUtil.parseTimeMillis(plugin.getConfig().getString("events.event-duration")));
 
+    String eventEndTime = plugin.getConfig().getString("events.event-duration");
+
     ChatUtil.sendBroadcast(
         plugin.getConfig().getString("events.broadcast.event-started")
-            .replace("%event%", activeEvent.event().getName()), false);
+            .replace("%event%", activeEvent.event().getName())
+            .replace("%time%", eventEndTime), false);
 
     new BukkitRunnable() {
       public void run() {
 
+        String eventStartTime = plugin.getConfig().getString("events.time-between-events");
+
         ChatUtil.sendBroadcast(
             plugin.getConfig().getString("events.broadcast.event-ended")
-                .replace("%event%", activeEvent.event().getName()), false);
+                .replace("%event%", activeEvent.event().getName())
+                .replace("%time%", eventStartTime), false);
 
         activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
             System.currentTimeMillis() + TimeUtil.parseTimeMillis(plugin
