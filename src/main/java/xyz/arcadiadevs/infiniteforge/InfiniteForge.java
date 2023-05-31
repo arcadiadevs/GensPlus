@@ -367,7 +367,7 @@ public final class InfiniteForge extends JavaPlugin {
       int tier = (int) generator.get("tier");
       int speed = (int) generator.get("speed");
       double price = (double) generator.get("price");
-      double sellPrice = (double) generator.get("sellprice");
+      double sellPrice = (double) generator.get("sellPrice");
       String spawnItem = (String) generator.get("spawnItem");
       String blockType = (String) generator.get("blockType");
       List<String> lore =
