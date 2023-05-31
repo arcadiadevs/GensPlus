@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,6 +62,23 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
         .findFirst()
         .orElse(null);
   }
+
+  /**
+   * Retrieves the generator location data for the specified block.
+   *
+   * @param uuid The block to find the generator location for.
+   * @return The GeneratorLocation object associated with the block, or null if not found.
+   */
+  public List<GeneratorLocation> getPlacedBGeneratorsByPlayer(UUID uuid) {
+    List<GeneratorLocation> generators = new ArrayList<>();
+    for (GeneratorLocation generator : locations) {
+      if (generator.getPlacedBy().getUniqueId().equals(uuid)) {
+        generators.add(generator);
+      }
+    }
+    return generators;
+  }
+
 
   /**
    * Retrieves the generator location data for the specified block.
@@ -229,6 +247,15 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
       return InfiniteForge.getInstance()
           .getGeneratorsData()
           .getGenerator(generator);
+    }
+
+    /**
+     * Retrieves the player who placed the generator.
+     *
+     * @return The Player object corresponding to the player UUID.
+     */
+    public Player getPlacedBy() {
+      return Bukkit.getPlayer(UUID.fromString(playerId));
     }
 
     /**

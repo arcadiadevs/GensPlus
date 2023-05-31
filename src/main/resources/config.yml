@@ -6,6 +6,13 @@
 # - "1h 5m 5s" for 1 hour and 5 minutes 5 seconds
 item-despawn-time: "5m"
 
+limit-settings:
+  enabled: true
+
+  limit: 10
+
+  message: "&cYou have reached the limit of %limit% generators!"
+
 guis:
   # Gui to view generators by a command
   generators-gui:
@@ -20,6 +27,7 @@ guis:
 
   # Gui when upgrading generator
   upgrade-gui:
+    first-line: "&e》 &nClick to upgrade generator!&e 《"
     # If lore is not specified, the default lore will be used.
     # The default lore can be specified in the following format:
     # - %tier%" equals to the generator's tier
@@ -35,14 +43,17 @@ guis:
     # - %nextSpawnItem% equals to the next spawn item of generator
     # - %nextBlockType% equals to the next block type of generator
     lore:
-      - "&eCurrent Tier: &b\\u27EB &e%tier% &b\\u27EB → &b\\u27EB &e%nextTier% &b\\u27EB"
+      - "&fMoney: &a%money%"
+      - "&fUpgrade Price: &a%upgradePrice%"
       - ""
-      - "&6Upgrade Details:"
-      - "&eSpeed: &b\\u27EB &e%speed% &7seconds per spawn &b\\u27EB → &b\\u27EB &e%nextSpeed% &7seconds per spawn"
-      - "&ePrice: &b\\u27EB &e%price% &b\\u27EB → &b\\u27EB &e%nextPrice% &b\\u27EB"
-      - "&eSell Price: &b\\u27EB &e%sellPrice% &b\\u27EB → &b\\u27EB &e%nextSellPrice% &b\\u27EB"
-      - "&eSpawn Item: &b\\u27EB &e%spawnItem% &b\\u27EB → &b\\u27EB &e%nextSpawnItem% &b\\u27EB"
-      - "&eBlock Type: &b\\u27EB &e%blockType% &b\\u27EB → &b\\u27EB &e%nextBlockType% &b\\u27EB"
+      - "&aUpgrade Details:"
+      - "&b%tier% &r&8》&d&l%nextTier% &0&lASD"
+      - "&b%speed%s &8》&d&l%nextSpeed%s"
+      - "&b%price% &r&8》&d&l%nextPrice%"
+      - "&b%sellPrice% &r&8》&d&l%nextSellPrice%"
+      - "&b%spawnItem% &r&8》&d&l%nextSpawnItem%"
+      - "&b%blockType% &r&8》&d&l%nextBlockType%"
+      - "&8&l&n                                "
 
 
     # Title of the gui
@@ -60,12 +71,12 @@ holograms:
   # %tier% will be replaced with the tier of the generator
   # %speed% will be replaced with the speed of the generator
   # %spawnItem% will be replaced with the item that generator spawns
-  # %sellprice% will be replaced with the sell price of the generator
+  # %sellPrice% will be replaced with the sell price of the generator
   lines:
     - "&a%name%"
     - "&7Tier: &a%tier%"
     - "&7Spawns each &a%speed% &7seconds &a%spawnItem%"
-    - "&7Sells for &a%sellprice%"
+    - "&7Sells for &a%sellPrice%"
 
 events:
   # time can be specified in the following format variations:
@@ -127,6 +138,7 @@ events:
 # - %tier%" equals to the generator's tier
 # - %speed%" is the generator's speed of spawning items
 # - %price%" is the price of generator
+# - %sellPrice%" is the sell price of generator drop
 # - %spawnItem%" equals to what item will generator spawn
 # - %blockType%" equals to block type of generator
 default-lore:
@@ -137,11 +149,18 @@ default-lore:
   - "&7Spawn Item: &a%spawnItem%"
   - "&7Block Type: &a%blockType%"
 
+# If itemSpawnLore is not specified, the default item spawn lore will be used.
+# The default item spawn lore can be specified in the following format:
+# - %sellPrice%" is the sell price of the generator drop
+default-item-spawn-lore:
+  - "&7Type in chat &a/selldrops &7to sell drops!"
+  - "&7Drops are selling for &a%sellPrice%&7!"
+
 # generators represent the generators that will be added in the gui,
 # name is the name of the generator
 # tier is the tier of the generator (each generator must have a unique tier)
 # price is the price of the generator
-# sellprice is the sell price of the generator drop
+# sellPrice is the sell price of the generator drop
 # speed is the speed of the generator (how often it will spawn items)
 # spawnItem is the item that generator will spawn
 # blockType is the block type of the generator
@@ -150,16 +169,18 @@ generators:
   - name: "generator1"
     tier: 1
     price: 500.0
-    sellprice: 50.0
+    sellPrice: 50.0
     speed: 10
     spawnItem: "DIAMOND"
     blockType: "DIAMOND_BLOCK"
     lore: []
+    itemSpawnLore: []
   - name: "generator2"
     tier: 2
     price: 1000.0
-    sellprice: 100.0
+    sellPrice: 100.0
     speed: 5
     spawnItem: "STONE"
     blockType: "STONE"
     lore: []
+    itemSpawnLore: []

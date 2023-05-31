@@ -2,10 +2,6 @@ package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.github.unldenis.hologram.IHologramPool;
 import com.samjakob.spigui.buttons.SGButton;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.block.Block;
@@ -20,6 +16,11 @@ import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.GuiUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The UpgradeGui class provides functionality for opening the upgrade GUI for generators in
@@ -58,17 +59,12 @@ public class UpgradeGui {
     menu.setAutomaticPaginationEnabled(false);
     menu.setBlockDefaultInteractions(true);
 
-    final ItemStack itemStack = new ItemStack(
-        nextGenerator.blockType());
+    final ItemStack itemStack = new ItemStack(nextGenerator.blockType());
+    final ItemMeta itemMeta = itemStack.getItemMeta();
 
-    ItemMeta itemMeta = itemStack.getItemMeta();
-
-    itemMeta.setDisplayName("⋙");
+    itemMeta.setDisplayName(ChatUtil.translate(config.getString("guis.upgrade-gui.first-line")));
 
     List<String> lore = config.getStringList("guis.upgrade-gui.lore");
-
-    System.out.println(lore.get(3));
-
     lore = lore.stream()
         .map(s -> s.replace("%tier%", String.valueOf(current.tier())))
         .map(s -> s.replace("%speed%", String.valueOf(current.speed())))
@@ -82,6 +78,9 @@ public class UpgradeGui {
         .map(s -> s.replace("%nextSellPrice%", economy.format(nextGenerator.sellPrice())))
         .map(s -> s.replace("%nextSpawnItem%", nextGenerator.spawnItem().getType().name()))
         .map(s -> s.replace("%nextBlockType%", nextGenerator.blockType().getType().name()))
+        .map(s -> s.replace("%upgradePrice%", economy.format(
+            instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier()))))
+        .map(s -> s.replace("%money%", economy.format(economy.getBalance(player))))
         .map(ChatUtil::translate)
         .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 

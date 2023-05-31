@@ -5,15 +5,14 @@ import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.HologramPool;
 import com.github.unldenis.hologram.IHologramPool;
 import com.github.unldenis.hologram.placeholder.Placeholders;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.samjakob.spigui.SpiGUI;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -319,7 +318,7 @@ public final class InfiniteForge extends JavaPlugin {
             .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))
             .map(line -> line.replace("%speed%", String.valueOf(generator.speed())))
             .map(line -> line.replace("%spawnItem%", generator.spawnItem().getType().toString()))
-            .map(line -> line.replace("%sellprice%", String.valueOf(generator.sellPrice())))
+            .map(line -> line.replace("%sellPrice%", String.valueOf(generator.sellPrice())))
             .map(ChatUtil::translate)
             .toList();
 
@@ -377,7 +376,7 @@ public final class InfiniteForge extends JavaPlugin {
       lore = lore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
           .map(s -> s.replace("%speed%", String.valueOf(speed)))
           .map(s -> s.replace("%price%", String.valueOf(price)))
-          .map(s -> s.replace("%sellprice%", String.valueOf(sellPrice)))
+          .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
           .map(s -> s.replace("%spawnItem%", spawnItem))
           .map(s -> s.replace("%blockType%", blockType)).map(ChatUtil::translate).toList();
 
@@ -411,9 +410,24 @@ public final class InfiniteForge extends JavaPlugin {
       blockTypeStack.setItemMeta(blockTypeMeta);
 
       // set lore for spawned item
+      List<String> spawnLore = new ArrayList<>();
+
+      List<String> itemSpawnLore = ((List<String>) generator.get("itemSpawnLore")).isEmpty()
+              ? getConfig().getStringList("default-item-spawn-lore")
+              : (List<String>) generator.get("itemSpawnLore");
+
+      itemSpawnLore = itemSpawnLore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
+          .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
+          .map(ChatUtil::translate)
+          .toList();
+
+      // TODO: format sellPrice with economy;
+
+      spawnLore.add(ChatUtil.translate("&8Generator drop tier " + tier));
+      spawnLore.addAll(itemSpawnLore);
+
       spawnItemMeta.setDisplayName(ChatUtil.translate(name));
-      spawnItemMeta.setLore(
-          Collections.singletonList(ChatUtil.translate("&8Generator drop tier " + tier)));
+      spawnItemMeta.setLore(spawnLore);
 
       spawnItemStack.setItemMeta(spawnItemMeta);
 

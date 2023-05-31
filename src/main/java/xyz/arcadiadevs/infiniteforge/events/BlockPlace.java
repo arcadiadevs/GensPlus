@@ -9,6 +9,8 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -20,6 +22,7 @@ import xyz.arcadiadevs.infiniteforge.models.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
+
 
 /**
  * The BlockPlace class is responsible for handling block place events related to generator blocks
@@ -73,7 +76,20 @@ public class BlockPlace implements Listener {
       return;
     }
 
+    final Player player = event.getPlayer();
+    final FileConfiguration config = InfiniteForge.getInstance().getConfig();
+
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
+    final int limit = config.getInt("limit-settings.limit");
+    final boolean enabled = config.getBoolean("limit-settings.enabled");
+
+    if (locationsData.getPlacedBGeneratorsByPlayer(player.getUniqueId()).size() >= limit
+            && enabled) {
+      ChatUtil.sendMessage(event.getPlayer(), config.getString("limit-settings.message")
+                      .replace("%limit%", String.valueOf(limit)));
+      event.setCancelled(true);
+      return;
+    }
 
     LocationsData.GeneratorLocation tempLocation = new LocationsData.GeneratorLocation(
         event.getPlayer().getUniqueId().toString(),
@@ -132,7 +148,7 @@ public class BlockPlace implements Listener {
                 String.valueOf(tempLocation.getGeneratorObject().speed())))
             .map(line -> line.replace("%spawnItem%",
                 tempLocation.getGeneratorObject().spawnItem().getType().toString()))
-            .map(line -> line.replace("%sellprice%",
+            .map(line -> line.replace("%sellPrice%",
                 String.valueOf(tempLocation.getGeneratorObject().sellPrice())))
             .map(ChatUtil::translate)
             .toList();
@@ -174,7 +190,7 @@ public class BlockPlace implements Listener {
                 String.valueOf(tempLocation.getGeneratorObject().speed())))
             .map(line -> line.replace("%spawnItem%",
                 tempLocation.getGeneratorObject().spawnItem().getType().toString()))
-            .map(line -> line.replace("%sellprice%",
+            .map(line -> line.replace("%sellPrice%",
                 String.valueOf(tempLocation.getGeneratorObject().sellPrice())))
             .map(ChatUtil::translate)
             .toList();

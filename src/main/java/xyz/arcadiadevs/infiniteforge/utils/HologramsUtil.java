@@ -99,7 +99,7 @@ public class HologramsUtil {
             String.valueOf(location.getGeneratorObject().speed())))
         .map(line -> line.replace("%spawnItem%",
             location.getGeneratorObject().spawnItem().getType().toString()))
-        .map(line -> line.replace("%sellprice%",
+        .map(line -> line.replace("%sellPrice%",
             String.valueOf(location.getGeneratorObject().sellPrice())))
         .map(ChatUtil::translate)
         .toList();

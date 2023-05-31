@@ -118,7 +118,7 @@ public class BlockBreak implements Listener {
               .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))
               .map(line -> line.replace("%speed%", String.valueOf(generator.speed())))
               .map(line -> line.replace("%spawnItem%", generator.spawnItem().getType().toString()))
-              .map(line -> line.replace("%sellprice%", String.valueOf(generator.sellPrice())))
+              .map(line -> line.replace("%sellPrice%", String.valueOf(generator.sellPrice())))
               .map(ChatUtil::translate)
               .toList();
 
