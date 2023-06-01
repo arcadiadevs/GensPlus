@@ -10,6 +10,9 @@ depend:
   - Vault
   - ProtocolLib
 
+softdepend:
+  - Oraxen
+
 commands:
   getitem:
     description: Get the generator item

@@ -2,6 +2,10 @@ package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.github.unldenis.hologram.IHologramPool;
 import com.samjakob.spigui.buttons.SGButton;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.block.Block;
@@ -16,11 +20,6 @@ import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.GuiUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * The UpgradeGui class provides functionality for opening the upgrade GUI for generators in
@@ -134,24 +133,26 @@ public class UpgradeGui {
     Set<Block> connectedBlocks = new HashSet<>();
     locationsData.traverseBlocks(generator.getBlock(), generator.getGenerator(), connectedBlocks);
 
-    instance.getLocationsData().remove(generator);
-    instance.getLocationsData().addLocation(next);
+    System.out.println(connectedBlocks.size());
 
-    List<LocationsData.GeneratorLocation> connectedLocations = connectedBlocks.stream()
+    ArrayList<LocationsData.GeneratorLocation> connectedLocations = connectedBlocks.stream()
         .map(locationsData::getLocationData)
-        .toList();
+        .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
     connectedLocations.forEach(location -> {
       HologramsData.IfHologram ifHologram1 =
           hologramsData.getHologramData(location.getHologramUuid());
+
+      location.setHologramUuid(null);
 
       if (ifHologram1 == null) {
         return;
       }
 
       hologramPool.remove(ifHologram1.getHologram());
-      location.setHologramUuid(null);
       hologramsData.removeHologramData(ifHologram1);
+
+      HologramsUtil.unlinkHolograms(location);
     });
 
     ChatUtil.sendMessage(player,
@@ -159,9 +160,17 @@ public class UpgradeGui {
 
     generator.getBlock().setType(nextGenerator.blockType().getType());
 
+    connectedLocations.remove(generator);
+    instance.getLocationsData().remove(generator);
+
+    next.setHologramUuid(null);
+    connectedLocations.add(next);
+
+    instance.getLocationsData().addLocation(next);
+
     for (LocationsData.GeneratorLocation location : connectedLocations) {
-      if (location == next) {
-        HologramsUtil.unlinkHolograms(next);
+      if (location.getHologramUuid() != null) {
+        continue;
       }
 
       HologramsUtil.fixConnections(location);

@@ -46,6 +46,7 @@ import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
+import xyz.arcadiadevs.infiniteforge.utils.ItemUtils;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
 /**
@@ -168,6 +169,12 @@ public final class InfiniteForge extends JavaPlugin {
   public void onDisable() {
     dataSaveTask.saveBlockDataToJson();
     dataSaveTask.saveHologramDataToJson();
+
+    if (getConfig().getBoolean("developer-options.debug")) {
+      // Remove all files
+      new File(getDataFolder(), "block_data.json").delete();
+      new File(getDataFolder(), "holograms.json").delete();
+    }
   }
 
   private void registerCommands() {
@@ -357,6 +364,7 @@ public final class InfiniteForge extends JavaPlugin {
    * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
    *                          encountered.
    */
+  @SuppressWarnings("unchecked")
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
     List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");
@@ -378,14 +386,15 @@ public final class InfiniteForge extends JavaPlugin {
           .map(s -> s.replace("%price%", String.valueOf(price)))
           .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
           .map(s -> s.replace("%spawnItem%", spawnItem))
-          .map(s -> s.replace("%blockType%", blockType)).map(ChatUtil::translate).toList();
+          .map(s -> s.replace("%blockType%", blockType))
+          .map(ChatUtil::translate).toList();
 
       if (generators.stream().anyMatch(g -> g.tier() == tier)) {
         throw new RuntimeException("Duplicate tier found: " + tier);
       }
 
-      ItemStack spawnItemStack = XMaterial.matchXMaterial(spawnItem).orElseThrow().parseItem();
-      ItemStack blockTypeStack = XMaterial.matchXMaterial(blockType).orElseThrow().parseItem();
+      ItemStack spawnItemStack = ItemUtils.getUniversalItem(spawnItem);
+      ItemStack blockTypeStack = ItemUtils.getUniversalItem(blockType);
 
       if (spawnItemStack == null || blockTypeStack == null) {
         throw new RuntimeException("Invalid item name");
@@ -413,8 +422,8 @@ public final class InfiniteForge extends JavaPlugin {
       List<String> spawnLore = new ArrayList<>();
 
       List<String> itemSpawnLore = ((List<String>) generator.get("itemSpawnLore")).isEmpty()
-              ? getConfig().getStringList("default-item-spawn-lore")
-              : (List<String>) generator.get("itemSpawnLore");
+          ? getConfig().getStringList("default-item-spawn-lore")
+          : (List<String>) generator.get("itemSpawnLore");
 
       itemSpawnLore = itemSpawnLore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
           .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
