@@ -11,7 +11,6 @@ import com.github.unldenis.hologram.line.animated.ItemALine;
 import com.github.unldenis.hologram.line.animated.StandardAnimatedLine;
 import com.github.unldenis.hologram.line.hologram.TextItemStandardLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -146,15 +145,20 @@ public class HologramsUtil {
         .map(locationsData::getLocationData)
         .toList();
 
+    System.out.println("SIZE: " + connectedLocations.size());
+
     connectedLocations.forEach(loc -> {
       HologramsData.IfHologram ifHologram = hologramsData.getHologramData(loc.getHologramUuid());
+      System.out.println("UNLINKING HOLOGRAM AT: " + loc.getLocation());
+
+      loc.setHologramUuid(null);
 
       if (ifHologram == null) {
+        System.out.println("NULL");
         return;
       }
 
       hologramPool.remove(ifHologram.getHologram());
-      loc.setHologramUuid(null);
       hologramsData.removeHologramData(ifHologram);
     });
   }
