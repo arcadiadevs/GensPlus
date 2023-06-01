@@ -136,10 +136,6 @@ public final class InfiniteForge extends JavaPlugin {
 
     setupEconomy();
 
-    if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
-      new PlaceHolder().register();
-    }
-
     gson = new GsonBuilder().registerTypeAdapterFactory(RecordTypeAdapterFactory.DEFAULT)
         .setPrettyPrinting()
         .create();
@@ -151,6 +147,10 @@ public final class InfiniteForge extends JavaPlugin {
     locationsData = new LocationsData(loadBlockDataFromJson());
 
     events = loadInfiniteForgeEvents();
+
+    if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
+      new PlaceHolder(locationsData).register();
+    }
 
     loadHolograms();
 

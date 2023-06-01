@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -69,7 +68,7 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
    * @param uuid The block to find the generator location for.
    * @return The GeneratorLocation object associated with the block, or null if not found.
    */
-  public List<GeneratorLocation> getPlacedBGeneratorsByPlayer(UUID uuid) {
+  public List<GeneratorLocation> getPlacedGeneratorsByPlayer(UUID uuid) {
     List<GeneratorLocation> generators = new ArrayList<>();
     for (GeneratorLocation generator : locations) {
       if (generator.getPlacedBy().getUniqueId().equals(uuid)) {

@@ -83,7 +83,7 @@ public class BlockPlace implements Listener {
     final int limit = config.getInt("limit-settings.limit");
     final boolean enabled = config.getBoolean("limit-settings.enabled");
 
-    if (locationsData.getPlacedBGeneratorsByPlayer(player.getUniqueId()).size() >= limit
+    if (locationsData.getPlacedGeneratorsByPlayer(player.getUniqueId()).size() >= limit
             && enabled) {
       ChatUtil.sendMessage(event.getPlayer(), config.getString("limit-settings.message")
                       .replace("%limit%", String.valueOf(limit)));
