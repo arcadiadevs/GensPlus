@@ -17,6 +17,7 @@ import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 
@@ -152,6 +153,6 @@ public class BlockBreak implements Listener {
     locationsData.remove(block);
 
     // Send a notification to the player
-    ChatUtil.sendMessage(event.getPlayer(), "&aYou have broken a generator block!");
+    ChatUtil.sendMessage(event.getPlayer(), Messages.SUCCESSFULLY_DESTROYED);
   }
 }

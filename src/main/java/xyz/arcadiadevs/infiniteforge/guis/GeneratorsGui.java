@@ -1,14 +1,18 @@
 package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
 /**
@@ -25,6 +29,7 @@ public class GeneratorsGui {
   public static void open(Player player) {
     final var instance = InfiniteForge.getInstance();
     final var config = instance.getConfig();
+    final Economy economy = instance.getEcon();
 
     if (!config.getBoolean("guis.generators-gui.enabled")) {
       return;
@@ -75,7 +80,24 @@ public class GeneratorsGui {
 
       menu.addButton(new SGButton(itemBuilder).withListener(event -> {
         event.setCancelled(true);
-        event.getWhoClicked().sendMessage(ChatUtil.translate("message"));
+
+        if (generator.price() > economy.getBalance(player)) {
+          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+          XSound.ENTITY_VILLAGER_NO.play(player);
+          return;
+        }
+
+        generator.giveItem(player);
+
+        economy.withdrawPlayer(player, generator.price());
+
+        ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_BOUGHT
+            .replace("%generator%", generator.name())
+            .replace("%tier%", String.valueOf(generator.tier()))
+            .replace("%price%", String.valueOf(generator.price()))
+        );
+
+        XSound.ENTITY_PLAYER_LEVELUP.play(player);
       }));
     }
 

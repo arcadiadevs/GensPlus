@@ -7,6 +7,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.infiniteforge.models.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.models.events.Event;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
@@ -53,7 +54,7 @@ public class EventLoop extends BukkitRunnable {
     String eventEndTime = plugin.getConfig().getString("events.event-duration");
 
     ChatUtil.sendBroadcast(
-        plugin.getConfig().getString("events.broadcast.event-started")
+        Messages.EVENT_STARTED
             .replace("%event%", activeEvent.event().getName())
             .replace("%time%", eventEndTime), false);
 
@@ -63,7 +64,7 @@ public class EventLoop extends BukkitRunnable {
         String eventStartTime = plugin.getConfig().getString("events.time-between-events");
 
         ChatUtil.sendBroadcast(
-            plugin.getConfig().getString("events.broadcast.event-ended")
+            Messages.EVENT_ENDED
                 .replace("%event%", activeEvent.event().getName())
                 .replace("%time%", eventStartTime), false);
 

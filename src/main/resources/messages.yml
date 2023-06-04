@@ -1,0 +1,26 @@
+# [general]
+default-message: '&9InfiniteForge> This server is running InfiniteForge v%version%'
+no-permission: "&cError> &7You don't have permission to do that!"
+config-reloaded: "&9InfiniteForge> &7Configuration reloaded."
+player-not-found: "&cError> &7Player not found!"
+not-enough-arguments: "&cError> &7Not enough arguments!"
+
+# [limit-settings]
+limit-reached: "&cError> &7You have reached the limit of &c%limit% &7generators!"
+
+# [events]
+event-started: "&9InfiniteForge> &7%event% has started and will end in &e&n%time%!"
+event-ended: "&9InfiniteForge> &7%event% has ended and new event will be started in &e&n%time%!"
+
+# [generators]
+successfully-upgraded: "&9InfiniteForge> &7Successfully upgraded your generator to tier &a%tier%!"
+successfully-sold: "&9InfiniteForge> &7Successfully sold drops for &a%price%"
+not-enough-money: "&cError> &7You don't have enough money to do that!"
+not-enough-drops: "&cError> &7You don't have any drops to sell!"
+invalid-generator-tier: "&cError> &7Invalid generator tier!"
+generator-given: "&9InfiniteForge> &7You gave a generator of tier &a%tier% &7to &a%targetPlayer%"
+generator-received: "&9InfiniteForge> &7You received a generator of tier &a%tier%"
+successfully-destroyed: "&9InfiniteForge> &7Successfully destroyed generator!"
+successfully-placed: "&9InfiniteForge> &7Successfully placed generator tier %tier%!"
+successfully-bought: "&9InfiniteForge> &7Successfully bought generator tier %tier% for %price%!"
+reached-max-tier: "&cError> &7You have reached the maximum tier of generator!"

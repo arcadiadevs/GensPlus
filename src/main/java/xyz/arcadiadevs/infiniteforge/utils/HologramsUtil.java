@@ -77,8 +77,6 @@ public class HologramsUtil {
         .map(locationsData::getLocationData)
         .toList();
 
-    System.out.println("CONNECTED BLOCKS: " + connectedBlocks);
-
     Location centerLocation =
         locationsData.getCenter(location.getLocation().getWorld(), connectedBlocks);
 
@@ -145,16 +143,12 @@ public class HologramsUtil {
         .map(locationsData::getLocationData)
         .toList();
 
-    System.out.println("SIZE: " + connectedLocations.size());
-
     connectedLocations.forEach(loc -> {
       HologramsData.IfHologram ifHologram = hologramsData.getHologramData(loc.getHologramUuid());
-      System.out.println("UNLINKING HOLOGRAM AT: " + loc.getLocation());
 
       loc.setHologramUuid(null);
 
       if (ifHologram == null) {
-        System.out.println("NULL");
         return;
       }
 

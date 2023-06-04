@@ -9,6 +9,7 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.models.events.SellEvent;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 
 /**
@@ -79,11 +80,11 @@ public class SellUtil {
 
       economy.depositPlayer(player, totalSellAmount * multiplier);
       ChatUtil.sendMessage(player,
-          "&9InfiniteForge> &aYou sold generator drops for " + (economy.format(
-              totalSellAmount * multiplier)) + "!");
+           Messages.SUCCESSFULLY_SOLD.replace("%price%", (economy.format(
+              totalSellAmount * multiplier))));
 
     } else {
-      ChatUtil.sendMessage(player, "&9InfiniteForge> &cYou do not have anything to sell!");
+      ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_DROPS);
     }
 
     sellAmounts.remove(player);

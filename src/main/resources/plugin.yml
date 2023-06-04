@@ -14,19 +14,13 @@ softdepend:
   - Oraxen
 
 commands:
-  getitem:
-    description: Get the generator item
-    usage: /getitem
-    permission: infiniteforge.getitem
-  generators:
-    description: List all generators in gui
-    usage: /generators
-    permission: infiniteforge.generators
   infiniteforge:
     description: Main command
     usage: /infiniteforge
-    permission: infiniteforge.infiniteforge
+    aliases: [ if, forge ]
+  generators:
+    description: List all generators in gui
+    usage: /generators
   selldrops:
     description: Sell all drops in inventory
     usage: /selldrops
-    permission: infiniteforge.selldrops

@@ -6,12 +6,17 @@
 # - "1h 5m 5s" for 1 hour and 5 minutes 5 seconds
 item-despawn-time: "5m"
 
+# If set to false, players will not be able to place generator drops.
+# If player places generator drop, it will lose all it
+# values and will be turned into a normal block.
+can-drops-be-placed: false
+
 limit-settings:
+  # If enabled is set to false, the limit will not be checked.
   enabled: true
 
+  # What should be the limit of generators per player.
   limit: 10
-
-  message: "&cYou have reached the limit of %limit% generators!"
 
 guis:
   # Gui to view generators by a command
@@ -95,14 +100,6 @@ events:
     # If enabled is set to false, there will be no broadcast messages.
     enabled: true
 
-    # Message when event starts
-    # %event% will be replaced with the name of the event
-    event-started: "&a&lEVENT> &7%event% has started and will end in &e&n%time%!"
-
-    # Message when event ends
-    # %event% will be replaced with the name of the event
-    event-ended: "&a&lEVENT> &7%event% has ended and new event will be started in &e&n%time%!"
-
   drop-event:
     # If enabled is set to false, the event will not be registered.
     enabled: true
@@ -166,22 +163,22 @@ default-item-spawn-lore:
 # blockType is the block type of the generator
 # lore is the lore of the generator (if not specified, the default lore will be used)
 generators:
-  - name: "&e&lWheat Generator"
+  - name: "&7&lStone Generator"
     tier: 1
     price: 50.0
     sellPrice: 10.0
     speed: 20
-    spawnItem: "WHEAT"
-    blockType: "HAY_BLOCK"
+    spawnItem: "STONE"
+    blockType: "STONE"
     lore: []
     itemSpawnLore: []
-  - name: "&a&lMelon Generator"
+  - name: "&e&lSandstone Generator"
     tier: 2
     price: 100.0
     sellPrice: 20.0
     speed: 20
-    spawnItem: "MELON_SLICE"
-    blockType: "MELON"
+    spawnItem: "SANDSTONE"
+    blockType: "SANDSTONE"
     lore: []
     itemSpawnLore: []
   - name: "&8&lCoal Generator"
@@ -193,31 +190,31 @@ generators:
     blockType: "COAL_ORE"
     lore: []
     itemSpawnLore: []
-  - name: "&8&lCoal Block Generator"
+  - name: "&6&lRed Sandstone Generator"
     tier: 4
     price: 300.0
     sellPrice: 50.0
     speed: 20
-    spawnItem: "COAL_BLOCK"
-    blockType: "COAL_BLOCK"
+    spawnItem: "RED_SANDSTONE"
+    blockType: "RED_SANDSTONE"
     lore: []
     itemSpawnLore: []
-  - name: "&7&lIron Generator"
+  - name: "&8&lCoal Generator"
     tier: 5
     price: 400.0
     sellPrice: 75.0
     speed: 20
-    spawnItem: "IRON_INGOT"
-    blockType: "IRON_ORE"
+    spawnItem: "COAL"
+    blockType: "COAL_ORE"
     lore: []
     itemSpawnLore: []
-  - name: "&7&lIron Block Generator"
+  - name: "&7&lIron Generator"
     tier: 6
     price: 500.0
     sellPrice: 100.0
     speed: 20
-    spawnItem: "IRON_BLOCK"
-    blockType: "IRON_BLOCK"
+    spawnItem: "IRON_INGOT"
+    blockType: "IRON_ORE"
     lore: []
     itemSpawnLore: []
   - name: "&6&lGold Generator"
@@ -229,157 +226,31 @@ generators:
     blockType: "GOLD_ORE"
     lore: []
     itemSpawnLore: []
-  - name: "&6&lGold Block Generator"
+  - name: "&b&lDiamond Generator"
     tier: 8
     price: 1000.0
     sellPrice: 200.0
-    speed: 20
-    spawnItem: "GOLD_BLOCK"
-    blockType: "GOLD_BLOCK"
-    lore: []
-    itemSpawnLore: []
-  - name: "&4&lRedstone Generator"
-    tier: 9
-    price: 5000.0
-    sellPrice: 300.0
-    speed: 20
-    spawnItem: "REDSTONE"
-    blockType: "REDSTONE_ORE"
-    lore: []
-    itemSpawnLore: []
-  - name: "&4&lRedstone Block Generator"
-    tier: 10
-    price: 10000.0
-    sellPrice: 400.0
-    speed: 20
-    spawnItem: "REDSTONE_BLOCK"
-    blockType: "REDSTONE_BLOCK"
-    lore: []
-    itemSpawnLore: []
-  - name: "&b&lLapis Generator"
-    tier: 11
-    price: 25000.0
-    sellPrice: 500.0
-    speed: 20
-    spawnItem: "LAPIS_LAZULI"
-    blockType: "LAPIS_ORE"
-    lore: []
-    itemSpawnLore: []
-  - name: "&b&lLapis Block Generator"
-    tier: 12
-    price: 50000.0
-    sellPrice: 600.0
-    speed: 20
-    spawnItem: "LAPIS_BLOCK"
-    blockType: "LAPIS_BLOCK"
-    lore: []
-    itemSpawnLore: []
-  - name: "&3&lDiamond Generator"
-    tier: 13
-    price: 100000.0
-    sellPrice: 700.0
     speed: 20
     spawnItem: "DIAMOND"
     blockType: "DIAMOND_ORE"
     lore: []
     itemSpawnLore: []
-  - name: "&3&lDiamond Block Generator"
-    tier: 14
-    price: 250000.0
-    sellPrice: 800.0
-    speed: 20
-    spawnItem: "DIAMOND_BLOCK"
-    blockType: "DIAMOND_BLOCK"
-    lore: []
-    itemSpawnLore: []
-  - name: "&a&lEmerald Generator"
-    tier: 15
-    price: 500000.0
-    sellPrice: 900.0
-    speed: 20
-    spawnItem: "EMERALD"
-    blockType: "EMERALD_ORE"
-    lore: []
-    itemSpawnLore: []
-  - name: "&a&lEmerald Block Generator"
-    tier: 16
-    price: 1000000.0
-    sellPrice: 1000.0
-    speed: 20
-    spawnItem: "EMERALD_BLOCK"
-    blockType: "EMERALD_BLOCK"
-    lore: []
-    itemSpawnLore: []
-  - name: "&e&lNetherrack Generator"
-    tier: 17
-    price: 2500000.0
-    sellPrice: 2000.0
-    speed: 20
-    spawnItem: "NETHERRACK"
-    blockType: "NETHERRACK"
-    lore: []
-    itemSpawnLore: []
-  - name: "&f&lQuartz Generator"
-    tier: 18
-    price: 5000000.0
-    sellPrice: 2500.0
-    speed: 20
-    spawnItem: "QUARTZ"
-    blockType: "NETHER_QUARTZ_ORE"
-    lore: []
-    itemSpawnLore: []
-  - name: "&f&lNether Gold Generator"
-    tier: 19
-    price: 10000000.0
-    sellPrice: 3000.0
-    speed: 20
-    spawnItem: "GOLD_NUGGET"
-    blockType: "NETHER_GOLD_ORE"
-    lore: []
-    itemSpawnLore: []
-  - name: "&e&lNether Brick Generator"
-    tier: 20
-    price: 25000000.0
-    sellPrice: 3500.0
-    speed: 20
-    spawnItem: "NETHER_BRICK"
-    blockType: "NETHER_BRICKS"
-    lore: []
-    itemSpawnLore: []
-  - name: "&c&lNether Wart Generator"
-    tier: 21
-    price: 50000000.0
-    sellPrice: 4000.0
-    speed: 20
-    spawnItem: "NETHER_WART"
-    blockType: "NETHER_WART_BLOCK"
-    lore: []
-    itemSpawnLore: []
-  - name: "&c&lObsidian Generator"
-    tier: 22
-    price: 100000000.0
-    sellPrice: 4500.0
+  - name: "&5&lObsidian Generator"
+    tier: 9
+    price: 5000.0
+    sellPrice: 300.0
     speed: 20
     spawnItem: "OBSIDIAN"
     blockType: "OBSIDIAN"
     lore: []
     itemSpawnLore: []
-  - name: "&c&lCrying Obsidian Generator"
-    tier: 23
-    price: 150000000.0
-    sellPrice: 5000.0
+  - name: "&4&lBedrock Generator"
+    tier: 10
+    price: 10000.0
+    sellPrice: 400.0
     speed: 20
-    spawnItem: "CRYING_OBSIDIAN"
-    blockType: "CRYING_OBSIDIAN"
-    lore: []
-    itemSpawnLore: []
-  - name: "&c&lObsidian Rose Generator"
-    tier: 24
-    price: 200000000.0
-    sellPrice: 5500.0
-    speed: 20
-    spawnItem: "WITHER_ROSE"
-    blockType: "RESPAWN_ANCHOR"
+    spawnItem: "BEDROCK"
+    blockType: "BEDROCK"
     lore: []
     itemSpawnLore: []
 

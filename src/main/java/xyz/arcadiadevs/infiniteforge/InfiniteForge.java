@@ -41,6 +41,7 @@ import xyz.arcadiadevs.infiniteforge.models.events.Event;
 import xyz.arcadiadevs.infiniteforge.models.events.SellEvent;
 import xyz.arcadiadevs.infiniteforge.models.events.SpeedEvent;
 import xyz.arcadiadevs.infiniteforge.placeholders.PlaceHolder;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.tasks.DataSaveTask;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
@@ -134,8 +135,11 @@ public final class InfiniteForge extends JavaPlugin {
 
     saveResource("block_data.json", false);
     saveResource("holograms.json", false);
+    saveResource("messages.yml", false);
 
     setupEconomy();
+
+    Messages.init();
 
     gson = new GsonBuilder().registerTypeAdapterFactory(RecordTypeAdapterFactory.DEFAULT)
         .setPrettyPrinting()
@@ -178,10 +182,9 @@ public final class InfiniteForge extends JavaPlugin {
   }
 
   private void registerCommands() {
-    getCommand("infiniteforge").setExecutor(new Commands(this, generatorsData));
-    getCommand("getitem").setExecutor(new Commands(this, generatorsData));
-    getCommand("generators").setExecutor(new Commands(this, generatorsData));
-    getCommand("selldrops").setExecutor(new Commands(this, generatorsData));
+    getCommand("infiniteforge").setExecutor(new Commands(generatorsData));
+    getCommand("generators").setExecutor(new Commands(generatorsData));
+    getCommand("selldrops").setExecutor(new Commands(generatorsData));
   }
 
   private void loadBukkitEvents() {
@@ -364,7 +367,6 @@ public final class InfiniteForge extends JavaPlugin {
    * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
    *                          encountered.
    */
-  @SuppressWarnings("unchecked")
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
     List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");

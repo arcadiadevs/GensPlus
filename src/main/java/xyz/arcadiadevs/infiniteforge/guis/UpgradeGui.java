@@ -17,6 +17,7 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.GuiUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
@@ -111,7 +112,7 @@ public class UpgradeGui {
     GeneratorsData.Generator nextGenerator = next.getGeneratorObject();
 
     if (nextGenerator == null) {
-      player.sendMessage(ChatUtil.translate("You have reached the maximum level"));
+      ChatUtil.sendMessage(player, Messages.REACHED_MAX_TIER);
       return;
     }
 
@@ -119,7 +120,7 @@ public class UpgradeGui {
         instance.getGeneratorsData().getUpgradePrice(current, next.getGenerator());
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
-      player.sendMessage(ChatUtil.translate("You don't have enough money"));
+      ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
       return;
     }
 
@@ -132,8 +133,6 @@ public class UpgradeGui {
 
     Set<Block> connectedBlocks = new HashSet<>();
     locationsData.traverseBlocks(generator.getBlock(), generator.getGenerator(), connectedBlocks);
-
-    System.out.println(connectedBlocks.size());
 
     ArrayList<LocationsData.GeneratorLocation> connectedLocations = connectedBlocks.stream()
         .map(locationsData::getLocationData)
@@ -156,7 +155,8 @@ public class UpgradeGui {
     });
 
     ChatUtil.sendMessage(player,
-        "&aYou have upgraded your generator to level " + next.getGenerator());
+        Messages.SUCCESSFULLY_UPGRADED
+            .replace("%tier%", String.valueOf(nextGenerator.tier())));
 
     generator.getBlock().setType(nextGenerator.blockType().getType());
 

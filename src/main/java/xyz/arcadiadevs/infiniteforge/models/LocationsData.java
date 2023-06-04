@@ -154,7 +154,6 @@ public record LocationsData(@Getter List<GeneratorLocation> locations) {
     }
 
     if (block.equals(filter)) {
-      System.out.println("Filter match");
       return;
     }
 

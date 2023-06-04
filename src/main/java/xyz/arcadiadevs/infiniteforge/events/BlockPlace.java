@@ -20,6 +20,7 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData;
 import xyz.arcadiadevs.infiniteforge.models.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 
@@ -72,12 +73,18 @@ public class BlockPlace implements Listener {
 
     String firstLine = lore.get(0);
 
+    final FileConfiguration config = InfiniteForge.getInstance().getConfig();
+
+    if (firstLine.contains("Generator drop tier") && !config.getBoolean("can-drops-be-placed")) {
+      event.setCancelled(true);
+      return;
+    }
+
     if (!firstLine.contains("Generator tier")) {
       return;
     }
 
     final Player player = event.getPlayer();
-    final FileConfiguration config = InfiniteForge.getInstance().getConfig();
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
     final int limit = config.getInt("limit-settings.limit");
@@ -85,7 +92,7 @@ public class BlockPlace implements Listener {
 
     if (locationsData.getPlacedGeneratorsByPlayer(player.getUniqueId()).size() >= limit
             && enabled) {
-      ChatUtil.sendMessage(event.getPlayer(), config.getString("limit-settings.message")
+      ChatUtil.sendMessage(event.getPlayer(), Messages.LIMIT_REACHED
                       .replace("%limit%", String.valueOf(limit)));
       event.setCancelled(true);
       return;
@@ -236,7 +243,8 @@ public class BlockPlace implements Listener {
     locationsData.addLocation(location);
 
     // Send a notification to the player
-    ChatUtil.sendMessage(event.getPlayer(), "&aYou have placed a &eTier " + tier + " &agenerator.");
+    ChatUtil.sendMessage(event.getPlayer(), Messages.SUCCESSFULLY_PLACED.replace("%tier%",
+        String.valueOf(tier)));
   }
 
 }

@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.infiniteforge.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.guis.GeneratorsGui;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
+import xyz.arcadiadevs.infiniteforge.statics.Permissions;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.SellUtil;
 
@@ -18,17 +21,14 @@ import xyz.arcadiadevs.infiniteforge.utils.SellUtil;
  */
 public class Commands implements CommandExecutor {
 
-  private final InfiniteForge instance;
   private final GeneratorsData generatorsData;
 
   /**
    * Constructs a Commands object with the specified InfiniteForge instance and GeneratorsData.
    *
-   * @param instance       The InfiniteForge instance.
    * @param generatorsData The GeneratorsData object containing information about generators.
    */
-  public Commands(InfiniteForge instance, GeneratorsData generatorsData) {
-    this.instance = instance;
+  public Commands(GeneratorsData generatorsData) {
     this.generatorsData = generatorsData;
   }
 
@@ -43,45 +43,89 @@ public class Commands implements CommandExecutor {
    */
   @Override
   public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
-      @NotNull String s, @NotNull String[] strings) {
+                           @NotNull String s, @NotNull String[] strings) {
     if (!(commandSender instanceof Player player)) {
       return false;
     }
 
-    if (command.getName().equalsIgnoreCase("getitem")) {
-      if (strings.length < 1) {
-        return true;
-      }
-
-      int tier = Integer.parseInt(strings[0]);
-
-      GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
-      generator.giveItem(player);
-
-      player.sendMessage("You got a generator of tier " + tier);
-    }
-
-    if (command.getName().equalsIgnoreCase("generators")) {
-      GeneratorsGui.open(player);
-    }
-
-    if (command.getName().equalsIgnoreCase("selldrops")) {
-      SellUtil.sell(player);
-    }
-
     if (command.getName().equalsIgnoreCase("infiniteforge")) {
       if (strings.length == 0) {
-        ChatUtil.sendMessage(player,
-            "&9InfiniteForge> This server is running InfiniteForge version &a"
-                + InfiniteForge.getInstance().getDescription().getVersion());
+        ChatUtil.sendMessage(player, Messages.DEFAULT_MESSAGE.replace("%version%",
+            InfiniteForge.getInstance().getDescription().getVersion()));
         return true;
       }
 
       if (strings[0].equalsIgnoreCase("reload")) {
-        instance.reloadConfig();
+        if (!player.hasPermission(Permissions.GENERATOR_RELOAD)) {
+          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          return true;
+        }
 
-        player.sendMessage("Configuration reloaded.");
+        InfiniteForge.getInstance().reloadConfig();
+        ChatUtil.sendMessage(player, Messages.CONFIG_RELOADED);
+        return true;
       }
+
+      if (strings[0].equalsIgnoreCase("admingive")) {
+        if (!player.hasPermission(Permissions.GENERATOR_GIVE)) {
+          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          return true;
+        }
+
+        if (strings.length < 3) {
+          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_ARGUMENTS);
+          return true;
+        }
+
+        Player targetPlayer = Bukkit.getPlayer(strings[1]);
+        if (targetPlayer == null) {
+          ChatUtil.sendMessage(player, Messages.PLAYER_NOT_FOUND);
+          return true;
+        }
+
+        int tier;
+        try {
+          tier = Integer.parseInt(strings[2]);
+        } catch (NumberFormatException e) {
+          ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
+          return true;
+        }
+
+        GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
+        if (generator == null) {
+          ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
+          return true;
+        }
+
+        generator.giveItem(targetPlayer);
+        ChatUtil.sendMessage(player,
+            String.format(Messages.GENERATOR_GIVEN
+                    .replace("%player%", targetPlayer.getName()))
+                    .replace("%tier%", String.valueOf(tier)));
+        ChatUtil.sendMessage(targetPlayer, String.format(Messages.GENERATOR_RECEIVED
+            .replace("%tier%", String.valueOf(tier)))
+        );
+        return true;
+      }
+    }
+
+    if (command.getName().equalsIgnoreCase("generators")) {
+      if (!player.hasPermission(Permissions.GENERATORS_GUI)) {
+        ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+        return true;
+      }
+      GeneratorsGui.open(player);
+      return true;
+    }
+
+    if (command.getName().equalsIgnoreCase("selldrops")) {
+      if (!player.hasPermission(Permissions.GENERATOR_SELL)) {
+        ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+        return true;
+      }
+
+      SellUtil.sell(player);
+      return true;
     }
 
     return true;
