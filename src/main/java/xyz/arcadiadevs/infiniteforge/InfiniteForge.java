@@ -1,7 +1,5 @@
 package xyz.arcadiadevs.infiniteforge;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.HologramPool;
 import com.github.unldenis.hologram.IHologramPool;
 import com.github.unldenis.hologram.placeholder.Placeholders;
@@ -20,9 +18,6 @@ import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -30,11 +25,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.infiniteforge.commands.Commands;
 import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
+import xyz.arcadiadevs.infiniteforge.events.BlockInteraction;
 import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
-import xyz.arcadiadevs.infiniteforge.events.ClickEvent;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
-import xyz.arcadiadevs.infiniteforge.models.HologramsData;
-import xyz.arcadiadevs.infiniteforge.models.HologramsData.IfHologram;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.models.events.DropEvent;
 import xyz.arcadiadevs.infiniteforge.models.events.Event;
@@ -46,7 +39,6 @@ import xyz.arcadiadevs.infiniteforge.tasks.DataSaveTask;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
-import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 import xyz.arcadiadevs.infiniteforge.utils.ItemUtils;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
@@ -114,14 +106,6 @@ public final class InfiniteForge extends JavaPlugin {
   private List<Event> events;
 
   /**
-   * Gets the list of holograms.
-   *
-   * @implNote Null if holograms are disabled.
-   */
-  @Getter
-  private HologramsData hologramsData;
-
-  /**
    * Gets the data save task.
    */
   private DataSaveTask dataSaveTask;
@@ -172,7 +156,6 @@ public final class InfiniteForge extends JavaPlugin {
   @Override
   public void onDisable() {
     dataSaveTask.saveBlockDataToJson();
-    dataSaveTask.saveHologramDataToJson();
 
     if (getConfig().getBoolean("developer-options.debug")) {
       // Remove all files
@@ -190,9 +173,9 @@ public final class InfiniteForge extends JavaPlugin {
   private void loadBukkitEvents() {
     final HashSet<Listener> events = new HashSet<>();
 
-    events.add(new BlockPlace(locationsData, hologramPool, hologramsData));
-    events.add(new BlockBreak(locationsData, generatorsData, hologramsData, hologramPool));
-    events.add(new ClickEvent(locationsData, generatorsData));
+    events.add(new BlockPlace(locationsData));
+    events.add(new BlockBreak(locationsData, generatorsData));
+    events.add(new BlockInteraction(locationsData, generatorsData));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
@@ -204,7 +187,7 @@ public final class InfiniteForge extends JavaPlugin {
     dataSaveTask.runTaskTimerAsynchronously(this, 0, 20);
 
     // Run spawner task every second
-    new SpawnerTask(locationsData.getLocations(), generatorsData).runTaskTimerAsynchronously(this,
+    new SpawnerTask(locationsData.locations(), generatorsData).runTaskTimerAsynchronously(this,
         0, 20);
 
     // Start event loop
@@ -253,111 +236,6 @@ public final class InfiniteForge extends JavaPlugin {
           getConfig().getString("events.speed-event.name")));
     }
     return events;
-  }
-
-  /**
-   * Loads holograms from holograms.json. If holograms are disabled, this method removes
-   * hologramUuid from all locations and deletes holograms.json.
-   */
-  @SuppressWarnings("ResultOfMethodCallIgnored")
-  private void loadHolograms() {
-    boolean enabled = getConfig().getBoolean("holograms.enabled", true);
-
-    if (!enabled) {
-      locationsData.getLocations().forEach(location -> location.setHologramUuid(null));
-
-      // Remove holograms.json if it exists
-      File file = new File(getDataFolder() + "/holograms.json");
-      if (file.exists()) {
-        file.delete();
-      }
-
-      hologramsData = null;
-
-      return;
-    }
-
-    hologramPool = new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000));
-    placeholders = new Placeholders();
-
-    try (FileReader reader = new FileReader(getDataFolder() + "/holograms.json")) {
-      List<IfHologram> hologramsList = gson.fromJson(reader,
-          new TypeToken<List<IfHologram>>() {
-          }.getType());
-
-      for (IfHologram hologramObject : hologramsList) {
-
-        final Hologram hologram = HologramsUtil.createHologram(
-            hologramObject.getLocation(),
-            hologramObject.getDescription(),
-            Material.matchMaterial(hologramObject.getItemStack())
-        );
-
-        hologramPool.takeCareOf(hologram);
-
-        hologramObject.setHologram(hologram);
-      }
-
-      hologramsData = new HologramsData(hologramsList);
-
-      for (LocationsData.GeneratorLocation location : locationsData.getLocations()) {
-        if (location.getHologramUuid() != null) {
-          continue;
-        }
-
-        GeneratorsData.Generator generator = location.getGeneratorObject();
-
-        HashSet<Block> connectedBlocks = new HashSet<>();
-        locationsData.traverseBlocks(location.getBlock(), location.getGenerator(), connectedBlocks);
-
-        final List<LocationsData.GeneratorLocation> connectedObjects = connectedBlocks.stream()
-            .map(locationsData::getLocationData)
-            .toList();
-
-        Location centerLocation = locationsData.getCenter(location);
-
-        Material material = XMaterial.matchXMaterial(
-                location.getGeneratorObject().blockType().getType().toString())
-            .orElseThrow(() -> new RuntimeException("Invalid item stack"))
-            .parseItem()
-            .getType();
-
-        List<String> lines = instance.getConfig().getStringList("holograms.lines")
-            .stream()
-            .map(line -> line.replace("%name%", generator.name()))
-            .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))
-            .map(line -> line.replace("%speed%", String.valueOf(generator.speed())))
-            .map(line -> line.replace("%spawnItem%", generator.spawnItem().getType().toString()))
-            .map(line -> line.replace("%sellPrice%", String.valueOf(generator.sellPrice())))
-            .map(ChatUtil::translate)
-            .toList();
-
-        Hologram hologram = HologramsUtil.createHologram(
-            centerLocation,
-            lines,
-            material
-        );
-
-        hologramPool.takeCareOf(hologram);
-
-        IfHologram ifHologram = new IfHologram(
-            generator.name(),
-            lines,
-            centerLocation.getX(),
-            centerLocation.getY(),
-            centerLocation.getZ(),
-            centerLocation.getWorld().getName(),
-            generator.blockType().getType().toString(),
-            hologram
-        );
-
-        hologramsData.addHologramData(ifHologram);
-        location.setHologramUuid(ifHologram.getUuid());
-        connectedObjects.forEach(object -> object.setHologramUuid(ifHologram.getUuid()));
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   /**
@@ -450,12 +328,11 @@ public final class InfiniteForge extends JavaPlugin {
     return new GeneratorsData(generators);
   }
 
-  /**
-   * Loads the block data from the JSON file.
-   *
-   * @return The list of generator locations.
-   * @throws RuntimeException if an I/O error occurs while reading the JSON file.
-   */
+  private void loadHolograms() {
+    hologramPool = new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000));
+    placeholders = new Placeholders();
+  }
+
   private List<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
     try (FileReader reader = new FileReader(getDataFolder() + "/block_data.json")) {
       return gson.fromJson(reader, new TypeToken<List<LocationsData.GeneratorLocation>>() {
@@ -464,4 +341,5 @@ public final class InfiniteForge extends JavaPlugin {
       throw new RuntimeException(e);
     }
   }
+
 }

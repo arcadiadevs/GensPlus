@@ -28,7 +28,6 @@ public class DataSaveTask extends BukkitRunnable {
   @Override
   public void run() {
     saveBlockDataToJson();
-    saveHologramDataToJson();
   }
 
   /**
@@ -37,23 +36,7 @@ public class DataSaveTask extends BukkitRunnable {
    */
   public void saveBlockDataToJson() {
     try (FileWriter writer = new FileWriter(instance.getDataFolder() + "/block_data.json")) {
-      instance.getGson().toJson(instance.getLocationsData().getLocations(), writer);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Saves the hologram data to a JSON file. It converts the hologram data to JSON format and writes
-   * it to a file.
-   */
-  public void saveHologramDataToJson() {
-    if (instance.getHologramPool() == null) {
-      return;
-    }
-
-    try (FileWriter writer = new FileWriter(instance.getDataFolder() + "/holograms.json")) {
-      instance.getGson().toJson(instance.getHologramsData().holograms(), writer);
+      instance.getGson().toJson(instance.getLocationsData().locations(), writer);
     } catch (IOException e) {
       e.printStackTrace();
     }

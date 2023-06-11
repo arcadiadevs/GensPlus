@@ -1,26 +1,20 @@
 package xyz.arcadiadevs.infiniteforge.guis;
 
-import com.github.unldenis.hologram.IHologramPool;
 import com.samjakob.spigui.buttons.SGButton;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
-import xyz.arcadiadevs.infiniteforge.models.HologramsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.GuiUtil;
-import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 
 /**
  * The UpgradeGui class provides functionality for opening the upgrade GUI for generators in
@@ -47,9 +41,8 @@ public class UpgradeGui {
     );
 
     final GeneratorsData.Generator current = generator.getGeneratorObject();
-    final LocationsData.GeneratorLocation next = generator.getNextTier();
-
-    GeneratorsData.Generator nextGenerator = next.getGeneratorObject();
+    GeneratorsData.Generator nextGenerator =
+        instance.getGeneratorsData().getGenerator(current.tier() + 1);
 
     if (nextGenerator == null) {
       ChatUtil.sendMessage(player, "&7You have reached the maximum tier for this generator.");
@@ -63,6 +56,9 @@ public class UpgradeGui {
     final ItemMeta itemMeta = itemStack.getItemMeta();
 
     itemMeta.setDisplayName(ChatUtil.translate(config.getString("guis.upgrade-gui.first-line")));
+
+    double price = instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier())
+        * generator.getBlockLocations().size();
 
     List<String> lore = config.getStringList("guis.upgrade-gui.lore");
     lore = lore.stream()
@@ -78,8 +74,7 @@ public class UpgradeGui {
         .map(s -> s.replace("%nextSellPrice%", economy.format(nextGenerator.sellPrice())))
         .map(s -> s.replace("%nextSpawnItem%", nextGenerator.spawnItem().getType().name()))
         .map(s -> s.replace("%nextBlockType%", nextGenerator.blockType().getType().name()))
-        .map(s -> s.replace("%upgradePrice%", economy.format(
-            instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier()))))
+        .map(s -> s.replace("%upgradePrice%", economy.format(price)))
         .map(s -> s.replace("%money%", economy.format(economy.getBalance(player))))
         .map(ChatUtil::translate)
         .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
@@ -100,16 +95,14 @@ public class UpgradeGui {
   /**
    * Upgrades the specified generator to the next tier for the given player.
    *
-   * @param player    The Player object who is upgrading the generator.
-   * @param generator The GeneratorLocation representing the generator to be upgraded.
+   * @param player     The Player object who is upgrading the generator.
+   * @param currentLoc The GeneratorLocation representing the generator to be upgraded.
    */
-  private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation generator) {
+  private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc) {
     final LocationsData locationsData = instance.getLocationsData();
-    final HologramsData hologramsData = instance.getHologramsData();
-    final IHologramPool hologramPool = instance.getHologramPool();
-    GeneratorsData.Generator current = generator.getGeneratorObject();
-    LocationsData.GeneratorLocation next = generator.getNextTier();
-    GeneratorsData.Generator nextGenerator = next.getGeneratorObject();
+    GeneratorsData.Generator current = currentLoc.getGeneratorObject();
+    GeneratorsData.Generator nextGenerator =
+        instance.getGeneratorsData().getGenerator(current.tier() + 1);
 
     if (nextGenerator == null) {
       ChatUtil.sendMessage(player, Messages.REACHED_MAX_TIER);
@@ -117,7 +110,8 @@ public class UpgradeGui {
     }
 
     double upgradePrice =
-        instance.getGeneratorsData().getUpgradePrice(current, next.getGenerator());
+        instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier())
+            * currentLoc.getBlockLocations().size();
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
       ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
@@ -131,50 +125,18 @@ public class UpgradeGui {
       return;
     }
 
-    Set<Block> connectedBlocks = new HashSet<>();
-    locationsData.traverseBlocks(generator.getBlock(), generator.getGenerator(), connectedBlocks);
+    LocationsData.GeneratorLocation next = currentLoc.getNextTier();
 
-    ArrayList<LocationsData.GeneratorLocation> connectedLocations = connectedBlocks.stream()
-        .map(locationsData::getLocationData)
-        .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+    currentLoc.getBlockLocations()
+        .forEach(blockLoc -> blockLoc.setType(nextGenerator.blockType().getType()));
 
-    connectedLocations.forEach(location -> {
-      HologramsData.IfHologram ifHologram1 =
-          hologramsData.getHologramData(location.getHologramUuid());
+    locationsData.removeLocation(currentLoc);
 
-      location.setHologramUuid(null);
-
-      if (ifHologram1 == null) {
-        return;
-      }
-
-      hologramPool.remove(ifHologram1.getHologram());
-      hologramsData.removeHologramData(ifHologram1);
-
-      HologramsUtil.unlinkHolograms(location);
-    });
+    locationsData.addLocation(next);
 
     ChatUtil.sendMessage(player,
         Messages.SUCCESSFULLY_UPGRADED
             .replace("%tier%", String.valueOf(nextGenerator.tier())));
-
-    generator.getBlock().setType(nextGenerator.blockType().getType());
-
-    connectedLocations.remove(generator);
-    instance.getLocationsData().remove(generator);
-
-    next.setHologramUuid(null);
-    connectedLocations.add(next);
-
-    instance.getLocationsData().addLocation(next);
-
-    for (LocationsData.GeneratorLocation location : connectedLocations) {
-      if (location.getHologramUuid() != null) {
-        continue;
-      }
-
-      HologramsUtil.fixConnections(location);
-    }
   }
 }
 
