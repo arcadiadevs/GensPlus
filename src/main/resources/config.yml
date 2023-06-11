@@ -181,13 +181,13 @@ generators:
     blockType: "SANDSTONE"
     lore: []
     itemSpawnLore: []
-  - name: "&8&lCoal Generator"
+  - name: "&f&lChiseled Sandstone Generator"
     tier: 3
     price: 200.0
     sellPrice: 25.0
     speed: 20
-    spawnItem: "COAL"
-    blockType: "COAL_ORE"
+    spawnItem: "CHISELED_SANDSTONE"
+    blockType: "CHISELED_SANDSTONE"
     lore: []
     itemSpawnLore: []
   - name: "&6&lRed Sandstone Generator"

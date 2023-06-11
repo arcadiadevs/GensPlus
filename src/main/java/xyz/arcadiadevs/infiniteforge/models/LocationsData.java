@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -95,7 +96,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
     private final String playerId;
     private final Integer generator;
     private final List<SimplifiedLocation> blockLocations;
-    private final transient Hologram hologram;
+
+    @Setter
+    private transient Hologram hologram;
 
     public GeneratorLocation(String playerId, Integer generator, List<?> blockLocations) {
       this.playerId = playerId;
@@ -174,8 +177,8 @@ public record LocationsData(List<GeneratorLocation> locations) {
 
       List<Item> items = new ArrayList<>();
 
-      long itemsToDrop = EventLoop.getActiveEvent().event() instanceof DropEvent event
-          ? event.getMultiplier() : 1;
+      long itemsToDrop = (EventLoop.getActiveEvent().event() instanceof DropEvent event
+          ? event.getMultiplier() : 1) * getBlockLocations().size();
 
       for (int i = 0; i < itemsToDrop; i++) {
         Item item = location.getWorld().dropItemNaturally(

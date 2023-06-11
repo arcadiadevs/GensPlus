@@ -1,5 +1,7 @@
 package xyz.arcadiadevs.infiniteforge;
 
+import com.cryptomorin.xseries.XMaterial;
+import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.HologramPool;
 import com.github.unldenis.hologram.IHologramPool;
 import com.github.unldenis.hologram.placeholder.Placeholders;
@@ -7,6 +9,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.samjakob.spigui.SpiGUI;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,10 +17,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -39,6 +45,7 @@ import xyz.arcadiadevs.infiniteforge.tasks.DataSaveTask;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 import xyz.arcadiadevs.infiniteforge.utils.ItemUtils;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
@@ -331,6 +338,31 @@ public final class InfiniteForge extends JavaPlugin {
   private void loadHolograms() {
     hologramPool = new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000));
     placeholders = new Placeholders();
+
+    for (LocationsData.GeneratorLocation location : getLocationsData().locations()) {
+      GeneratorsData.Generator generator = generatorsData.getGenerator(location.getGenerator());
+
+      Material material = XMaterial.matchXMaterial(generator.blockType().getType().toString())
+          .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+          .parseItem()
+          .getType();
+
+      List<String> lines = InfiniteForge.getInstance().getConfig()
+          .getStringList("holograms.lines")
+          .stream()
+          .map(line -> line.replace("%name%", generator.name()))
+          .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))
+          .map(line -> line.replace("%speed%", String.valueOf(generator.speed())))
+          .map(line -> line.replace("%spawnItem%", generator.spawnItem().getType().toString()))
+          .map(line -> line.replace("%sellPrice%", String.valueOf(generator.sellPrice())))
+          .map(ChatUtil::translate)
+          .toList();
+
+      Location center = location.getCenter();
+      Hologram hologram = HologramsUtil.createHologram(center, lines, material);
+      location.setHologram(hologram);
+      hologramPool.takeCareOf(hologram);
+    }
   }
 
   private List<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
