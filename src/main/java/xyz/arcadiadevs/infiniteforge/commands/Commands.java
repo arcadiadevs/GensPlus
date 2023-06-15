@@ -114,7 +114,7 @@ public class Commands implements CommandExecutor {
         ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
         return true;
       }
-      GeneratorsGui.open(player);
+      new GeneratorsGui(InfiniteForge.getInstance()).open(player);
       return true;
     }
 

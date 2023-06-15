@@ -2,50 +2,54 @@ package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * The GeneratorsGui class provides functionality for opening the generators GUI in InfiniteForge.
  * It displays a GUI menu containing buttons representing different generators.
  */
-public class GeneratorsGui {
+public class GeneratorsGui implements Listener {
+
+  private final Gui gui;
+  private final Economy economy = InfiniteForge.getInstance().getEcon();
+
+  /**
+   * Constructs a new GeneratorsGui instance.
+   *
+   * @param plugin  The Plugin instance.
+   */
+  public GeneratorsGui(Plugin plugin) {
+    this.gui = new Gui("Generators", 6);
+    Bukkit.getPluginManager().registerEvents(this, plugin);
+  }
 
   /**
    * Opens the generators GUI for the specified player.
    *
    * @param player The Player object for whom the GUI is being opened.
    */
-  public static void open(Player player) {
-    final var instance = InfiniteForge.getInstance();
-    final var config = instance.getConfig();
-    final Economy economy = instance.getEcon();
+  public void open(Player player) {
+    gui.getInventory().clear();
 
-    if (!config.getBoolean("guis.generators-gui.enabled")) {
-      return;
-    }
-
-    final var rows = config.getInt("guis.generators-gui.rows");
-    final var menu = instance.getSpiGui().create(
-        ChatUtil.translate(config.getString("guis.generators-gui.title")),
-        rows
-    );
-
-    menu.setAutomaticPaginationEnabled(true);
-    menu.setBlockDefaultInteractions(true);
-
-    GeneratorsData generatorsData = instance.getGeneratorsData();
-    List<Map<?, ?>> generatorsConfig = config.getMapList("generators");
+    GeneratorsData generatorsData = InfiniteForge.getInstance().getGeneratorsData();
+    List<Map<?, ?>> generatorsConfig = InfiniteForge.getInstance().getConfig().getMapList("generators");
 
     for (GeneratorsData.Generator generator : generatorsData.getGenerators()) {
       final var material = XMaterial.matchXMaterial(generator.blockType()).parseItem();
@@ -60,7 +64,7 @@ public class GeneratorsGui {
       }
 
       List<String> lore = ((List<String>) matchingGeneratorConfig.get("lore")).isEmpty()
-          ? config.getStringList("default-lore")
+          ? InfiniteForge.getInstance().getConfig().getStringList("default-lore")
           : (List<String>) matchingGeneratorConfig.get("lore");
 
       lore = lore.stream()
@@ -78,9 +82,7 @@ public class GeneratorsGui {
           .lore(lore)
           .build();
 
-      menu.addButton(new SGButton(itemBuilder).withListener(event -> {
-        event.setCancelled(true);
-
+      gui.addItem(new Gui.GuiItem(Gui.GuiItemType.ITEM, itemBuilder, () -> {
         if (generator.price() > economy.getBalance(player)) {
           ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
           XSound.ENTITY_VILLAGER_NO.play(player);
@@ -101,6 +103,21 @@ public class GeneratorsGui {
       }));
     }
 
-    player.openInventory(menu.getInventory());
+    player.openInventory(gui.getInventory());
+  }
+
+  /**
+   * Handles the inventory click event for the generators GUI.
+   *
+   * @param event The InventoryClickEvent instance.
+   */
+  @EventHandler
+  public void onInventoryClick(InventoryClickEvent event) {
+    if (!event.getInventory().equals(gui.getInventory())) {
+      return;
+    }
+
+    event.setCancelled(true);
+    gui.onButtonClick(event);
   }
 }
