@@ -1,14 +1,22 @@
 package xyz.arcadiadevs.infiniteforge.guis;
 
+import com.cryptomorin.xseries.XSound;
 import com.samjakob.spigui.buttons.SGButton;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
@@ -87,6 +95,7 @@ public class UpgradeGui {
     menu.setButton(0, 13, new SGButton(itemStack).withListener(event -> {
       upgradeGenerator(player, generator);
       player.closeInventory();
+      spawnFirework(generator.getCenter());
     }));
 
     player.openInventory(menu.getInventory());
@@ -138,5 +147,12 @@ public class UpgradeGui {
         Messages.SUCCESSFULLY_UPGRADED
             .replace("%tier%", String.valueOf(nextGenerator.tier())));
   }
+
+  private static void spawnFirework(Location location) {
+    World world = location.getWorld();
+    world.createExplosion(location, 0f);
+    XSound.ENTITY_FIREWORK_ROCKET_LAUNCH.play(location, 1, 1);
+  }
+
 }
 
