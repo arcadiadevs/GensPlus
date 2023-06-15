@@ -16,7 +16,7 @@ public class Gui implements Listener {
   private ArrayList<Inventory> inventory;
 
   public Gui(String title, int rows) {
-    this(title, rows, null);
+    this(title, rows, new ArrayList<>());
   }
 
   public Gui(String title, int rows, ArrayList<GuiItem> items) {
