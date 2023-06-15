@@ -103,6 +103,7 @@ public class GeneratorsGui implements Listener {
       }));
     }
 
+    gui.init(InfiniteForge.getInstance());
     player.openInventory(gui.getInventory());
   }
 
