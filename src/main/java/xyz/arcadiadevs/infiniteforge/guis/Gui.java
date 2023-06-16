@@ -41,7 +41,7 @@ public class Gui implements Listener {
   public void addItem(GuiItem item, boolean firstEmpty) {
     if (firstEmpty) {
       for (int i = 0; i < items.size(); i++) {
-        if (getItemAtSlot(i) == null) {
+        if (items.get(i) == null) {
           items.set(i, item);
           return;
         }
@@ -89,7 +89,7 @@ public class Gui implements Listener {
       int lastItem = Math.min(firstItem + itemsPerInventory, items.size());
 
       for (int j = firstItem; j < lastItem; j++) {
-        GuiItem item = getItemAtSlot(j);
+        GuiItem item = items.get(j);
 
         if (item != null) {
           inv.setItem(j - firstItem, item.item);
@@ -98,7 +98,7 @@ public class Gui implements Listener {
     }
 
     for (int i = 0; i < items.size(); i++) {
-      GuiItem item = getItemAtSlot(i);
+      GuiItem item = items.get(i);
 
       if (item == null) {
         continue;
@@ -129,7 +129,7 @@ public class Gui implements Listener {
       return;
     }
 
-    GuiItem item = getItemAtSlot(event.getSlot());
+    GuiItem item = items.get(event.getSlot());
 
     if (item == null) {
       return;
