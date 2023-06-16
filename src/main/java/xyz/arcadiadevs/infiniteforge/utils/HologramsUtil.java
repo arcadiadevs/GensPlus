@@ -2,6 +2,7 @@ package xyz.arcadiadevs.infiniteforge.utils;
 
 import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.animation.Animation;
+import com.github.unldenis.hologram.line.ILine;
 import com.github.unldenis.hologram.line.ItemLine;
 import com.github.unldenis.hologram.line.Line;
 import com.github.unldenis.hologram.line.TextLine;
@@ -32,12 +33,12 @@ public class HologramsUtil {
     Hologram hologram = new Hologram(InfiniteForge.getInstance(), location,
         new TextItemStandardLoader());
 
-    List<TextLine> textLines = new ArrayList<>();
+    List<ILine> lines = new ArrayList<>();
     for (String lineText : text) {
       Line line1 = new Line(InfiniteForge.getInstance());
       TextLine textLine = new TextLine(line1, lineText,
           InfiniteForge.getInstance().getPlaceholders());
-      textLines.add(textLine);
+      lines.add(textLine);
     }
 
     Line line = new Line(InfiniteForge.getInstance());
@@ -46,8 +47,9 @@ public class HologramsUtil {
 
     itemAline.setAnimation(Animation.AnimationType.CIRCLE, hologram);
 
-    hologram.load(textLines.get(0), textLines.get(1), textLines.get(2), textLines.get(3),
-        itemAline);
+    lines.add(itemAline);
+
+    hologram.load(lines.toArray(new ILine[0]));
 
     InfiniteForge.getInstance().getHologramPool().takeCareOf(hologram);
 

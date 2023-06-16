@@ -2,11 +2,8 @@ package xyz.arcadiadevs.infiniteforge.models;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.github.unldenis.hologram.Hologram;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -122,8 +119,24 @@ public record LocationsData(List<GeneratorLocation> locations) {
               .parseItem()
               .getType();
 
-      List<String> lines = InfiniteForge.getInstance().getConfig()
-          .getStringList("holograms.lines")
+      List<Map<?, ?>> generatorsConfig = InfiniteForge.getInstance()
+          .getConfig().getMapList("generators");
+
+      Map<?, ?> matchingGeneratorConfig = generatorsConfig.stream()
+          .filter(generatorConfig -> generatorConfig.get("name")
+              .equals(getGeneratorObject().name()))
+          .findFirst()
+          .orElse(null);
+
+      if (matchingGeneratorConfig == null) {
+        return;
+      }
+
+      List<String> lines = ((List<String>) matchingGeneratorConfig.get("hologramLines")).isEmpty()
+          ? InfiniteForge.getInstance().getConfig().getStringList("default-hologram-lines")
+          : (List<String>) matchingGeneratorConfig.get("hologramLines");
+
+      lines = lines
           .stream()
           .map(line -> line.replace("%name%", getGeneratorObject().name()))
           .map(line -> line.replace("%tier%",

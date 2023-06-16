@@ -9,6 +9,7 @@ public class Permissions {
     public static String GENERATORS_GUI = "infiniteforge.generator.open";
     public static String GENERATOR_SELL = "infiniteforge.generator.sell";
     public static String GENERATOR_GIVE = "infiniteforge.admin.give";
+    public static String GENERATOR_GIVE_ALL = "infiniteforge.admin.give.all";
     public static String GENERATOR_RELOAD = "infiniteforge.admin.reload";
     public static String GENERATOR_INFO = "infiniteforge.generator.info";
 }
