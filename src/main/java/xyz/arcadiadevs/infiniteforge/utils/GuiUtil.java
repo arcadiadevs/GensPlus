@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.samjakob.spigui.SGMenu;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * The GuiUtil class provides utility methods for GUI-related operations.
@@ -52,13 +53,18 @@ public class GuiUtil {
    *
    * @param menu The SGMenu to fill.
    * @param rows The number of rows in the menu.
+   * @param material The material to fill the menu with.
    */
-  public static void fillInventory(SGMenu menu, int rows) {
+  public static void fillInventory(SGMenu menu, int rows, String material, String displayName) {
     for (int i = 0; i < rows * 9; i++) {
-      menu.setButton(
-          i,
-          new SGButton(new ItemBuilder(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem()).build())
-      );
+      ItemStack itemStack = new ItemBuilder(XMaterial
+          .matchXMaterial(material)
+          .orElseThrow()
+          .parseItem())
+          .name(displayName)
+          .build();
+
+      menu.setButton(i, new SGButton(itemStack));
     }
   }
 

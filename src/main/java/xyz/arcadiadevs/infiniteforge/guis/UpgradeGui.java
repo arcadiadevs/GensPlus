@@ -2,21 +2,19 @@ package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.cryptomorin.xseries.XSound;
 import com.samjakob.spigui.buttons.SGButton;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.BlockLocation;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
@@ -60,15 +58,15 @@ public class UpgradeGui {
     menu.setAutomaticPaginationEnabled(false);
     menu.setBlockDefaultInteractions(true);
 
-    final ItemStack itemStack = new ItemStack(nextGenerator.blockType());
-    final ItemMeta itemMeta = itemStack.getItemMeta();
+    final ItemStack itemStackUpgradeOne = new ItemStack(nextGenerator.blockType());
+    final ItemMeta itemMetaUpgradeOne = itemStackUpgradeOne.getItemMeta();
 
-    itemMeta.setDisplayName(ChatUtil.translate(config.getString("guis.upgrade-gui.first-line")));
+    itemMetaUpgradeOne.setDisplayName(ChatUtil.translate(config.getString(
+        "guis.upgrade-gui.upgradeOne.first-line")));
 
-    double price = instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier())
-        * generator.getBlockLocations().size();
+    double price = instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
-    List<String> lore = config.getStringList("guis.upgrade-gui.lore");
+    List<String> lore = config.getStringList("guis.upgrade-gui.upgradeOne.lore");
     lore = lore.stream()
         .map(s -> s.replace("%tier%", String.valueOf(current.tier())))
         .map(s -> s.replace("%speed%", String.valueOf(current.speed())))
@@ -87,15 +85,52 @@ public class UpgradeGui {
         .map(ChatUtil::translate)
         .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-    itemMeta.setLore(lore);
-    itemStack.setItemMeta(itemMeta);
+    itemMetaUpgradeOne.setLore(lore);
+    itemStackUpgradeOne.setItemMeta(itemMetaUpgradeOne);
 
-    GuiUtil.fillHalfInventory(menu, rows);
+    final ItemStack itemStackUpgradeAll = new ItemStack(nextGenerator.blockType());
+    final ItemMeta itemMetaUpgradeAll = itemStackUpgradeAll.getItemMeta();
 
-    menu.setButton(0, 13, new SGButton(itemStack).withListener(event -> {
+    itemMetaUpgradeAll.setDisplayName(ChatUtil.translate(config.getString(
+        "guis.upgrade-gui.upgradeAll.first-line")));
+
+    List<String> loreAll = config.getStringList("guis.upgrade-gui.upgradeAll.lore");
+    double priceForAll = price * generator.getBlockLocations().size();
+    loreAll = loreAll.stream()
+        .map(s -> s.replace("%tier%", String.valueOf(current.tier())))
+        .map(s -> s.replace("%speed%", String.valueOf(current.speed())))
+        .map(s -> s.replace("%price%", economy.format(current.price())))
+        .map(s -> s.replace("%sellPrice%", economy.format(current.sellPrice())))
+        .map(s -> s.replace("%spawnItem%", current.spawnItem().getType().name()))
+        .map(s -> s.replace("%blockType%", current.blockType().getType().name()))
+        .map(s -> s.replace("%nextTier%", String.valueOf(nextGenerator.tier())))
+        .map(s -> s.replace("%nextSpeed%", String.valueOf(nextGenerator.speed())))
+        .map(s -> s.replace("%nextPrice%", economy.format(nextGenerator.price())))
+        .map(s -> s.replace("%nextSellPrice%", economy.format(nextGenerator.sellPrice())))
+        .map(s -> s.replace("%nextSpawnItem%", nextGenerator.spawnItem().getType().name()))
+        .map(s -> s.replace("%nextBlockType%", nextGenerator.blockType().getType().name()))
+        .map(s -> s.replace("%upgradePrice%", economy.format(priceForAll)))
+        .map(s -> s.replace("%money%", economy.format(economy.getBalance(player))))
+        .map(ChatUtil::translate)
+        .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+
+    itemMetaUpgradeAll.setLore(loreAll);
+    itemStackUpgradeAll.setItemMeta(itemMetaUpgradeAll);
+
+    final String itemFill = economy.has(player, price)
+        ? "GREEN_STAINED_GLASS_PANE"
+        : "GRAY_STAINED_GLASS_PANE";
+
+    GuiUtil.fillInventory(menu, rows, itemFill, " ");
+
+    menu.setButton(0, 11, new SGButton(itemStackUpgradeOne).withListener(event -> {
       upgradeGenerator(player, generator);
       player.closeInventory();
-      spawnFirework(generator.getCenter());
+    }));
+
+    menu.setButton(0, 15, new SGButton(itemStackUpgradeAll).withListener(event -> {
+      upgradeAllGenerators(player, generator);
+      player.closeInventory();
     }));
 
     player.openInventory(menu.getInventory());
@@ -107,7 +142,9 @@ public class UpgradeGui {
    * @param player     The Player object who is upgrading the generator.
    * @param currentLoc The GeneratorLocation representing the generator to be upgraded.
    */
-  private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc) {
+  private static void upgradeAllGenerators(Player player,
+                                           LocationsData.GeneratorLocation currentLoc) {
+
     final LocationsData locationsData = instance.getLocationsData();
     GeneratorsData.Generator current = currentLoc.getGeneratorObject();
     GeneratorsData.Generator nextGenerator =
@@ -124,6 +161,7 @@ public class UpgradeGui {
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
       ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+      XSound.ENTITY_VILLAGER_NO.play(player);
       return;
     }
 
@@ -143,16 +181,34 @@ public class UpgradeGui {
 
     locationsData.addLocation(next);
 
+    spawnFirework(currentLoc.getCenter());
+
     ChatUtil.sendMessage(player,
         Messages.SUCCESSFULLY_UPGRADED
             .replace("%tier%", String.valueOf(nextGenerator.tier())));
   }
 
-  private static void spawnFirework(Location location) {
-    World world = location.getWorld();
-    world.createExplosion(location, 0f);
-    XSound.ENTITY_FIREWORK_ROCKET_LAUNCH.play(location, 1, 1);
+  private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc) {
+
   }
 
+  private static void spawnFirework(Location location) {
+    FileConfiguration config = InfiniteForge.getInstance().getConfig();
+    XSound.matchXSound(config.getString("particles.sound"))
+        .orElse(XSound.ENTITY_FIREWORK_ROCKET_BLAST)
+        .play(location);
+
+    if (!config.getBoolean("particles.enabled")) {
+      return;
+    }
+
+    String particle = config.getString("particles.type");
+    location.getWorld()
+        .spawnParticle(
+            Particle.valueOf(particle),
+            location.add(0, -1, 0),
+            70
+        );
+  }
 }
 

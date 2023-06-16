@@ -29,6 +29,8 @@ public class Messages {
   public static String SUCCESSFULLY_BOUGHT;
   public static String REACHED_MAX_TIER;
   public static String NOT_ENOUGH_ARGUMENTS;
+  public static String INVALID_AMOUNT;
+  public static String GENERATOR_GIVEN_ALL;
   public static String DEFAULT_MESSAGE;
 
   /**
@@ -127,6 +129,17 @@ public class Messages {
     NOT_ENOUGH_ARGUMENTS = config.getString(
         "not-enough-arguments",
         "&cError> &7Not enough arguments!"
+    );
+
+    INVALID_AMOUNT = config.getString(
+        "invalid-amount",
+        "&cError> &7Invalid amount!"
+    );
+
+    GENERATOR_GIVEN_ALL = config.getString(
+        "generator-given-all",
+        "&9InfiniteForge> &7You gave &a%amount% &7generator"
+            + " of tier &a%tier% &7to all players! (&a%count%&7)"
     );
 
     DEFAULT_MESSAGE = config.getString(

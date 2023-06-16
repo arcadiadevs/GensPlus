@@ -9,7 +9,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.samjakob.spigui.SpiGUI;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
@@ -258,6 +256,7 @@ public final class InfiniteForge extends JavaPlugin {
 
     for (Map<?, ?> generator : generatorsConfig) {
       final String name = (String) generator.get("name");
+      final String dropDisplayName = (String) generator.get("dropDisplayName");
       int tier = (int) generator.get("tier");
       int speed = (int) generator.get("speed");
       double price = (double) generator.get("price");
@@ -322,7 +321,7 @@ public final class InfiniteForge extends JavaPlugin {
       spawnLore.add(ChatUtil.translate("&8Generator drop tier " + tier));
       spawnLore.addAll(itemSpawnLore);
 
-      spawnItemMeta.setDisplayName(ChatUtil.translate(name));
+      spawnItemMeta.setDisplayName(ChatUtil.translate(dropDisplayName));
       spawnItemMeta.setLore(spawnLore);
 
       spawnItemStack.setItemMeta(spawnItemMeta);
@@ -339,6 +338,8 @@ public final class InfiniteForge extends JavaPlugin {
     hologramPool = new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000));
     placeholders = new Placeholders();
 
+    List<Map<?, ?>> generatorsConfig = instance.getConfig().getMapList("generators");
+
     for (LocationsData.GeneratorLocation location : getLocationsData().locations()) {
       GeneratorsData.Generator generator = generatorsData.getGenerator(location.getGenerator());
 
@@ -347,8 +348,20 @@ public final class InfiniteForge extends JavaPlugin {
           .parseItem()
           .getType();
 
-      List<String> lines = InfiniteForge.getInstance().getConfig()
-          .getStringList("holograms.lines")
+      Map<?, ?> matchingGeneratorConfig = generatorsConfig.stream()
+          .filter(generatorConfig -> generatorConfig.get("name").equals(generator.name()))
+          .findFirst()
+          .orElse(null);
+
+      if (matchingGeneratorConfig == null) {
+        continue;
+      }
+
+      List<String> lines = ((List<String>) matchingGeneratorConfig.get("hologramLines")).isEmpty()
+          ? InfiniteForge.getInstance().getConfig().getStringList("default-hologram-lines")
+          : (List<String>) matchingGeneratorConfig.get("hologramLines");
+
+      lines = lines
           .stream()
           .map(line -> line.replace("%name%", generator.name()))
           .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))

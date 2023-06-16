@@ -3,23 +3,20 @@ package xyz.arcadiadevs.infiniteforge.guis;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.samjakob.spigui.item.ItemBuilder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The GeneratorsGui class provides functionality for opening the generators GUI in InfiniteForge.
@@ -47,9 +44,10 @@ public class GeneratorsGui implements Listener {
    */
   public void open(Player player) {
     gui.getInventory().clear();
+    InfiniteForge instance = InfiniteForge.getInstance();
 
-    GeneratorsData generatorsData = InfiniteForge.getInstance().getGeneratorsData();
-    List<Map<?, ?>> generatorsConfig = InfiniteForge.getInstance().getConfig().getMapList("generators");
+    GeneratorsData generatorsData = instance.getGeneratorsData();
+    List<Map<?, ?>> generatorsConfig = instance.getConfig().getMapList("generators");
 
     for (GeneratorsData.Generator generator : generatorsData.getGenerators()) {
       final var material = XMaterial.matchXMaterial(generator.blockType()).parseItem();

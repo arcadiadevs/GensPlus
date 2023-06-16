@@ -55,6 +55,20 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
+      if (strings[0].equalsIgnoreCase("help")) {
+        ChatUtil.sendMessage(player,
+            "&9InfiniteForge Commands:");
+        ChatUtil.sendMessage(player,
+            "&7- /infiniteforge: Display plugin version");
+        ChatUtil.sendMessage(player,
+            "&7- /infiniteforge reload: Reload plugin configuration");
+        ChatUtil.sendMessage(player,
+            "&7- /infiniteforge give <player> <tier>: Give a generator to a player");
+        ChatUtil.sendMessage(player,
+            "&7- /infiniteforge giveall <tier> [amount]: Give a generator to all players");
+        return true;
+      }
+
       if (strings[0].equalsIgnoreCase("reload")) {
         if (!player.hasPermission(Permissions.GENERATOR_RELOAD)) {
           ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
@@ -66,7 +80,7 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
-      if (strings[0].equalsIgnoreCase("admingive")) {
+      if (strings[0].equalsIgnoreCase("give")) {
         if (!player.hasPermission(Permissions.GENERATOR_GIVE)) {
           ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
           return true;
@@ -98,13 +112,70 @@ public class Commands implements CommandExecutor {
         }
 
         generator.giveItem(targetPlayer);
+
         ChatUtil.sendMessage(player,
             String.format(Messages.GENERATOR_GIVEN
-                    .replace("%player%", targetPlayer.getName()))
-                    .replace("%tier%", String.valueOf(tier)));
+                .replace("%targetPlayer%", targetPlayer.getName())
+                .replace("%tier%", String.valueOf(tier))
+            ));
+
         ChatUtil.sendMessage(targetPlayer, String.format(Messages.GENERATOR_RECEIVED
             .replace("%tier%", String.valueOf(tier)))
         );
+        return true;
+      }
+
+      if (strings[0].equalsIgnoreCase("giveall")) {
+        if (!player.hasPermission(Permissions.GENERATOR_GIVE_ALL)) {
+          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          return true;
+        }
+
+        if (strings.length < 2) {
+          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_ARGUMENTS);
+          return true;
+        }
+
+        int tier;
+        try {
+          tier = Integer.parseInt(strings[1]);
+        } catch (NumberFormatException e) {
+          ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
+          return true;
+        }
+
+        int amount;
+        if (strings.length < 3) {
+          amount = 1; // Set default value to 1
+        } else {
+          try {
+            amount = Integer.parseInt(strings[2]);
+          } catch (NumberFormatException e) {
+            ChatUtil.sendMessage(player, Messages.INVALID_AMOUNT);
+            return true;
+          }
+        }
+
+        GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
+        if (generator == null) {
+          ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
+          return true;
+        }
+
+        int givenCount = 0;
+        for (Player targetPlayer : Bukkit.getOnlinePlayers()) {
+          for (int i = 0; i < amount; i++) {
+            generator.giveItem(targetPlayer);
+          }
+
+          givenCount++;
+        }
+
+        ChatUtil.sendMessage(player, String.format(Messages.GENERATOR_GIVEN_ALL
+            .replace("%tier%", String.valueOf(tier))
+            .replace("%amount%", String.valueOf(amount))
+            .replace("%count%", String.valueOf(givenCount))));
+
         return true;
       }
     }

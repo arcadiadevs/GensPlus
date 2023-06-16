@@ -32,34 +32,63 @@ guis:
 
   # Gui when upgrading generator
   upgrade-gui:
-    first-line: "&e》 &nClick to upgrade generator!&e 《"
-    # If lore is not specified, the default lore will be used.
-    # The default lore can be specified in the following format:
-    # - %tier%" equals to the generator's tier
-    # - %speed%" is the generator's speed of spawning items
-    # - %price%" is the price of generator
-    # - %sellPrice%" is the sell price of generator drop
-    # - %spawnItem%" equals to what item will generator spawn
-    # - %blockType%" equals to block type of generator
-    # - %nextTier% equals to the next tier of generator
-    # - %nextSpeed% equals to the next speed of generator
-    # - %nextPrice% equals to the next price of generator
-    # - %nextSellPrice% equals to the next sell price of generator
-    # - %nextSpawnItem% equals to the next spawn item of generator
-    # - %nextBlockType% equals to the next block type of generator
-    lore:
-      - "&fMoney: &a%money%"
-      - "&fUpgrade Price: &a%upgradePrice%"
-      - ""
-      - "&aUpgrade Details:"
-      - "&b%tier% &r&8》&d&l%nextTier% &0&lASD"
-      - "&b%speed%s &8》&d&l%nextSpeed%s"
-      - "&b%price% &r&8》&d&l%nextPrice%"
-      - "&b%sellPrice% &r&8》&d&l%nextSellPrice%"
-      - "&b%spawnItem% &r&8》&d&l%nextSpawnItem%"
-      - "&b%blockType% &r&8》&d&l%nextBlockType%"
-      - "&8&l&n                                "
+    upgradeOne:
+      first-line: "&e》 &nClick to upgrade generator!&e 《"
+      # If lore is not specified, the default lore will be used.
+      # The default lore can be specified in the following format:
+      # - %tier%" equals to the generator's tier
+      # - %speed%" is the generator's speed of spawning items
+      # - %price%" is the price of generator
+      # - %sellPrice%" is the sell price of generator drop
+      # - %spawnItem%" equals to what item will generator spawn
+      # - %blockType%" equals to block type of generator
+      # - %nextTier% equals to the next tier of generator
+      # - %nextSpeed% equals to the next speed of generator
+      # - %nextPrice% equals to the next price of generator
+      # - %nextSellPrice% equals to the next sell price of generator
+      # - %nextSpawnItem% equals to the next spawn item of generator
+      # - %nextBlockType% equals to the next block type of generator
+      lore:
+        - "&fMoney: &a%money%"
+        - "&fUpgrade Price: &a%upgradePrice%"
+        - ""
+        - "&aUpgrade Details:"
+        - "&b%tier% &r&8》&d&l%nextTier% &0&lASD"
+        - "&b%speed%s &8》&d&l%nextSpeed%s"
+        - "&b%price% &r&8》&d&l%nextPrice%"
+        - "&b%sellPrice% &r&8》&d&l%nextSellPrice%"
+        - "&b%spawnItem% &r&8》&d&l%nextSpawnItem%"
+        - "&b%blockType% &r&8》&d&l%nextBlockType%"
+        - "&8&l&n                                "
 
+    upgradeAll:
+        first-line: "&e》 &nClick to upgrade all generators!&e 《"
+        # If lore is not specified, the default lore will be used.
+        # The default lore can be specified in the following format:
+        # - %tier%" equals to the generator's tier
+        # - %speed%" is the generator's speed of spawning items
+        # - %price%" is the price of generator
+        # - %sellPrice%" is the sell price of generator drop
+        # - %spawnItem%" equals to what item will generator spawn
+        # - %blockType%" equals to block type of generator
+        # - %nextTier% equals to the next tier of generator
+        # - %nextSpeed% equals to the next speed of generator
+        # - %nextPrice% equals to the next price of generator
+        # - %nextSellPrice% equals to the next sell price of generator
+        # - %nextSpawnItem% equals to the next spawn item of generator
+        # - %nextBlockType% equals to the next block type of generator
+        lore:
+            - "&fMoney: &a%money%"
+            - "&fUpgrade Price: &a%upgradePrice%"
+            - ""
+            - "&aUpgrade Details:"
+            - "&b%tier% &r&8》&d&l%nextTier% &0&lASD"
+            - "&b%speed%s &8》&d&l%nextSpeed%s"
+            - "&b%price% &r&8》&d&l%nextPrice%"
+            - "&b%sellPrice% &r&8》&d&l%nextSellPrice%"
+            - "&b%spawnItem% &r&8》&d&l%nextSpawnItem%"
+            - "&b%blockType% &r&8》&d&l%nextBlockType%"
+            - "&8&l&n                                "
 
     # Title of the gui
     title: "Upgrade Generator"
@@ -69,19 +98,6 @@ guis:
 
 holograms:
   view-distance: 300
-
-  # Lines that will be displayed above the generator
-  # Lines can be specified in the following format:
-  # %name% will be replaced with the name of the generator
-  # %tier% will be replaced with the tier of the generator
-  # %speed% will be replaced with the speed of the generator
-  # %spawnItem% will be replaced with the item that generator spawns
-  # %sellPrice% will be replaced with the sell price of the generator
-  lines:
-    - "&a%name%"
-    - "&7Tier: &a%tier%"
-    - "&7Spawns each &a%speed% &7seconds &a%spawnItem%"
-    - "&7Sells for &a%sellPrice%"
 
 events:
   # time can be specified in the following format variations:
@@ -130,6 +146,22 @@ events:
     # Multiplier for the event
     multiplier: 2
 
+particles:
+  # If enabled is set to false, particles will not be displayed upon upgrade.
+  enabled: true
+
+  # Type of the particle. Make sure to use particles
+  # that are supported by your server version, otherwise,
+  # the particles will not be displayed. You can find
+  # all supported particles here:
+  # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+  type: "FIREWORKS_SPARK"
+
+  # Sound that will be played upon upgrade.
+  # You can find all supported sounds here:
+  # https://github.com/dieterblancke/DonatorJoinPlus/blob/master/spigot/src/main/java/com/dbsoftwares/djp/spigot/utils/XSound.java
+  sound: "ENTITY_FIREWORK_ROCKET_BLAST"
+
 # If lore is not specified, the default lore will be used.
 # The default lore can be specified in the following format:
 # - %tier%" equals to the generator's tier
@@ -153,6 +185,21 @@ default-item-spawn-lore:
   - "&7Type in chat &a/selldrops &7to sell drops!"
   - "&7Drops are selling for &a%sellPrice%&7!"
 
+# If hologramLines is not specified, the default hologram lines will be used.
+# The default hologram lines can be specified in the following format:
+# Lines that will be displayed above the generator
+# Lines can be specified in the following format:
+# %name% will be replaced with the name of the generator
+# %tier% will be replaced with the tier of the generator
+# %speed% will be replaced with the speed of the generator
+# %spawnItem% will be replaced with the item that generator spawns
+# %sellPrice% will be replaced with the sell price of the generator
+default-hologram-lines:
+  - "&a%name%"
+  - "&7Tier: &a%tier%"
+  - "&7Spawns each &a%speed% &7seconds &a%spawnItem%"
+  - "&7Sells for &a%sellPrice%"
+
 # generators represent the generators that will be added in the gui,
 # name is the name of the generator
 # tier is the tier of the generator (each generator must have a unique tier)
@@ -172,6 +219,8 @@ generators:
     blockType: "STONE"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&7&lStone Drop"
   - name: "&e&lSandstone Generator"
     tier: 2
     price: 100.0
@@ -181,6 +230,8 @@ generators:
     blockType: "SANDSTONE"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&e&lSandstone Drop"
   - name: "&f&lChiseled Sandstone Generator"
     tier: 3
     price: 200.0
@@ -190,6 +241,8 @@ generators:
     blockType: "CHISELED_SANDSTONE"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&f&lChiseled Sandstone Drop"
   - name: "&6&lRed Sandstone Generator"
     tier: 4
     price: 300.0
@@ -199,6 +252,8 @@ generators:
     blockType: "RED_SANDSTONE"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&6&lRed Sandstone Drop"
   - name: "&8&lCoal Generator"
     tier: 5
     price: 400.0
@@ -208,6 +263,8 @@ generators:
     blockType: "COAL_ORE"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&8&lCoal Drop"
   - name: "&7&lIron Generator"
     tier: 6
     price: 500.0
@@ -217,6 +274,8 @@ generators:
     blockType: "IRON_ORE"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&7&lIron Drop"
   - name: "&6&lGold Generator"
     tier: 7
     price: 750.0
@@ -226,6 +285,8 @@ generators:
     blockType: "GOLD_ORE"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&6&lGold Drop"
   - name: "&b&lDiamond Generator"
     tier: 8
     price: 1000.0
@@ -235,6 +296,8 @@ generators:
     blockType: "DIAMOND_ORE"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&b&lDiamond Drop"
   - name: "&5&lObsidian Generator"
     tier: 9
     price: 5000.0
@@ -244,6 +307,8 @@ generators:
     blockType: "OBSIDIAN"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&5&lObsidian Drop"
   - name: "&4&lBedrock Generator"
     tier: 10
     price: 10000.0
@@ -253,6 +318,8 @@ generators:
     blockType: "BEDROCK"
     lore: []
     itemSpawnLore: []
+    hologramLines: []
+    dropDisplayName: "&4&lBedrock Drop"
 
 developer-options:
   debug: false
