@@ -219,7 +219,11 @@ generators:
     blockType: "STONE"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&a%name%"
+      - "&7Tier: &7%tier%"
+      - "&7Spawns each &7%speed% &7seconds &7%spawnItem%"
+      - "&7Sells for &7%sellPrice%"
     dropDisplayName: "&7&lStone Drop"
   - name: "&e&lSandstone Generator"
     tier: 2
@@ -230,7 +234,11 @@ generators:
     blockType: "SANDSTONE"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&e%name%"
+      - "&7Tier: &e%tier%"
+      - "&7Spawns each &e%speed% &7seconds &e%spawnItem%"
+      - "&7Sells for &e%sellPrice%"
     dropDisplayName: "&e&lSandstone Drop"
   - name: "&f&lChiseled Sandstone Generator"
     tier: 3
@@ -241,7 +249,11 @@ generators:
     blockType: "CHISELED_SANDSTONE"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&f%name%"
+      - "&7Tier: &f%tier%"
+      - "&7Spawns each &f%speed% &7seconds &f%spawnItem%"
+      - "&7Sells for &f%sellPrice%"
     dropDisplayName: "&f&lChiseled Sandstone Drop"
   - name: "&6&lRed Sandstone Generator"
     tier: 4
@@ -252,7 +264,11 @@ generators:
     blockType: "RED_SANDSTONE"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&6%name%"
+      - "&7Tier: &6%tier%"
+      - "&7Spawns each &6%speed% &7seconds &6%spawnItem%"
+      - "&7Sells for &6%sellPrice%"
     dropDisplayName: "&6&lRed Sandstone Drop"
   - name: "&8&lCoal Generator"
     tier: 5
@@ -263,7 +279,11 @@ generators:
     blockType: "COAL_ORE"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&8%name%"
+      - "&7Tier: &8%tier%"
+      - "&7Spawns each &8%speed% &7seconds &8%spawnItem%"
+      - "&7Sells for &8%sellPrice%"
     dropDisplayName: "&8&lCoal Drop"
   - name: "&7&lIron Generator"
     tier: 6
@@ -274,7 +294,11 @@ generators:
     blockType: "IRON_ORE"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&7%name%"
+      - "&7Tier: &7%tier%"
+      - "&7Spawns each &7%speed% &7seconds &7%spawnItem%"
+      - "&7Sells for &7%sellPrice%"
     dropDisplayName: "&7&lIron Drop"
   - name: "&6&lGold Generator"
     tier: 7
@@ -285,7 +309,11 @@ generators:
     blockType: "GOLD_ORE"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&6%name%"
+      - "&7Tier: &6%tier%"
+      - "&7Spawns each &6%speed% &7seconds &6%spawnItem%"
+      - "&7Sells for &6%sellPrice%"
     dropDisplayName: "&6&lGold Drop"
   - name: "&b&lDiamond Generator"
     tier: 8
@@ -296,7 +324,11 @@ generators:
     blockType: "DIAMOND_ORE"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&b%name%"
+      - "&7Tier: &b%tier%"
+      - "&7Spawns each &b%speed% &7seconds &b%spawnItem%"
+      - "&7Sells for &b%sellPrice%"
     dropDisplayName: "&b&lDiamond Drop"
   - name: "&5&lObsidian Generator"
     tier: 9
@@ -307,7 +339,11 @@ generators:
     blockType: "OBSIDIAN"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&5%name%"
+      - "&7Tier: &5%tier%"
+      - "&7Spawns each &5%speed% &7seconds &5%spawnItem%"
+      - "&7Sells for &5%sellPrice%"
     dropDisplayName: "&5&lObsidian Drop"
   - name: "&4&lBedrock Generator"
     tier: 10
@@ -318,7 +354,11 @@ generators:
     blockType: "BEDROCK"
     lore: []
     itemSpawnLore: []
-    hologramLines: []
+    hologramLines:
+      - "&4%name%"
+      - "&7Tier: &4%tier%"
+      - "&7Spawns each &4%speed% &7seconds &4%spawnItem%"
+      - "&7Sells for &4%sellPrice%"
     dropDisplayName: "&4&lBedrock Drop"
 
 developer-options:

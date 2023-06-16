@@ -63,12 +63,13 @@ public class Messages {
 
     GENERATOR_GIVEN = config.getString(
         "generator-given",
-        "&9InfiniteForge> &7You gave a generator of tier &a%tier% &7to &a%targetPlayer%"
+        "&9InfiniteForge> &7You gave &a%amount% &7generator(s)"
+            + " of tier &a%tier% &7to &a%targetPlayer%"
     );
 
     GENERATOR_RECEIVED = config.getString(
         "generator-received",
-        "&9InfiniteForge> &7You received a generator of tier &a%tier"
+        "&9InfiniteForge> &7You received &a%amount% &7generator(s) of tier &a%tier"
     );
 
     LIMIT_REACHED = config.getString(

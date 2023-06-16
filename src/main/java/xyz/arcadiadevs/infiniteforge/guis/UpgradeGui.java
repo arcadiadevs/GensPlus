@@ -51,7 +51,7 @@ public class UpgradeGui {
         instance.getGeneratorsData().getGenerator(current.tier() + 1);
 
     if (nextGenerator == null) {
-      ChatUtil.sendMessage(player, "&7You have reached the maximum tier for this generator.");
+      ChatUtil.sendMessage(player, Messages.LIMIT_REACHED);
       return;
     }
 

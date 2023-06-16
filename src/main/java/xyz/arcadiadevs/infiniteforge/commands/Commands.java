@@ -61,9 +61,7 @@ public class Commands implements CommandExecutor {
         ChatUtil.sendMessage(player,
             "&7- /infiniteforge: Display plugin version");
         ChatUtil.sendMessage(player,
-            "&7- /infiniteforge reload: Reload plugin configuration");
-        ChatUtil.sendMessage(player,
-            "&7- /infiniteforge give <player> <tier>: Give a generator to a player");
+            "&7- /infiniteforge give <player> <tier> [amount]: Give a generator to a player");
         ChatUtil.sendMessage(player,
             "&7- /infiniteforge giveall <tier> [amount]: Give a generator to all players");
         return true;
@@ -105,22 +103,39 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
+        int amount;
+        if (strings.length < 4) {
+          amount = 1; // Set default value to 1
+        } else {
+          try {
+            amount = Integer.parseInt(strings[3]);
+          } catch (NumberFormatException e) {
+            ChatUtil.sendMessage(player, Messages.INVALID_AMOUNT);
+            return true;
+          }
+        }
+
         GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
         if (generator == null) {
           ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
           return true;
         }
 
-        generator.giveItem(targetPlayer);
+        for (int i = 0; i < amount; i++) {
+          generator.giveItem(targetPlayer);
+        }
 
         ChatUtil.sendMessage(player,
             String.format(Messages.GENERATOR_GIVEN
                 .replace("%targetPlayer%", targetPlayer.getName())
                 .replace("%tier%", String.valueOf(tier))
-            ));
+                .replace("%amount%", String.valueOf(amount))
+            )
+        );
 
         ChatUtil.sendMessage(targetPlayer, String.format(Messages.GENERATOR_RECEIVED
             .replace("%tier%", String.valueOf(tier)))
+            .replace("%amount%", String.valueOf(amount))
         );
         return true;
       }
