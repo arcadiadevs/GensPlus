@@ -41,7 +41,7 @@ public class Gui implements Listener {
   public void addItem(GuiItem item, boolean firstEmpty) {
     if (firstEmpty) {
       for (int i = 0; i < items.size(); i++) {
-        if (items.get(i) == null) {
+        if (getItemAtSlot(i) == null) {
           items.set(i, item);
           return;
         }
@@ -67,7 +67,7 @@ public class Gui implements Listener {
     BORDER,
   }
 
-  public record GuiItem(GuiItemType type, ItemStack item, Runnable listener) {
+  public record GuiItem(GuiItemType type, ItemStack item, int slot, Runnable listener) {
 
   }
 
@@ -89,7 +89,7 @@ public class Gui implements Listener {
       int lastItem = Math.min(firstItem + itemsPerInventory, items.size());
 
       for (int j = firstItem; j < lastItem; j++) {
-        GuiItem item = items.get(j);
+        GuiItem item = getItemAtSlot(j);
 
         if (item != null) {
           inv.setItem(j - firstItem, item.item);
@@ -98,7 +98,7 @@ public class Gui implements Listener {
     }
 
     for (int i = 0; i < items.size(); i++) {
-      GuiItem item = items.get(i);
+      GuiItem item = getItemAtSlot(i);
 
       if (item == null) {
         continue;
@@ -120,12 +120,16 @@ public class Gui implements Listener {
     return inventory.stream().findFirst().orElse(Bukkit.createInventory(null, rows * 9, title));
   }
 
+  public GuiItem getItemAtSlot(int slot) {
+    return items.stream().filter(item -> item.slot == slot).findFirst().orElse(null);
+  }
+
   public void onButtonClick(InventoryClickEvent event) {
     if (inventory.stream().noneMatch(inv -> inv.equals(event.getClickedInventory()))) {
       return;
     }
 
-    GuiItem item = items.get(event.getSlot());
+    GuiItem item = getItemAtSlot(event.getSlot());
 
     if (item == null) {
       return;
