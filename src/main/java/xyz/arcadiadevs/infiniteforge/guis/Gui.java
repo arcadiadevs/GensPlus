@@ -64,6 +64,7 @@ public class Gui implements Listener {
     CLOSE,
     NEXT,
     PREVIOUS,
+    BORDER,
   }
 
   public record GuiItem(GuiItemType type, ItemStack item, Runnable listener) {
@@ -73,7 +74,8 @@ public class Gui implements Listener {
   public void init(Plugin plugin) {
     int itemsPerInventory = rows * 9;
 
-    int inventories = (int) (double) items.size() / itemsPerInventory;
+    // inv.size() / itemsPerInventory but round up to int
+    int inventories = (int) Math.ceil((double) items.size() / itemsPerInventory);
 
     for (int i = 0; i < inventories; i++) {
       inventory.add(i, Bukkit.createInventory(null, rows * 9, title));
@@ -83,8 +85,31 @@ public class Gui implements Listener {
       Inventory inv = inventory.get(i);
       inv.clear();
 
-      for (int j = 0; j < itemsPerInventory; j++) {
-        inv.setItem(j, items.get(i * itemsPerInventory + j).item);
+      int firstItem = i * itemsPerInventory;
+      int lastItem = Math.min(firstItem + itemsPerInventory, items.size());
+
+      for (int j = firstItem; j < lastItem; j++) {
+        GuiItem item = items.get(j);
+
+        if (item != null) {
+          inv.setItem(j - firstItem, item.item);
+        }
+      }
+    }
+
+    for (int i = 0; i < items.size(); i++) {
+      GuiItem item = items.get(i);
+
+      if (item == null) {
+        continue;
+      }
+
+      if (item.type == GuiItemType.ITEM) {
+        continue;
+      }
+
+      for (Inventory inv : inventory) {
+        inv.setItem(i, item.item);
       }
     }
 

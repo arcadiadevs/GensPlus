@@ -82,25 +82,27 @@ public class GeneratorsGui implements Listener {
           .lore(lore)
           .build();
 
-      gui.addItem(new Gui.GuiItem(Gui.GuiItemType.ITEM, itemBuilder, () -> {
-        if (generator.price() > economy.getBalance(player)) {
-          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
-          XSound.ENTITY_VILLAGER_NO.play(player);
-          return;
-        }
+      for (int i = 0; i < 40; i++) {
+        gui.addItem(new Gui.GuiItem(Gui.GuiItemType.ITEM, itemBuilder, () -> {
+          if (generator.price() > economy.getBalance(player)) {
+            ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+            XSound.ENTITY_VILLAGER_NO.play(player);
+            return;
+          }
 
-        generator.giveItem(player);
+          generator.giveItem(player);
 
-        economy.withdrawPlayer(player, generator.price());
+          economy.withdrawPlayer(player, generator.price());
 
-        ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_BOUGHT
-            .replace("%generator%", generator.name())
-            .replace("%tier%", String.valueOf(generator.tier()))
-            .replace("%price%", String.valueOf(generator.price()))
-        );
+          ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_BOUGHT
+              .replace("%generator%", generator.name())
+              .replace("%tier%", String.valueOf(generator.tier()))
+              .replace("%price%", String.valueOf(generator.price()))
+          );
 
-        XSound.ENTITY_PLAYER_LEVELUP.play(player);
-      }));
+          XSound.ENTITY_PLAYER_LEVELUP.play(player);
+        }));
+      }
     }
 
     gui.init(InfiniteForge.getInstance());
