@@ -67,7 +67,7 @@ public class Gui implements Listener {
     BORDER,
   }
 
-  public record GuiItem(GuiItemType type, ItemStack item, int slot, Runnable listener) {
+  public record GuiItem(GuiItemType type, ItemStack item, Runnable listener) {
 
   }
 
