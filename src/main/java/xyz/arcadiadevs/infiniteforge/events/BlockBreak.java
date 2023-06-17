@@ -1,18 +1,19 @@
 package xyz.arcadiadevs.infiniteforge.events;
 
-import com.github.unldenis.hologram.IHologramPool;
 import java.util.ArrayList;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
+/**
+ * Handles the BlockBreakEvent triggered when a player breaks a block.
+ */
 public class BlockBreak implements Listener {
 
   private final LocationsData locationsData;
@@ -47,12 +48,12 @@ public class BlockBreak implements Listener {
     GeneratorsData.Generator generator =
         generatorsData.getGenerator(generatorLocation.getGenerator());
 
-    Player player = generatorLocation.getPlacedBy();
-    int tier = generatorLocation.getGenerator();
+    final Player player = generatorLocation.getPlacedBy();
+    final int tier = generatorLocation.getGenerator();
     ArrayList<Block> blocks = generatorLocation.getBlockLocations();
 
     // Generate and drop the generator item for the player
-    generator.dropItem(event.getPlayer(), event);
+    generator.dropItem(event.getPlayer(), eventBlock.getLocation());
 
     blocks.remove(eventBlock);
 

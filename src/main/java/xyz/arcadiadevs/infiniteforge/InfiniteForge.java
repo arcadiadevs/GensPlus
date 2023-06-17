@@ -32,6 +32,7 @@ import xyz.arcadiadevs.infiniteforge.commands.CommandsTabCompletion;
 import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
 import xyz.arcadiadevs.infiniteforge.events.BlockInteraction;
 import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
+import xyz.arcadiadevs.infiniteforge.events.InstantBreak;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.models.events.DropEvent;
@@ -190,6 +191,7 @@ public final class InfiniteForge extends JavaPlugin {
     events.add(new BlockPlace(locationsData));
     events.add(new BlockBreak(locationsData, generatorsData));
     events.add(new BlockInteraction(locationsData, generatorsData));
+    events.add(new InstantBreak(locationsData, generatorsData));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
@@ -266,6 +268,7 @@ public final class InfiniteForge extends JavaPlugin {
     for (Map<?, ?> generator : generatorsConfig) {
       final String name = (String) generator.get("name");
       final String dropDisplayName = (String) generator.get("dropDisplayName");
+      final boolean instantBreak = (boolean) generator.get("instantBreak");
       int tier = (int) generator.get("tier");
       int speed = (int) generator.get("speed");
       double price = (double) generator.get("price");
@@ -337,7 +340,7 @@ public final class InfiniteForge extends JavaPlugin {
 
       generators.add(
           new GeneratorsData.Generator(name, tier, price, sellPrice, speed, spawnItemStack,
-              blockTypeStack, lore));
+              blockTypeStack, lore, instantBreak));
     }
 
     return new GeneratorsData(generators);
