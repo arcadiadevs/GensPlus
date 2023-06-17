@@ -24,14 +24,11 @@ import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
 public record LocationsData(List<GeneratorLocation> locations) {
 
-  public List<GeneratorLocation> getPlacedGeneratorsByPlayer(UUID uuid) {
-    List<GeneratorLocation> generators = new ArrayList<>();
-    for (GeneratorLocation generator : locations) {
-      if (generator.getPlacedBy().getUniqueId().equals(uuid)) {
-        generators.add(generator);
-      }
-    }
-    return generators;
+  public int getGeneratorsCountByPlayer(Player player) {
+    return (int) locations.stream()
+        .filter(l -> l.getPlacedBy().equals(player))
+        .mapToLong(l -> l.getBlockLocations().size())
+        .sum();
   }
 
   public GeneratorLocation createLocation(Player player, int generator, Block location) {

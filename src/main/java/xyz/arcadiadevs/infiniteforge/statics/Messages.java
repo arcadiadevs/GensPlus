@@ -69,7 +69,7 @@ public class Messages {
 
     GENERATOR_RECEIVED = config.getString(
         "generator-received",
-        "&9InfiniteForge> &7You received &a%amount% &7generator(s) of tier &a%tier"
+        "&9InfiniteForge> &7You received &a%amount% &7generator(s) of tier &a%tier%"
     );
 
     LIMIT_REACHED = config.getString(

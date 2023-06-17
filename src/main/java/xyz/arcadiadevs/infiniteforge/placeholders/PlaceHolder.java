@@ -94,7 +94,7 @@ public class PlaceHolder extends PlaceholderExpansion {
           activeEvent.event() == null ? "No Events" : activeEvent.event().getName();
       case "gen_limit" -> String.valueOf(config.getInt("limit-settings.limit"));
       case "gen_placed" -> String.valueOf(
-              locationsData.getPlacedGeneratorsByPlayer(player.getUniqueId()).size());
+              locationsData.getGeneratorsCountByPlayer(player.getPlayer()));
       default -> throw new IllegalStateException("Unexpected value: " + params);
     };
   }

@@ -26,4 +26,4 @@ reached-max-tier: "&cError> &7You have reached the maximum tier of generator!"
 # [admin]
 generator-given: "&9InfiniteForge> &7You gave &a%amount% &7generator(s) of tier &a%tier% &7to &a%targetPlayer%"
 generator-given-all: "&9InfiniteForge> &7You gave &a%amount% &7generator of tier &a%tier% &7to all players! (&a%count%&7)"
-generator-received: "&9InfiniteForge> &7You received &a%amount% &7generator(s) of tier &a%tier"
+generator-received: "&9InfiniteForge> &7You received &a%amount% &7generator(s) of tier &a%tier%"

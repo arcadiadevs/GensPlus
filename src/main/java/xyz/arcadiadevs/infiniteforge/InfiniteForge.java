@@ -28,6 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.infiniteforge.commands.Commands;
+import xyz.arcadiadevs.infiniteforge.commands.CommandsTabCompletion;
 import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
 import xyz.arcadiadevs.infiniteforge.events.BlockInteraction;
 import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
@@ -156,6 +157,9 @@ public final class InfiniteForge extends JavaPlugin {
 
     // Register commands
     registerCommands();
+
+    // Register tab completion
+    registerTabCompletion();
   }
 
   @Override
@@ -173,6 +177,11 @@ public final class InfiniteForge extends JavaPlugin {
     getCommand("infiniteforge").setExecutor(new Commands(generatorsData));
     getCommand("generators").setExecutor(new Commands(generatorsData));
     getCommand("selldrops").setExecutor(new Commands(generatorsData));
+  }
+
+  private void registerTabCompletion() {
+    getCommand("infiniteforge").setTabCompleter(new CommandsTabCompletion(generatorsData));
+    getCommand("selldrops").setTabCompleter(new CommandsTabCompletion(generatorsData));
   }
 
   private void loadBukkitEvents() {

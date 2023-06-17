@@ -1,11 +1,7 @@
 package xyz.arcadiadevs.infiniteforge.events;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.github.unldenis.hologram.Hologram;
-import com.github.unldenis.hologram.IHologramPool;
 import java.util.List;
-import org.bukkit.Location;
-import org.bukkit.Material;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +13,6 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
-import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 
 public class BlockPlace implements Listener {
 
@@ -75,7 +70,7 @@ public class BlockPlace implements Listener {
     final int limit = config.getInt("limit-settings.limit");
     final boolean enabled = config.getBoolean("limit-settings.enabled");
 
-    if (locationsData.getPlacedGeneratorsByPlayer(player.getUniqueId()).size() >= limit
+    if (locationsData.getGeneratorsCountByPlayer(player) >= limit
         && enabled) {
       ChatUtil.sendMessage(event.getPlayer(), Messages.LIMIT_REACHED
           .replace("%limit%", String.valueOf(limit)));
