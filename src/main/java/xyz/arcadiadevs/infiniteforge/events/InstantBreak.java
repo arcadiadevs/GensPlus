@@ -12,6 +12,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
 /**
  * Handles the PlayerInteractEvent triggered when a player interacts with a block. If the block is
@@ -36,18 +38,22 @@ public class InstantBreak implements Listener {
 
     String version = Bukkit.getBukkitVersion();
     final boolean is1_19 = version.contains("1.19");
+    final Player player = event.getPlayer();
 
     if (is1_19 && event.getHand().toString().equals("OFF_HAND")) {
       return;
     }
 
-    final Player player = event.getPlayer();
+    Block block = event.getClickedBlock();
 
-    if (event.getAction() != Action.LEFT_CLICK_BLOCK && !player.isSneaking()) {
+    if (block == null) {
       return;
     }
 
-    Block block = event.getClickedBlock();
+    if (event.getAction() != Action.LEFT_CLICK_BLOCK || !player.isSneaking()) {
+      return;
+    }
+
     final LocationsData.GeneratorLocation generatorLocation =
         locationsData.getGeneratorLocation(block);
 
@@ -88,6 +94,8 @@ public class InstantBreak implements Listener {
       locationsData.createLocation(player, tier, generatorBlock);
     });
 
+    // Send a notification to the player
+    ChatUtil.sendMessage(event.getPlayer(), Messages.SUCCESSFULLY_DESTROYED);
     event.setCancelled(true);
   }
 }
