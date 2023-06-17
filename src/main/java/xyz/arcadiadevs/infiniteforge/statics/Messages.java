@@ -23,7 +23,7 @@ public class Messages {
   public static String SUCCESSFULLY_UPGRADED;
   public static String SUCCESSFULLY_SOLD;
   public static String NOT_ENOUGH_MONEY;
-  public static String NOT_ENOUGH_DROPS;
+  public static String NOTHING_TO_SELL;
   public static String SUCCESSFULLY_DESTROYED;
   public static String SUCCESSFULLY_PLACED;
   public static String SUCCESSFULLY_BOUGHT;
@@ -102,8 +102,8 @@ public class Messages {
         "&cError> &7You don't have enough money to do that!"
     );
 
-    NOT_ENOUGH_DROPS = config.getString(
-        "not-enough-drops",
+    NOTHING_TO_SELL = config.getString(
+        "nothing-to-sell",
         "&cError> &7You don't have any drops to sell!"
     );
 

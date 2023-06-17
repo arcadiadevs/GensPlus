@@ -44,13 +44,9 @@ public class Gui implements Listener {
   }
 
   public void addItem(GuiItem item, boolean firstEmpty) {
-    System.out.println("Adding item");
     if (!firstEmpty) {
-      System.out.println("Adding item to first empty slot");
       for (int i = 0; i < items.size(); i++) {
-        System.out.println("Checking slot " + i);
         if (items.get(i) == null) {
-          System.out.println("Slot " + i + " is empty");
           items.set(i, item);
           return;
         }

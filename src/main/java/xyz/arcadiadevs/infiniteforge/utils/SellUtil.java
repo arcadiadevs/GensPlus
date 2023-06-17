@@ -2,6 +2,7 @@ package xyz.arcadiadevs.infiniteforge.utils;
 
 import java.util.HashMap;
 import java.util.List;
+
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -85,7 +86,7 @@ public class SellUtil {
               totalSellAmount * multiplier))));
 
     } else {
-      ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_DROPS);
+      ChatUtil.sendMessage(player, Messages.NOTHING_TO_SELL);
     }
 
     sellAmounts.remove(player);
@@ -105,48 +106,44 @@ public class SellUtil {
         ? event.event().getMultiplier()
         : 1.0);
 
-    ItemStack item = player.getItemInUse();
-
-    if (item == null) {
-      ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_DROPS);
-      return;
-    }
+    ItemStack item = player.getInventory().getItemInMainHand();
+    final boolean isAir = item.getType().isAir();
 
     ItemMeta meta = item.getItemMeta();
 
-    if (meta == null) {
-      return;
-    }
-
-    if (!meta.hasLore()) {
+    if (isAir || meta == null || !meta.hasLore() || meta.getLore() == null) {
+      ChatUtil.sendMessage(player, Messages.NOTHING_TO_SELL);
       return;
     }
 
     List<String> lore = meta.getLore();
 
     if (lore == null) {
+      ChatUtil.sendMessage(player, Messages.NOTHING_TO_SELL);
       return;
     }
 
     String firstLine = lore.get(0);
 
-    if (firstLine.contains("Generator drop tier")) {
-      int tier = Integer.parseInt(firstLine.split(" ")[3]);
-      final GeneratorsData generatorsData = InfiniteForge.getInstance().getGeneratorsData();
-      final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
-
-      final int itemAmount = item.getAmount();
-      final double sellPrice = generator.sellPrice();
-      double sellAmount = (int) (sellPrice * itemAmount * multiplier);
-      player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
-
-      final Economy economy = InfiniteForge.getInstance().getEcon();
-
-      economy.withdrawPlayer(player, sellAmount * multiplier);
-      ChatUtil.sendMessage(player,
-          Messages.SUCCESSFULLY_SOLD.replace("%price%", (economy.format(
-              sellAmount * multiplier))));
-
+    if (!firstLine.contains("Generator drop tier")) {
+      ChatUtil.sendMessage(player, Messages.NOTHING_TO_SELL);
+      return;
     }
+
+    int tier = Integer.parseInt(firstLine.split(" ")[3]);
+    final GeneratorsData generatorsData = InfiniteForge.getInstance().getGeneratorsData();
+    final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
+
+    final int itemAmount = item.getAmount();
+    final double sellPrice = generator.sellPrice();
+    double sellAmount = (int) (sellPrice * itemAmount * multiplier);
+    player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
+
+    final Economy economy = InfiniteForge.getInstance().getEcon();
+
+    economy.withdrawPlayer(player, sellAmount * multiplier);
+    ChatUtil.sendMessage(player,
+        Messages.SUCCESSFULLY_SOLD.replace("%price%", (economy.format(
+            sellAmount * multiplier))));
   }
 }
