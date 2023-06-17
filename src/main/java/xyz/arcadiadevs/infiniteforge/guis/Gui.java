@@ -1,6 +1,7 @@
 package xyz.arcadiadevs.infiniteforge.guis;
 
 import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,7 +17,11 @@ public class Gui implements Listener {
   private ArrayList<Inventory> inventory;
 
   public Gui(String title, int rows) {
-    this(title, rows, new ArrayList<>());
+    this(title, rows, new ArrayList<>(50000) {{
+      for (int i = 0; i < 50000; i++) {
+        add(null);
+      }
+    }});
   }
 
   public Gui(String title, int rows, ArrayList<GuiItem> items) {
@@ -39,9 +44,13 @@ public class Gui implements Listener {
   }
 
   public void addItem(GuiItem item, boolean firstEmpty) {
-    if (firstEmpty) {
+    System.out.println("Adding item");
+    if (!firstEmpty) {
+      System.out.println("Adding item to first empty slot");
       for (int i = 0; i < items.size(); i++) {
+        System.out.println("Checking slot " + i);
         if (items.get(i) == null) {
+          System.out.println("Slot " + i + " is empty");
           items.set(i, item);
           return;
         }
@@ -67,7 +76,7 @@ public class Gui implements Listener {
     BORDER,
   }
 
-  public record GuiItem(GuiItemType type, ItemStack item, int slot, Runnable listener) {
+  public record GuiItem(GuiItemType type, ItemStack item, Runnable listener) {
 
   }
 
@@ -118,10 +127,6 @@ public class Gui implements Listener {
 
   public Inventory getInventory() {
     return inventory.stream().findFirst().orElse(Bukkit.createInventory(null, rows * 9, title));
-  }
-
-  public GuiItem getItemAtSlot(int slot) {
-    return items.stream().filter(item -> item.slot == slot).findFirst().orElse(null);
   }
 
   public void onButtonClick(InventoryClickEvent event) {

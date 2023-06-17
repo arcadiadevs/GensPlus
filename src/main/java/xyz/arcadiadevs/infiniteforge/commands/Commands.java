@@ -48,6 +48,8 @@ public class Commands implements CommandExecutor {
       return false;
     }
 
+    final boolean adminPermission = player.hasPermission(Permissions.ADMIN);
+
     if (command.getName().equalsIgnoreCase("infiniteforge")) {
       if (strings.length == 0) {
         ChatUtil.sendMessage(player, Messages.DEFAULT_MESSAGE.replace("%version%",
@@ -56,6 +58,11 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("help")) {
+        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_HELP))) {
+          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          return true;
+        }
+
         ChatUtil.sendMessage(player,
             "&9InfiniteForge Commands:");
         ChatUtil.sendMessage(player,
@@ -64,11 +71,15 @@ public class Commands implements CommandExecutor {
             "&7- /infiniteforge give <player> <tier> [amount]: Give a generator to a player");
         ChatUtil.sendMessage(player,
             "&7- /infiniteforge giveall <tier> [amount]: Give a generator to all players");
+        ChatUtil.sendMessage(player,
+            "&7- /selldrops hand/all: Sell all drops in your hand or inventory");
+        ChatUtil.sendMessage(player,
+            "&7- /generators: view all generators");
         return true;
       }
 
       if (strings[0].equalsIgnoreCase("reload")) {
-        if (!player.hasPermission(Permissions.GENERATOR_RELOAD)) {
+        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_RELOAD))) {
           ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
           return true;
         }
@@ -79,7 +90,7 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("give")) {
-        if (!player.hasPermission(Permissions.GENERATOR_GIVE)) {
+        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE))) {
           ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
           return true;
         }
@@ -103,10 +114,8 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
-        int amount;
-        if (strings.length < 4) {
-          amount = 1; // Set default value to 1
-        } else {
+        int amount = 1;
+        if (strings.length >= 4) {
           try {
             amount = Integer.parseInt(strings[3]);
           } catch (NumberFormatException e) {
@@ -125,23 +134,20 @@ public class Commands implements CommandExecutor {
           generator.giveItem(targetPlayer);
         }
 
-        ChatUtil.sendMessage(player,
-            String.format(Messages.GENERATOR_GIVEN
-                .replace("%targetPlayer%", targetPlayer.getName())
-                .replace("%tier%", String.valueOf(tier))
-                .replace("%amount%", String.valueOf(amount))
-            )
-        );
+        ChatUtil.sendMessage(player, Messages.GENERATOR_GIVEN
+            .replace("%targetPlayer%", targetPlayer.getName())
+            .replace("%tier%", String.valueOf(tier))
+            .replace("%amount%", String.valueOf(amount)));
 
-        ChatUtil.sendMessage(targetPlayer, String.format(Messages.GENERATOR_RECEIVED
-            .replace("%tier%", String.valueOf(tier)))
-            .replace("%amount%", String.valueOf(amount))
-        );
+        ChatUtil.sendMessage(targetPlayer, Messages.GENERATOR_RECEIVED
+            .replace("%tier%", String.valueOf(tier))
+            .replace("%amount%", String.valueOf(amount)));
+
         return true;
       }
 
       if (strings[0].equalsIgnoreCase("giveall")) {
-        if (!player.hasPermission(Permissions.GENERATOR_GIVE_ALL)) {
+        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE_ALL))) {
           ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
           return true;
         }
@@ -159,10 +165,8 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
-        int amount;
-        if (strings.length < 3) {
-          amount = 1; // Set default value to 1
-        } else {
+        int amount = 1;
+        if (strings.length >= 3) {
           try {
             amount = Integer.parseInt(strings[2]);
           } catch (NumberFormatException e) {
@@ -186,32 +190,53 @@ public class Commands implements CommandExecutor {
           givenCount++;
         }
 
-        ChatUtil.sendMessage(player, String.format(Messages.GENERATOR_GIVEN_ALL
+        ChatUtil.sendMessage(player, Messages.GENERATOR_GIVEN_ALL
             .replace("%tier%", String.valueOf(tier))
             .replace("%amount%", String.valueOf(amount))
-            .replace("%count%", String.valueOf(givenCount))));
+            .replace("%count%", String.valueOf(givenCount)));
 
         return true;
       }
     }
 
     if (command.getName().equalsIgnoreCase("generators")) {
-      if (!player.hasPermission(Permissions.GENERATORS_GUI)) {
+      if (!(adminPermission || player.hasPermission(Permissions.GENERATORS_GUI))) {
         ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
         return true;
       }
-      new GeneratorsGui(InfiniteForge.getInstance()).open(player);
+
+      GeneratorsGui.open(player);
       return true;
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      if (!player.hasPermission(Permissions.GENERATOR_SELL)) {
-        ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+      if (strings.length == 0) {
+        ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_ARGUMENTS);
         return true;
       }
 
-      SellUtil.sell(player);
-      return true;
+      final boolean sellPermission = adminPermission
+          || player.hasPermission(Permissions.GENERATOR_DROPS_SELL);
+
+      if (strings[0].equalsIgnoreCase("all")) {
+        if (!(sellPermission || player.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL))) {
+          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          return true;
+        }
+
+        SellUtil.sellAll(player);
+        return true;
+      }
+
+      if (strings[0].equalsIgnoreCase("hand")) {
+        if (!(sellPermission || player.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND))) {
+          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          return true;
+        }
+
+        SellUtil.sellHand(player);
+        return true;
+      }
     }
 
     return true;
