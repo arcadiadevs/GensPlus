@@ -59,7 +59,7 @@ public class BlockInteraction implements Listener {
     }
 
     // Open the upgrade GUI for the generator block
-    UpgradeGui.open(player, generatorLocation);
+    UpgradeGui.open(player, generatorLocation, block);
   }
 
 }

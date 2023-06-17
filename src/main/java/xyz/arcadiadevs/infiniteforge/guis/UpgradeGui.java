@@ -2,14 +2,12 @@ package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.cryptomorin.xseries.XSound;
 import com.samjakob.spigui.buttons.SGButton;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.BlockLocation;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -36,7 +34,8 @@ public class UpgradeGui {
    * @param player    The Player object for whom the GUI is being opened.
    * @param generator The GeneratorLocation representing the generator to be upgraded.
    */
-  public static void open(Player player, LocationsData.GeneratorLocation generator) {
+  public static void open(Player player, LocationsData.GeneratorLocation generator,
+                          Block clickedBlock) {
     final FileConfiguration config = instance.getConfig();
     final Economy economy = instance.getEcon();
 
@@ -124,7 +123,7 @@ public class UpgradeGui {
     GuiUtil.fillInventory(menu, rows, itemFill, " ");
 
     menu.setButton(0, 11, new SGButton(itemStackUpgradeOne).withListener(event -> {
-      upgradeGenerator(player, generator);
+      upgradeGenerator(player, generator, clickedBlock);
       player.closeInventory();
     }));
 
@@ -188,8 +187,36 @@ public class UpgradeGui {
             .replace("%tier%", String.valueOf(nextGenerator.tier())));
   }
 
-  private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc) {
+  private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc,
+                                       Block clickedBlock) {
+    final LocationsData locationsData = instance.getLocationsData();
+    GeneratorsData.Generator current = currentLoc.getGeneratorObject();
+    GeneratorsData.Generator nextGenerator =
+        instance.getGeneratorsData().getGenerator(current.tier() + 1);
 
+    ArrayList<Block> blocks = currentLoc.getBlockLocations();
+    blocks.remove(clickedBlock);
+
+    locationsData.removeLocation(currentLoc);
+
+    blocks.forEach(block -> {
+      LocationsData.GeneratorLocation loc = locationsData.getGeneratorLocation(block);
+
+      if (loc != null) {
+        return;
+      }
+
+      locationsData.createLocation(player, currentLoc.getGenerator(), block);
+    });
+
+    locationsData.createLocation(player, currentLoc.getGenerator() + 1, clickedBlock);
+
+    clickedBlock.setType(nextGenerator.blockType().getType());
+
+    spawnFirework(currentLoc.getCenter());
+
+    ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_UPGRADED
+        .replace("%tier%", String.valueOf(currentLoc.getGenerator() + 1)));
   }
 
   private static void spawnFirework(Location location) {

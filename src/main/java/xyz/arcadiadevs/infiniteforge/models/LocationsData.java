@@ -89,7 +89,7 @@ public record LocationsData(List<GeneratorLocation> locations) {
 
     private final String playerId;
     private final Integer generator;
-    private final List<SimplifiedLocation> blockLocations;
+    private final ArrayList<SimplifiedLocation> blockLocations;
 
     @Setter
     private transient Hologram hologram;
@@ -102,10 +102,10 @@ public record LocationsData(List<GeneratorLocation> locations) {
         // Perform actions specific to Block
         this.blockLocations = blockLocations.stream()
             .map(b -> SimplifiedLocation.fromLocation(((Block) b).getLocation()))
-            .toList();
+            .collect(Collectors.toCollection(ArrayList::new));
       } else if (blockLocations.get(0) instanceof SimplifiedLocation) {
         // Perform actions specific to SimplifiedLocation
-        this.blockLocations = (List<SimplifiedLocation>) blockLocations;
+        this.blockLocations = (ArrayList<SimplifiedLocation>) blockLocations;
       } else {
         throw new IllegalArgumentException("Invalid blockLocations type");
       }
@@ -148,6 +148,10 @@ public record LocationsData(List<GeneratorLocation> locations) {
           .toList();
 
       this.hologram = HologramsUtil.createHologram(getCenter(), lines, material);
+    }
+
+    public void removeBlock(Block block) {
+      blockLocations.remove(SimplifiedLocation.fromLocation(block.getLocation()));
     }
 
     public Player getPlacedBy() {
