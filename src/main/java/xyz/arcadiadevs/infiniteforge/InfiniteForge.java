@@ -323,12 +323,12 @@ public final class InfiniteForge extends JavaPlugin {
           ? getConfig().getStringList("default-item-spawn-lore")
           : (List<String>) generator.get("itemSpawnLore");
 
+      String formattedSellPrice = econ.format(sellPrice);
+
       itemSpawnLore = itemSpawnLore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
-          .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
+          .map(s -> s.replace("%sellPrice%", formattedSellPrice))
           .map(ChatUtil::translate)
           .toList();
-
-      // TODO: format sellPrice with economy;
 
       spawnLore.add(ChatUtil.translate("&8Generator drop tier " + tier));
       spawnLore.addAll(itemSpawnLore);

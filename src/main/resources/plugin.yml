@@ -12,6 +12,7 @@ depend:
 
 softdepend:
   - Oraxen
+  - Essentials
 
 commands:
   infiniteforge:
