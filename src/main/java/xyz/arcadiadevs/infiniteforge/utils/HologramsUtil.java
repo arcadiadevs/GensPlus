@@ -14,6 +14,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 
 /**
@@ -30,6 +31,10 @@ public class HologramsUtil {
    * @return The hologram created.
    */
   public static Hologram createHologram(Location location, List<String> text, Material material) {
+    if (!InfiniteForge.getInstance().getConfig().getBoolean("hologram.enabled")) {
+      return null;
+    }
+
     Hologram hologram = new Hologram(InfiniteForge.getInstance(), location,
         new TextItemStandardLoader());
 
@@ -56,7 +61,7 @@ public class HologramsUtil {
     return hologram;
   }
 
-  public static void removeHologram(Hologram hologram) {
+  public static void removeHologram(@NotNull Hologram hologram) {
     InfiniteForge.getInstance().getHologramPool().remove(hologram);
   }
 

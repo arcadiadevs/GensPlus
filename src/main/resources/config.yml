@@ -108,6 +108,8 @@ guis:
     rows: 3
 
 holograms:
+  enabled: true
+
   view-distance: 300
 
 events:

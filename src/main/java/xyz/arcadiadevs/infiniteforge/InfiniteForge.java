@@ -348,6 +348,10 @@ public final class InfiniteForge extends JavaPlugin {
     hologramPool = new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000));
     placeholders = new Placeholders();
 
+    if (!InfiniteForge.getInstance().getConfig().getBoolean("hologram.enabled")) {
+      return;
+    }
+
     List<Map<?, ?>> generatorsConfig = instance.getConfig().getMapList("generators");
 
     for (LocationsData.GeneratorLocation location : getLocationsData().locations()) {
