@@ -29,10 +29,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.infiniteforge.commands.Commands;
 import xyz.arcadiadevs.infiniteforge.commands.CommandsTabCompletion;
-import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
-import xyz.arcadiadevs.infiniteforge.events.BlockInteraction;
-import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
-import xyz.arcadiadevs.infiniteforge.events.InstantBreak;
+import xyz.arcadiadevs.infiniteforge.events.*;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.models.events.DropEvent;
@@ -192,6 +189,7 @@ public final class InfiniteForge extends JavaPlugin {
     events.add(new BlockBreak(locationsData, generatorsData));
     events.add(new BlockInteraction(locationsData, generatorsData));
     events.add(new InstantBreak(locationsData, generatorsData));
+    events.add(new OnJoin(generatorsData, getConfig()));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }

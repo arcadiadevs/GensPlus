@@ -1,6 +1,8 @@
 package xyz.arcadiadevs.infiniteforge.events;
 
 import java.util.ArrayList;
+
+import lombok.AllArgsConstructor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,21 +16,11 @@ import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 /**
  * Handles the BlockBreakEvent triggered when a player breaks a block.
  */
+@AllArgsConstructor
 public class BlockBreak implements Listener {
 
   private final LocationsData locationsData;
   private final GeneratorsData generatorsData;
-
-  /**
-   * Constructs a BlockBreak object with the specified LocationsData and GeneratorsData.
-   *
-   * @param locationsData  The LocationsData object containing information about block locations.
-   * @param generatorsData The GeneratorsData object containing information about generators.
-   */
-  public BlockBreak(LocationsData locationsData, GeneratorsData generatorsData) {
-    this.locationsData = locationsData;
-    this.generatorsData = generatorsData;
-  }
 
   /**
    * Handles the BlockBreakEvent triggered when a player breaks a block.

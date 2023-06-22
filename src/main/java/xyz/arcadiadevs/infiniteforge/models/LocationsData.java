@@ -22,8 +22,14 @@ import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
+/**
+ * Represents the data of all the generator locations in the server.
+ */
 public record LocationsData(List<GeneratorLocation> locations) {
 
+  /**
+   * Represents a generator location.
+   */
   public int getGeneratorsCountByPlayer(Player player) {
     return (int) locations.stream()
         .filter(l -> l.getPlacedBy().equals(player))
@@ -31,6 +37,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
         .sum();
   }
 
+  /**
+   * Represents a generator location.
+   */
   public GeneratorLocation createLocation(Player player, int generator, Block location) {
     GeneratorLocation[] surroundingBlocks = {
         getGeneratorLocation(location.getRelative(0, 1, 0)),
@@ -77,6 +86,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
     locations.forEach(this::removeLocation);
   }
 
+  /**
+   * Represents a generator location.
+   */
   public GeneratorLocation getGeneratorLocation(Block location) {
     return locations.stream()
         .filter(l -> l.getBlockLocations().contains(location))
@@ -84,6 +96,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
         .orElse(null);
   }
 
+  /**
+   * Represents a generator location.
+   */
   @Getter
   public static class GeneratorLocation {
 
@@ -94,6 +109,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
     @Setter
     private transient Hologram hologram;
 
+    /**
+     * Represents a generator location.
+     */
     public GeneratorLocation(String playerId, Integer generator, List<?> blockLocations) {
       this.playerId = playerId;
       this.generator = generator;

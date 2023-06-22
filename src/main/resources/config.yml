@@ -11,6 +11,17 @@ item-despawn-time: "5m"
 # values and will be turned into a normal block.
 can-drops-be-placed: false
 
+on-join:
+  # If enabled is set to false, when player joins, he will not receive
+  # the generator.
+  enabled: true
+
+  # What tier of generator should player be given on join.
+  generator-tier: 1
+
+  # How many generators should player be given on join.
+  generator-amount: 3
+
 limit-settings:
   # If enabled is set to false, the limit will not be checked.
   enabled: true

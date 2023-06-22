@@ -58,11 +58,6 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("help")) {
-        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_HELP))) {
-          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
-          return true;
-        }
-
         ChatUtil.sendMessage(player,
             "&9InfiniteForge Commands:");
         ChatUtil.sendMessage(player,
@@ -215,11 +210,8 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
-      final boolean sellPermission = adminPermission
-          || player.hasPermission(Permissions.GENERATOR_DROPS_SELL);
-
       if (strings[0].equalsIgnoreCase("all")) {
-        if (!(sellPermission || player.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL))) {
+        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)) {
           ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
           return true;
         }
@@ -229,7 +221,7 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("hand")) {
-        if (!(sellPermission || player.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND))) {
+        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
           ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
           return true;
         }

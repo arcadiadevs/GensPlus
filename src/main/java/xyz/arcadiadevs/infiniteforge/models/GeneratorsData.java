@@ -46,6 +46,19 @@ public record GeneratorsData(@Getter List<Generator> generators) {
   }
 
   /**
+   * Calculates the sell price of the specified generator.
+   *
+   * @param player The player who is selling the generator.
+   * @param tier   The tier of the generator.
+   */
+  public void giveItemByTier(Player player, int tier, int amount) {
+    Generator generator = getGenerator(tier);
+    ItemStack item = new ItemStack(generator.blockType());
+    item.setAmount(amount);
+    player.getInventory().addItem(item);
+  }
+
+  /**
    * The Generator record represents a generator in InfiniteForge. It contains various properties
    * such as name, tier, price, sell price, speed, items, and lore.
    */
@@ -67,7 +80,7 @@ public record GeneratorsData(@Getter List<Generator> generators) {
      * event.
      *
      * @param player The player who broke the block.
-     * @param event  The block break event.
+     * @param location The location of the block.
      */
     public void dropItem(Player player, Location location) {
       player.getWorld().dropItemNaturally(location, blockType);
