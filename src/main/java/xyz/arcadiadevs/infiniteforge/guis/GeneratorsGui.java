@@ -8,12 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
@@ -40,13 +36,11 @@ public class GeneratorsGui {
     }
 
     final var rows = config.getInt("guis.generators-gui.rows");
-    final var menu = instance.getSpiGui().create(
+
+    final var menu = new Gui(
         ChatUtil.translate(config.getString("guis.generators-gui.title")),
         rows
     );
-
-    menu.setAutomaticPaginationEnabled(true);
-    menu.setBlockDefaultInteractions(true);
 
     GeneratorsData generatorsData = instance.getGeneratorsData();
     List<Map<?, ?>> generatorsConfig = config.getMapList("generators");
@@ -82,28 +76,34 @@ public class GeneratorsGui {
           .lore(lore)
           .build();
 
-      menu.addButton(new SGButton(itemBuilder).withListener(event -> {
-        event.setCancelled(true);
+      menu.setItem(0, new Gui.GuiItem(Gui.GuiItemType.NEXT, XMaterial.ARROW.parseItem(), () -> {
 
-        if (generator.price() > economy.getBalance(player)) {
-          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
-          XSound.ENTITY_VILLAGER_NO.play(player);
-          return;
-        }
-
-        generator.giveItem(player);
-
-        economy.withdrawPlayer(player, generator.price());
-
-        ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_BOUGHT
-            .replace("%generator%", generator.name())
-            .replace("%tier%", String.valueOf(generator.tier()))
-            .replace("%price%", String.valueOf(generator.price()))
-        );
-
-        XSound.ENTITY_PLAYER_LEVELUP.play(player);
       }));
+
+      for (int i = 0; i < 20; i++) {
+        menu.addItem(new Gui.GuiItem(Gui.GuiItemType.ITEM, itemBuilder, () -> {
+          if (generator.price() > economy.getBalance(player)) {
+            ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+            XSound.ENTITY_VILLAGER_NO.play(player);
+            return;
+          }
+
+          generator.giveItem(player);
+
+          economy.withdrawPlayer(player, generator.price());
+
+          ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_BOUGHT
+              .replace("%generator%", generator.name())
+              .replace("%tier%", String.valueOf(generator.tier()))
+              .replace("%price%", String.valueOf(generator.price()))
+          );
+
+          XSound.ENTITY_PLAYER_LEVELUP.play(player);
+        }));
+      }
     }
+
+    menu.init(instance);
 
     player.openInventory(menu.getInventory());
   }

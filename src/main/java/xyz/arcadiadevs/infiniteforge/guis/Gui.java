@@ -1,8 +1,9 @@
 package xyz.arcadiadevs.infiniteforge.guis;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -13,18 +14,14 @@ public class Gui implements Listener {
 
   private final String title;
   private final int rows;
-  private final ArrayList<GuiItem> items;
+  private final HashMap<Integer, GuiItem> items;
   private ArrayList<Inventory> inventory;
 
   public Gui(String title, int rows) {
-    this(title, rows, new ArrayList<>(50000) {{
-      for (int i = 0; i < 50000; i++) {
-        add(null);
-      }
-    }});
+    this(title, rows, new HashMap<>());
   }
 
-  public Gui(String title, int rows, ArrayList<GuiItem> items) {
+  public Gui(String title, int rows, HashMap<Integer, GuiItem> items) {
     this.title = title;
     this.items = items;
     this.rows = rows;
@@ -32,7 +29,7 @@ public class Gui implements Listener {
   }
 
   public void setItem(int slot, GuiItem item) {
-    items.set(slot, item);
+    items.put(slot, item);
   }
 
   public void removeItem(int slot) {
@@ -43,29 +40,25 @@ public class Gui implements Listener {
     items.clear();
   }
 
-  public void addItem(GuiItem item, boolean firstEmpty) {
-    System.out.println("Adding item");
-    if (!firstEmpty) {
+  public void addItem(GuiItem item) {
+    int maxSlot = items.keySet().stream().max(Integer::compareTo).orElse(-1);
+
+    System.out.println("Max slot: " + maxSlot);
+
+    if (maxSlot != -1) {
       System.out.println("Adding item to first empty slot");
-      for (int i = 0; i < items.size(); i++) {
+
+      for (int i = 0; i < maxSlot + 2; i++) {
         System.out.println("Checking slot " + i);
-        if (items.get(i) == null) {
+        if (!isItemOnSlot(i)) {
           System.out.println("Slot " + i + " is empty");
-          items.set(i, item);
+          items.put(i, item);
           return;
         }
       }
+    } else {
+      items.put(0, item);
     }
-
-    items.add(item);
-  }
-
-  public void addItem(GuiItem item) {
-    addItem(item, false);
-  }
-
-  public void addItems(ArrayList<GuiItem> items) {
-    this.items.addAll(items);
   }
 
   public enum GuiItemType {
@@ -129,6 +122,32 @@ public class Gui implements Listener {
     return inventory.stream().findFirst().orElse(Bukkit.createInventory(null, rows * 9, title));
   }
 
+  private boolean isItemOnSlot(int slot) {
+    boolean output = false;
+
+    int inventory = slot / (rows * 9);
+
+    // Get all items that are not of type item.
+    HashMap<Integer, GuiItem> replicatableItems = this.items.entrySet().stream()
+        .filter(entry -> entry.getValue().type != GuiItemType.ITEM)
+        .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), HashMap::putAll);
+
+    if (replicatableItems.entrySet().stream().anyMatch(entry -> {
+      System.out.println("TEST: " + (entry.getKey() + (inventory * rows * 9)) + " T: " + slot + " T2: " + inventory + " T3: " + rows * 9);
+      return (entry.getKey() + (inventory * rows * 9)) == slot;
+    })) {
+      System.out.println("IT IS");
+      output = true;
+    }
+
+    if (items.get(slot) != null) {
+      output = true;
+    }
+
+    return output;
+  }
+
+  @EventHandler
   public void onButtonClick(InventoryClickEvent event) {
     if (inventory.stream().noneMatch(inv -> inv.equals(event.getClickedInventory()))) {
       return;
