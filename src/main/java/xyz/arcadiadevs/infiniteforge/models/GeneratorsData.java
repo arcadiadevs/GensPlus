@@ -3,8 +3,10 @@ package xyz.arcadiadevs.infiniteforge.models;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.Getter;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -44,11 +46,25 @@ public record GeneratorsData(@Getter List<Generator> generators) {
   }
 
   /**
+   * Calculates the sell price of the specified generator.
+   *
+   * @param player The player who is selling the generator.
+   * @param tier   The tier of the generator.
+   */
+  public void giveItemByTier(Player player, int tier, int amount) {
+    Generator generator = getGenerator(tier);
+    ItemStack item = new ItemStack(generator.blockType());
+    item.setAmount(amount);
+    player.getInventory().addItem(item);
+  }
+
+  /**
    * The Generator record represents a generator in InfiniteForge. It contains various properties
    * such as name, tier, price, sell price, speed, items, and lore.
    */
   public record Generator(String name, int tier, double price, double sellPrice, int speed,
-                          ItemStack spawnItem, ItemStack blockType, List<String> lore) {
+                          ItemStack spawnItem, ItemStack blockType, List<String> lore,
+                          boolean instantBreak) {
 
     /**
      * Gives the generator's block item to the specified player.
@@ -64,10 +80,10 @@ public record GeneratorsData(@Getter List<Generator> generators) {
      * event.
      *
      * @param player The player who broke the block.
-     * @param event  The block break event.
+     * @param location The location of the block.
      */
-    public void dropItem(Player player, BlockBreakEvent event) {
-      player.getWorld().dropItemNaturally(event.getBlock().getLocation(), blockType);
+    public void dropItem(Player player, Location location) {
+      player.getWorld().dropItemNaturally(location, blockType);
     }
 
   }

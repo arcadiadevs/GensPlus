@@ -2,8 +2,12 @@ package xyz.arcadiadevs.infiniteforge.models;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.github.unldenis.hologram.Hologram;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -22,8 +26,14 @@ import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
+/**
+ * Represents the data of all the generator locations in the server.
+ */
 public record LocationsData(List<GeneratorLocation> locations) {
 
+  /**
+   * Represents a generator location.
+   */
   public int getGeneratorsCountByPlayer(Player player) {
     return (int) locations.stream()
         .filter(l -> l.getPlacedBy().equals(player))
@@ -31,6 +41,13 @@ public record LocationsData(List<GeneratorLocation> locations) {
         .sum();
   }
 
+  /**
+   * Creates a new generator location for generator.
+   *
+   * @param player    The player who placed the generator.
+   * @param generator The generator tier.
+   * @param location  The location of the generator.
+   */
   public GeneratorLocation createLocation(Player player, int generator, Block location) {
     GeneratorLocation[] surroundingBlocks = {
         getGeneratorLocation(location.getRelative(0, 1, 0)),
@@ -68,8 +85,15 @@ public record LocationsData(List<GeneratorLocation> locations) {
     locations.add(location);
   }
 
+  /**
+   * Removes generator location.
+   *
+   * @param location The generator location to remove.
+   */
   public void removeLocation(GeneratorLocation location) {
-    HologramsUtil.removeHologram(location.getHologram());
+    if (location.getHologram() != null) {
+      HologramsUtil.removeHologram(location.getHologram());
+    }
     locations.remove(location);
   }
 
@@ -77,6 +101,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
     locations.forEach(this::removeLocation);
   }
 
+  /**
+   * Represents a generator location.
+   */
   public GeneratorLocation getGeneratorLocation(Block location) {
     return locations.stream()
         .filter(l -> l.getBlockLocations().contains(location))
@@ -84,6 +111,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
         .orElse(null);
   }
 
+  /**
+   * Represents a generator location.
+   */
   @Getter
   public static class GeneratorLocation {
 
@@ -94,6 +124,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
     @Setter
     private transient Hologram hologram;
 
+    /**
+     * Represents a generator location.
+     */
     public GeneratorLocation(String playerId, Integer generator, List<?> blockLocations) {
       this.playerId = playerId;
       this.generator = generator;
@@ -162,6 +195,11 @@ public record LocationsData(List<GeneratorLocation> locations) {
       return blockLocations.get(0).getLocation().getWorld();
     }
 
+    /**
+     * Gets the center of the generator.
+     *
+     * @return The center of the generator.
+     */
     public ArrayList<Block> getBlockLocations() {
       return blockLocations.stream()
           .map(SimplifiedLocation::getLocation)
@@ -169,6 +207,11 @@ public record LocationsData(List<GeneratorLocation> locations) {
           .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Gets the generator object.
+     *
+     * @return Generator object.
+     */
     public GeneratorsData.Generator getGeneratorObject() {
 
       return InfiniteForge.getInstance()
@@ -180,6 +223,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
       return new GeneratorLocation(playerId, generator + 1, blockLocations);
     }
 
+    /**
+     * Spawns the items for generators.
+     */
     public void spawn() {
       Location location = getCenter();
 
@@ -208,6 +254,9 @@ public record LocationsData(List<GeneratorLocation> locations) {
                   InfiniteForge.getInstance().getConfig().getString("item-despawn-time")));
     }
 
+    /**
+     * Sells the items for generators.
+     */
     public Location getCenter() {
       double minX = Integer.MAX_VALUE;
       double minZ = Integer.MAX_VALUE;

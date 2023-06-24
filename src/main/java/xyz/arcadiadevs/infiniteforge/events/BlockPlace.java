@@ -78,10 +78,7 @@ public class BlockPlace implements Listener {
       return;
     }
 
-    LocationsData.GeneratorLocation location =
-        locationsData.createLocation(player, tier, event.getBlockPlaced());
-
-    System.out.println(location.getBlockLocations());
+    locationsData.createLocation(player, tier, event.getBlockPlaced());
 
     // Send a notification to the player
     ChatUtil.sendMessage(event.getPlayer(), Messages.SUCCESSFULLY_PLACED.replace("%tier%",

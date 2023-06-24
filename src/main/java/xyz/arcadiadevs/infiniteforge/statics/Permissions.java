@@ -9,8 +9,6 @@ public class Permissions {
   public static String GENERATOR_GIVE = "infiniteforge.admin.give";
   public static String GENERATOR_GIVE_ALL = "infiniteforge.admin.give.all";
   public static String GENERATOR_RELOAD = "infiniteforge.admin.reload";
-  public static String GENERATOR_HELP = "infiniteforge.help";
-  public static String GENERATOR_DROPS_SELL = "infiniteforge.drop.sell.*";
   public static String GENERATOR_DROPS_SELL_ALL = "infiniteforge.drop.sell.all";
   public static String GENERATOR_DROPS_SELL_HAND = "infiniteforge.drop.sell.hand";
 }

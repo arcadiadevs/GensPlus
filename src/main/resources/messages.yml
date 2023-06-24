@@ -16,7 +16,7 @@ event-ended: "&9InfiniteForge> &7%event% has ended and new event will be started
 successfully-upgraded: "&9InfiniteForge> &7Successfully upgraded your generator to tier &a%tier%!"
 successfully-sold: "&9InfiniteForge> &7Successfully sold drops for &a%price%"
 not-enough-money: "&cError> &7You don't have enough money to do that!"
-not-enough-drops: "&cError> &7You don't have any drops to sell!"
+nothing-to-sell: "&cError> &7You don't have any drops to sell!"
 invalid-generator-tier: "&cError> &7Invalid generator tier!"
 successfully-destroyed: "&9InfiniteForge> &7Successfully destroyed generator!"
 successfully-placed: "&9InfiniteForge> &7Successfully placed generator tier %tier%!"

@@ -29,9 +29,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.infiniteforge.commands.Commands;
 import xyz.arcadiadevs.infiniteforge.commands.CommandsTabCompletion;
-import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
-import xyz.arcadiadevs.infiniteforge.events.BlockInteraction;
-import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
+import xyz.arcadiadevs.infiniteforge.events.*;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.models.events.DropEvent;
@@ -190,6 +188,8 @@ public final class InfiniteForge extends JavaPlugin {
     events.add(new BlockPlace(locationsData));
     events.add(new BlockBreak(locationsData, generatorsData));
     events.add(new BlockInteraction(locationsData, generatorsData));
+    events.add(new InstantBreak(locationsData, generatorsData));
+    events.add(new OnJoin(generatorsData, getConfig()));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
@@ -266,6 +266,7 @@ public final class InfiniteForge extends JavaPlugin {
     for (Map<?, ?> generator : generatorsConfig) {
       final String name = (String) generator.get("name");
       final String dropDisplayName = (String) generator.get("dropDisplayName");
+      final boolean instantBreak = (boolean) generator.get("instantBreak");
       int tier = (int) generator.get("tier");
       int speed = (int) generator.get("speed");
       double price = (double) generator.get("price");
@@ -320,12 +321,12 @@ public final class InfiniteForge extends JavaPlugin {
           ? getConfig().getStringList("default-item-spawn-lore")
           : (List<String>) generator.get("itemSpawnLore");
 
+      String formattedSellPrice = econ.format(sellPrice);
+
       itemSpawnLore = itemSpawnLore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
-          .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
+          .map(s -> s.replace("%sellPrice%", formattedSellPrice))
           .map(ChatUtil::translate)
           .toList();
-
-      // TODO: format sellPrice with economy;
 
       spawnLore.add(ChatUtil.translate("&8Generator drop tier " + tier));
       spawnLore.addAll(itemSpawnLore);
@@ -337,7 +338,7 @@ public final class InfiniteForge extends JavaPlugin {
 
       generators.add(
           new GeneratorsData.Generator(name, tier, price, sellPrice, speed, spawnItemStack,
-              blockTypeStack, lore));
+              blockTypeStack, lore, instantBreak));
     }
 
     return new GeneratorsData(generators);
@@ -346,6 +347,10 @@ public final class InfiniteForge extends JavaPlugin {
   private void loadHolograms() {
     hologramPool = new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000));
     placeholders = new Placeholders();
+
+    if (!InfiniteForge.getInstance().getConfig().getBoolean("hologram.enabled")) {
+      return;
+    }
 
     List<Map<?, ?>> generatorsConfig = instance.getConfig().getMapList("generators");
 

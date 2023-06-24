@@ -3,7 +3,9 @@ package xyz.arcadiadevs.infiniteforge.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -33,9 +35,21 @@ public class CommandsTabCompletion implements TabCompleter {
     final boolean adminPermission = commandSender.hasPermission(Permissions.ADMIN);
 
     if (command.getName().equalsIgnoreCase("infiniteforge")) {
-      if (strings.length == 1) {
 
-        return List.of("help", "give", "giveall");
+      if (strings.length == 1) {
+        List<String> commands = new ArrayList<>();
+
+        addCommand(commands, adminPermission
+                || commandSender.hasPermission(Permissions.GENERATOR_GIVE),
+            "give", ChatColor.RED);
+
+        addCommand(commands, adminPermission
+                || commandSender.hasPermission(Permissions.GENERATOR_GIVE_ALL),
+            "giveall", ChatColor.RED);
+
+        commands.add("help");
+
+        return commands;
       }
 
       if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("give"))) {
@@ -89,9 +103,8 @@ public class CommandsTabCompletion implements TabCompleter {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL)
-          || commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)
-          || commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND))) {
+      if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)
+          || commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
         return null;
       }
 
@@ -103,5 +116,14 @@ public class CommandsTabCompletion implements TabCompleter {
     }
 
     return null;
+  }
+
+  private void addCommand(List<String> commands, boolean hasPermission, String commandName,
+                          ChatColor color) {
+    if (hasPermission) {
+      commands.add(commandName);
+    } else {
+      commands.add(color + commandName);
+    }
   }
 }

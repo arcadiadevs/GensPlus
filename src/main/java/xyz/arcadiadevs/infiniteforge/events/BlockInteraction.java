@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.infiniteforge.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,6 +38,13 @@ public class BlockInteraction implements Listener {
   public void onBlockClick(PlayerInteractEvent event) {
     Block block = event.getClickedBlock();
     Player player = event.getPlayer();
+
+    String version = Bukkit.getBukkitVersion();
+    final boolean is1_19 = version.contains("1.19");
+
+    if (is1_19 && event.getHand().toString().equals("OFF_HAND")) {
+      return;
+    }
 
     if (block == null) {
       return;
