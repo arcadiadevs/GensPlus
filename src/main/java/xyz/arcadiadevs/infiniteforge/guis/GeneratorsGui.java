@@ -2,15 +2,16 @@ package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.Gui;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItem;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItemType;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
@@ -39,7 +40,8 @@ public class GeneratorsGui {
 
     final var menu = new Gui(
         ChatUtil.translate(config.getString("guis.generators-gui.title")),
-        rows
+        rows,
+        instance
     );
 
     GeneratorsData generatorsData = instance.getGeneratorsData();
@@ -76,12 +78,12 @@ public class GeneratorsGui {
           .lore(lore)
           .build();
 
-      menu.setItem(0, new Gui.GuiItem(Gui.GuiItemType.NEXT, XMaterial.ARROW.parseItem(), () -> {
+      menu.setItem(0, new GuiItem(GuiItemType.NEXT, XMaterial.ARROW.parseItem(), () -> {
 
       }));
 
       for (int i = 0; i < 20; i++) {
-        menu.addItem(new Gui.GuiItem(Gui.GuiItemType.ITEM, itemBuilder, () -> {
+        menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
           if (generator.price() > economy.getBalance(player)) {
             ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
             XSound.ENTITY_VILLAGER_NO.play(player);
@@ -102,8 +104,6 @@ public class GeneratorsGui {
         }));
       }
     }
-
-    menu.init(instance);
 
     player.openInventory(menu.getInventory());
   }
