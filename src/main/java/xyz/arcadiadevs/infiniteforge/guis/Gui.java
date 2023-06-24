@@ -2,6 +2,8 @@ package xyz.arcadiadevs.infiniteforge.guis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,25 +42,29 @@ public class Gui implements Listener {
     items.clear();
   }
 
-  public void addItem(GuiItem item) {
+  public void addItem(GuiItem item, boolean firstEmpty) {
     int maxSlot = items.keySet().stream().max(Integer::compareTo).orElse(-1);
 
-    System.out.println("Max slot: " + maxSlot);
-
-    if (maxSlot != -1) {
+    if (!firstEmpty && maxSlot != -1) {
       System.out.println("Adding item to first empty slot");
 
-      for (int i = 0; i < maxSlot + 2; i++) {
+      for (int i = 0; i < maxSlot; i++) {
         System.out.println("Checking slot " + i);
-        if (!isItemOnSlot(i)) {
+        if (items.get(i) == null) {
           System.out.println("Slot " + i + " is empty");
           items.put(i, item);
           return;
         }
       }
-    } else {
-      items.put(0, item);
     }
+
+    System.out.printf("Adding item to slot %d%n", maxSlot + 1);
+
+    items.put(maxSlot + 1, item);
+  }
+
+  public void addItem(GuiItem item) {
+    addItem(item, false);
   }
 
   public enum GuiItemType {
@@ -70,6 +76,16 @@ public class Gui implements Listener {
   }
 
   public record GuiItem(GuiItemType type, ItemStack item, Runnable listener) {
+
+  }
+
+  public static class GuiInventory {
+
+    private final ArrayList<GuiItem> items;
+
+    public GuiInventory() {
+      this.items = new ArrayList<>();
+    }
 
   }
 
@@ -123,7 +139,9 @@ public class Gui implements Listener {
   }
 
   private boolean isItemOnSlot(int slot) {
-    boolean output = false;
+    if (items.get(slot) != null) {
+      return true;
+    }
 
     int inventory = slot / (rows * 9);
 
@@ -132,19 +150,11 @@ public class Gui implements Listener {
         .filter(entry -> entry.getValue().type != GuiItemType.ITEM)
         .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), HashMap::putAll);
 
-    if (replicatableItems.entrySet().stream().anyMatch(entry -> {
-      System.out.println("TEST: " + (entry.getKey() + (inventory * rows * 9)) + " T: " + slot + " T2: " + inventory + " T3: " + rows * 9);
-      return (entry.getKey() + (inventory * rows * 9)) == slot;
-    })) {
-      System.out.println("IT IS");
-      output = true;
+    if (replicatableItems.entrySet().stream().anyMatch(entry -> entry.getKey() * (inventory + 1) == slot)) {
+      return true;
     }
 
-    if (items.get(slot) != null) {
-      output = true;
-    }
-
-    return output;
+    return false;
   }
 
   @EventHandler
