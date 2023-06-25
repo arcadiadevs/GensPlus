@@ -130,10 +130,7 @@ public class Gui implements Listener {
       return;
     }
 
-    GuiItem item = Arrays.stream(getItems())
-        .filter(guiItem -> guiItem.item().equals(event.getCurrentItem()))
-        .findFirst()
-        .orElse(null);
+    GuiItem item = page.getItems()[event.getSlot() / 9][event.getSlot() % 9];
 
     if (item == null) {
       return;
