@@ -90,7 +90,7 @@ public class Gui implements Listener {
   }
 
   public Inventory getInventory() {
-    return pages.get(0).getInventory(GuiPageType.FIRST);
+    return pages.get(0).getInventory(pages.size() == 1 ? GuiPageType.SINGLE : GuiPageType.FIRST);
   }
 
   public Inventory getInventory(int page) {
