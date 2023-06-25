@@ -99,6 +99,8 @@ public class Gui implements Listener {
             ? GuiPageType.SINGLE
             : page == pages.size() - 1
             ? GuiPageType.LAST
+            : page == 0
+            ? GuiPageType.FIRST
             : GuiPageType.NORMAL
         );
   }
