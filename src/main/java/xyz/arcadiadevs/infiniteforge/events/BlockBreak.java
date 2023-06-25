@@ -61,6 +61,8 @@ public class BlockBreak implements Listener {
       locationsData.createLocation(player, tier, block);
     });
 
+    event.setDropItems(false);
+
     // Send a notification to the player
     ChatUtil.sendMessage(event.getPlayer(), Messages.SUCCESSFULLY_DESTROYED);
   }
