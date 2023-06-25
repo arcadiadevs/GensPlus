@@ -2,6 +2,8 @@ package xyz.arcadiadevs.infiniteforge.guis.guilib;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +14,8 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 public class Gui implements Listener {
 
   private final String title;
+
+  @Getter
   private final int rows;
   private final InfiniteForge instance;
   private final ArrayList<GuiPage> pages;

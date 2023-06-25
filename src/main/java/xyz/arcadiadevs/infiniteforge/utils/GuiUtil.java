@@ -9,6 +9,9 @@ import xyz.arcadiadevs.infiniteforge.guis.guilib.Gui;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItem;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItemType;
 
+import java.util.List;
+import java.util.Random;
+
 /**
  * The GuiUtil class provides utility methods for GUI-related operations.
  */
@@ -93,6 +96,38 @@ public class GuiUtil {
       menu.setButton(i, new SGButton(itemStack));
     }
   }
+
+  // Make a function that fills the inventory with random items
+
+
+  public static void fillWithRandom(Gui menu, List<String>... materials) {
+    Random random = new Random();
+    int rows = menu.getRows();
+
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < 9; j++) {
+        menu.setItem(
+            i * 9 + j,
+            getRandomItem(materials[random.nextInt(materials.length)])
+        );
+      }
+    }
+  }
+
+  private static GuiItem getRandomItem(List<String> materials) {
+    Random random = new Random();
+    String randomMaterial = materials.get(random.nextInt(materials.size()));
+
+    ItemStack itemstack = new ItemBuilder(XMaterial.matchXMaterial(randomMaterial)
+        .orElseThrow()
+        .parseItem())
+        .name(" ")
+        .build();
+    // Replace this with your logic to parse the material string into an actual item.
+    // Here, we're assuming the material string is a valid material name.
+    return new GuiItem(GuiItemType.BORDER, itemstack, null);
+  }
+
 
   /**
    * Fills half of the specified SGMenu with green and red stained glass panes. The left half of the

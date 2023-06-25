@@ -2,8 +2,10 @@ package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.cryptomorin.xseries.XSound;
 import com.samjakob.spigui.buttons.SGButton;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Location;
@@ -14,6 +16,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.Gui;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItem;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItemType;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
@@ -40,9 +45,10 @@ public class UpgradeGui {
     final Economy economy = instance.getEcon();
 
     final var rows = config.getInt("guis.upgrade-gui.rows");
-    final var menu = instance.getSpiGui().create(
+    final var menu = new Gui(
         ChatUtil.translate(config.getString("guis.upgrade-gui.title")),
-        rows
+        rows,
+        instance
     );
 
     final GeneratorsData.Generator current = generator.getGeneratorObject();
@@ -53,9 +59,6 @@ public class UpgradeGui {
       ChatUtil.sendMessage(player, Messages.REACHED_MAX_TIER);
       return;
     }
-
-    menu.setAutomaticPaginationEnabled(false);
-    menu.setBlockDefaultInteractions(true);
 
     final ItemStack itemStackUpgradeOne = new ItemStack(nextGenerator.blockType());
     final ItemMeta itemMetaUpgradeOne = itemStackUpgradeOne.getItemMeta();
@@ -116,18 +119,18 @@ public class UpgradeGui {
     itemMetaUpgradeAll.setLore(loreAll);
     itemStackUpgradeAll.setItemMeta(itemMetaUpgradeAll);
 
-    final String itemFill = economy.has(player, price)
-        ? "GREEN_STAINED_GLASS_PANE"
-        : "GRAY_STAINED_GLASS_PANE";
+    final List<String> itemFill = economy.has(player, price)
+        ? List.of("ORANGE_STAINED_GLASS_PANE", "LIME_STAINED_GLASS_PANE")
+        : List.of("ORANGE_STAINED_GLASS_PANE", "RED_STAINED_GLASS_PANE");
 
-    GuiUtil.fillInventory(menu, rows, itemFill, " ");
+    GuiUtil.fillWithRandom(menu, itemFill);
 
-    menu.setButton(0, 11, new SGButton(itemStackUpgradeOne).withListener(event -> {
+    menu.setItem(11, new GuiItem(GuiItemType.ITEM, itemStackUpgradeOne, () -> {
       upgradeGenerator(player, generator, clickedBlock);
       player.closeInventory();
     }));
 
-    menu.setButton(0, 15, new SGButton(itemStackUpgradeAll).withListener(event -> {
+    menu.setItem(15, new GuiItem(GuiItemType.ITEM, itemStackUpgradeAll, () -> {
       upgradeAllGenerators(player, generator);
       player.closeInventory();
     }));
