@@ -95,7 +95,12 @@ public class Gui implements Listener {
 
   public Inventory getInventory(int page) {
     return pages.get(page)
-        .getInventory(page == pages.size() - 1 ? GuiPageType.LAST : GuiPageType.NORMAL);
+        .getInventory(pages.size() == 1
+            ? GuiPageType.SINGLE
+            : page == pages.size() - 1
+            ? GuiPageType.LAST
+            : GuiPageType.NORMAL
+        );
   }
 
   private GuiItem[] getItems() {

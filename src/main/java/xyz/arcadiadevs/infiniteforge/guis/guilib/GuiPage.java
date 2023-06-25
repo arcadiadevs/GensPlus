@@ -35,11 +35,13 @@ public class GuiPage {
             continue;
           }
 
-          if (type == GuiPageType.LAST && item.type() == GuiItemType.NEXT) {
+          if ((type == GuiPageType.LAST || type == GuiPageType.SINGLE)
+              && item.type() == GuiItemType.NEXT) {
             continue;
           }
 
-          if (type == GuiPageType.FIRST && item.type() == GuiItemType.PREVIOUS) {
+          if ((type == GuiPageType.FIRST || type == GuiPageType.SINGLE)
+              && item.type() == GuiItemType.PREVIOUS) {
             continue;
           }
 
