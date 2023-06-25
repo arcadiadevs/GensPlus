@@ -39,7 +39,7 @@ guis:
     title: "Generators"
 
     # Number of rows in the gui
-    rows: 5
+    rows: 6
 
   # Gui when upgrading generator
   upgrade-gui:
@@ -60,17 +60,22 @@ guis:
       # - %nextSpawnItem% equals to the next spawn item of generator
       # - %nextBlockType% equals to the next block type of generator
       lore:
+        - ""
         - "&fMoney: &a%money%"
         - "&fUpgrade Price: &a%upgradePrice%"
         - ""
-        - "&aUpgrade Details:"
-        - "&b%tier% &r&8》&d&l%nextTier% &0&lASD"
-        - "&b%speed%s &8》&d&l%nextSpeed%s"
-        - "&b%price% &r&8》&d&l%nextPrice%"
-        - "&b%sellPrice% &r&8》&d&l%nextSellPrice%"
-        - "&b%spawnItem% &r&8》&d&l%nextSpawnItem%"
-        - "&b%blockType% &r&8》&d&l%nextBlockType%"
-        - "&8&l&n                                "
+        - "&eCurrent Details:"
+        - "&e⌈ &fTier: &a%tier%"
+        - "&eⅠ &fSpeed: &a%speed%"
+        - "&eⅠ &fPrice: &a%price%"
+        - "&e⌊ &fSell Price: &a%sellPrice%"
+        - ""
+        - "&eNext Details:"
+        - "&e⌈ &fTier: &a%nextTier%"
+        - "&eⅠ &fSpeed: &a%nextSpeed%"
+        - "&eⅠ &fPrice: &a%nextPrice%"
+        - "&e⌊ &fSell Price: &a%nextSellPrice%"
+        - ""
 
     upgradeAll:
         first-line: "&e》 &nClick to upgrade all generators!&e 《"
@@ -89,17 +94,22 @@ guis:
         # - %nextSpawnItem% equals to the next spawn item of generator
         # - %nextBlockType% equals to the next block type of generator
         lore:
+            - ""
             - "&fMoney: &a%money%"
             - "&fUpgrade Price: &a%upgradePrice%"
             - ""
-            - "&aUpgrade Details:"
-            - "&b%tier% &r&8》&d&l%nextTier% &0&lASD"
-            - "&b%speed%s &8》&d&l%nextSpeed%s"
-            - "&b%price% &r&8》&d&l%nextPrice%"
-            - "&b%sellPrice% &r&8》&d&l%nextSellPrice%"
-            - "&b%spawnItem% &r&8》&d&l%nextSpawnItem%"
-            - "&b%blockType% &r&8》&d&l%nextBlockType%"
-            - "&8&l&n                                "
+            - "&eCurrent Details:"
+            - "&e⌈ &fTier: &a%tier%"
+            - "&eⅠ &fSpeed: &a%speed%"
+            - "&eⅠ &fPrice: &a%price%"
+            - "&e⌊ &fSell Price: &a%sellPrice%"
+            - ""
+            - "&eNext Details:"
+            - "&e⌈ &fTier: &a%nextTier%"
+            - "&eⅠ &fSpeed: &a%nextSpeed%"
+            - "&eⅠ &fPrice: &a%nextPrice%"
+            - "&e⌊ &fSell Price: &a%nextSellPrice%"
+            - ""
 
     # Title of the gui
     title: "Upgrade Generator"
@@ -184,19 +194,22 @@ particles:
 # - %spawnItem%" equals to what item will generator spawn
 # - %blockType%" equals to block type of generator
 default-lore:
-  - "&7Tier: &a%tier%"
-  - "&7Speed: &a%speed%"
-  - "&7Price: &a%price%"
-  - "&7Sell Price: &a%sellPrice%"
-  - "&7Spawn Item: &a%spawnItem%"
-  - "&7Block Type: &a%blockType%"
+  - "&7Place down to start generating items!"
+  - ""
+  - "&e&l⌈ &6Tier: &7%tier%"
+  - "&e&lⅠ &6Speed: &7%speed%"
+  - "&e&lⅠ &6Price: &a%price%"
+  - "&e&l⌊ &6Sell Price: &a%sellPrice%"
+  - ""
+  - "&e&l⌈ &6Spawn Item: &7%spawnItem%"
+  - "&e&l⌊ &6Block Type: &7%blockType%"
 
 # If itemSpawnLore is not specified, the default item spawn lore will be used.
 # The default item spawn lore can be specified in the following format:
 # - %sellPrice%" is the sell price of the generator drop
 default-item-spawn-lore:
-  - "&7Type in chat &a/selldrops &7to sell drops!"
-  - "&7Drops are selling for &a%sellPrice%&7!"
+  - "&7Type in chat &e/selldrops &6hand&8/&6all"
+  - "&7to sell the drops for &e%sellPrice%"
 
 # If hologramLines is not specified, the default hologram lines will be used.
 # The default hologram lines can be specified in the following format:
@@ -223,29 +236,13 @@ default-hologram-lines:
 # blockType is the block type of the generator
 # lore is the lore of the generator (if not specified, the default lore will be used)
 generators:
-  - name: "&7&lStone Generator"
+  - name: "&e&lWheat Generator"
     tier: 1
-    price: 50.0
+    price: 1000.0
     sellPrice: 10.0
     speed: 20
-    spawnItem: "STONE"
-    blockType: "STONE"
-    lore: []
-    itemSpawnLore: []
-    hologramLines:
-      - "&a%name%"
-      - "&7Tier: &7%tier%"
-      - "&7Spawns each &7%speed% &7seconds &7%spawnItem%"
-      - "&7Sells for &7%sellPrice%"
-    dropDisplayName: "&7&lStone Drop"
-    instantBreak: false
-  - name: "&e&lSandstone Generator"
-    tier: 2
-    price: 100.0
-    sellPrice: 20.0
-    speed: 20
-    spawnItem: "SANDSTONE"
-    blockType: "SANDSTONE"
+    spawnItem: "WHEAT"
+    blockType: "HAY_BLOCK"
     lore: []
     itemSpawnLore: []
     hologramLines:
@@ -253,44 +250,28 @@ generators:
       - "&7Tier: &e%tier%"
       - "&7Spawns each &e%speed% &7seconds &e%spawnItem%"
       - "&7Sells for &e%sellPrice%"
-    dropDisplayName: "&e&lSandstone Drop"
+    dropDisplayName: "&e&lWheat Drop"
     instantBreak: false
-  - name: "&f&lChiseled Sandstone Generator"
-    tier: 3
-    price: 200.0
-    sellPrice: 25.0
+  - name: "&a&lMelon Generator"
+    tier: 2
+    price: 2000.0
+    sellPrice: 20.0
     speed: 20
-    spawnItem: "CHISELED_SANDSTONE"
-    blockType: "CHISELED_SANDSTONE"
+    spawnItem: "MELON_SLICE"
+    blockType: "MELON"
     lore: []
     itemSpawnLore: []
     hologramLines:
-      - "&f%name%"
-      - "&7Tier: &f%tier%"
-      - "&7Spawns each &f%speed% &7seconds &f%spawnItem%"
-      - "&7Sells for &f%sellPrice%"
-    dropDisplayName: "&f&lChiseled Sandstone Drop"
-    instantBreak: false
-  - name: "&6&lRed Sandstone Generator"
-    tier: 4
-    price: 300.0
-    sellPrice: 50.0
-    speed: 20
-    spawnItem: "RED_SANDSTONE"
-    blockType: "RED_SANDSTONE"
-    lore: []
-    itemSpawnLore: []
-    hologramLines:
-      - "&6%name%"
-      - "&7Tier: &6%tier%"
-      - "&7Spawns each &6%speed% &7seconds &6%spawnItem%"
-      - "&7Sells for &6%sellPrice%"
-    dropDisplayName: "&6&lRed Sandstone Drop"
+      - "&a%name%"
+      - "&7Tier: &a%tier%"
+      - "&7Spawns each &a%speed% &7seconds &a%spawnItem%"
+      - "&7Sells for &a%sellPrice%"
+    dropDisplayName: "&a&lMelon Drop"
     instantBreak: false
   - name: "&8&lCoal Generator"
-    tier: 5
-    price: 400.0
-    sellPrice: 75.0
+    tier: 3
+    price: 3000.0
+    sellPrice: 25.0
     speed: 20
     spawnItem: "COAL"
     blockType: "COAL_ORE"
@@ -303,10 +284,26 @@ generators:
       - "&7Sells for &8%sellPrice%"
     dropDisplayName: "&8&lCoal Drop"
     instantBreak: false
+  - name: "&8&lCoal Block Generator"
+    tier: 4
+    price: 4000.0
+    sellPrice: 50.0
+    speed: 20
+    spawnItem: "COAL_BLOCK"
+    blockType: "COAL_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&8%name%"
+      - "&7Tier: &8%tier%"
+      - "&7Spawns each &8%speed% &7seconds &8%spawnItem%"
+      - "&7Sells for &8%sellPrice%"
+    dropDisplayName: "&8&lCoal Block Drop"
+    instantBreak: false
   - name: "&7&lIron Generator"
-    tier: 6
-    price: 500.0
-    sellPrice: 100.0
+    tier: 5
+    price: 5000.0
+    sellPrice: 75.0
     speed: 20
     spawnItem: "IRON_INGOT"
     blockType: "IRON_ORE"
@@ -319,9 +316,25 @@ generators:
       - "&7Sells for &7%sellPrice%"
     dropDisplayName: "&7&lIron Drop"
     instantBreak: false
+  - name: "&7&lIron Block Generator"
+    tier: 6
+    price: 6000.0
+    sellPrice: 100.0
+    speed: 20
+    spawnItem: "IRON_BLOCK"
+    blockType: "IRON_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&7%name%"
+      - "&7Tier: &7%tier%"
+      - "&7Spawns each &7%speed% &7seconds &7%spawnItem%"
+      - "&7Sells for &7%sellPrice%"
+    dropDisplayName: "&f&lIron Block Drop"
+    instantBreak: false
   - name: "&6&lGold Generator"
     tier: 7
-    price: 750.0
+    price: 7000.0
     sellPrice: 150.0
     speed: 20
     spawnItem: "GOLD_INGOT"
@@ -335,13 +348,61 @@ generators:
       - "&7Sells for &6%sellPrice%"
     dropDisplayName: "&6&lGold Drop"
     instantBreak: false
-  - name: "&b&lDiamond Generator"
+  - name: "&6&lGold Block Generator"
     tier: 8
-    price: 1000.0
+    price: 8000.0
     sellPrice: 200.0
     speed: 20
-    spawnItem: "DIAMOND"
-    blockType: "DIAMOND_ORE"
+    spawnItem: "GOLD_BLOCK"
+    blockType: "GOLD_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&6%name%"
+      - "&7Tier: &6%tier%"
+      - "&7Spawns each &6%speed% &7seconds &6%spawnItem%"
+      - "&7Sells for &6%sellPrice%"
+    dropDisplayName: "&6&lGold Block Drop"
+    instantBreak: false
+  - name: "&4&lRedstone Generator"
+    tier: 9
+    price: 9000.0
+    sellPrice: 300.0
+    speed: 20
+    spawnItem: "REDSTONE"
+    blockType: "REDSTONE_ORE"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&4%name%"
+      - "&7Tier: &4%tier%"
+      - "&7Spawns each &4%speed% &7seconds &4%spawnItem%"
+      - "&7Sells for &4%sellPrice%"
+    dropDisplayName: "&4&lRedstone Drop"
+    instantBreak: false
+  - name: "&4&lRedstone Block Generator"
+    tier: 10
+    price: 10000.0
+    sellPrice: 400.0
+    speed: 20
+    spawnItem: "REDSTONE_BLOCK"
+    blockType: "REDSTONE_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&4%name%"
+      - "&7Tier: &4%tier%"
+      - "&7Spawns each &4%speed% &7seconds &4%spawnItem%"
+      - "&7Sells for &4%sellPrice%"
+    dropDisplayName: "&4&lRedstone Block Drop"
+    instantBreak: false
+  - name: "&b&lLapis Generator"
+    tier: 11
+    price: 11000.0
+    sellPrice: 500.0
+    speed: 20
+    spawnItem: "LAPIS_LAZULI"
+    blockType: "LAPIS_ORE"
     lore: []
     itemSpawnLore: []
     hologramLines:
@@ -349,15 +410,159 @@ generators:
       - "&7Tier: &b%tier%"
       - "&7Spawns each &b%speed% &7seconds &b%spawnItem%"
       - "&7Sells for &b%sellPrice%"
-    dropDisplayName: "&b&lDiamond Drop"
+    dropDisplayName: "&b&lLapis Drop"
     instantBreak: false
-  - name: "&5&lObsidian Generator"
-    tier: 9
-    price: 5000.0
-    sellPrice: 300.0
+  - name: "&b&lLapis Block Generator"
+    tier: 12
+    price: 12000.0
+    sellPrice: 600.0
     speed: 20
-    spawnItem: "OBSIDIAN"
-    blockType: "OBSIDIAN"
+    spawnItem: "LAPIS_BLOCK"
+    blockType: "LAPIS_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&b%name%"
+      - "&7Tier: &b%tier%"
+      - "&7Spawns each &b%speed% &7seconds &b%spawnItem%"
+      - "&7Sells for &b%sellPrice%"
+    dropDisplayName: "&b&lLapis Block Drop"
+    instantBreak: false
+  - name: "&3&lDiamond Generator"
+    tier: 13
+    price: 13000.0
+    sellPrice: 700.0
+    speed: 20
+    spawnItem: "DIAMOND"
+    blockType: "DIAMOND_ORE"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&3%name%"
+      - "&7Tier: &3%tier%"
+      - "&7Spawns each &3%speed% &7seconds &3%spawnItem%"
+      - "&7Sells for &3%sellPrice%"
+    dropDisplayName: "&3&lDiamond Drop"
+    instantBreak: false
+  - name: "&3&lDiamond Block Generator"
+    tier: 14
+    price: 14000.0
+    sellPrice: 800.0
+    speed: 20
+    spawnItem: "DIAMOND_BLOCK"
+    blockType: "DIAMOND_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&3%name%"
+      - "&7Tier: &3%tier%"
+      - "&7Spawns each &3%speed% &7seconds &3%spawnItem%"
+      - "&7Sells for &3%sellPrice%"
+    dropDisplayName: "&3&lDiamond Block Drop"
+    instantBreak: false
+  - name: "&a&lEmerald Generator"
+    tier: 15
+    price: 15000.0
+    sellPrice: 900.0
+    speed: 20
+    spawnItem: "EMERALD"
+    blockType: "EMERALD_ORE"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&a%name%"
+      - "&7Tier: &a%tier%"
+      - "&7Spawns each &a%speed% &7seconds &a%spawnItem%"
+      - "&7Sells for &a%sellPrice%"
+    dropDisplayName: "&a&lEmerald Drop"
+    instantBreak: false
+  - name: "&a&lEmerald Block Generator"
+    tier: 16
+    price: 16000.0
+    sellPrice: 1000.0
+    speed: 20
+    spawnItem: "EMERALD_BLOCK"
+    blockType: "EMERALD_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&a%name%"
+      - "&7Tier: &a%tier%"
+      - "&7Spawns each &a%speed% &7seconds &a%spawnItem%"
+      - "&7Sells for &a%sellPrice%"
+    dropDisplayName: "&a&lEmerald Block Drop"
+    instantBreak: false
+  - name: "&d&lQuartz Generator"
+    tier: 17
+    price: 17000.0
+    sellPrice: 1100.0
+    speed: 20
+    spawnItem: "QUARTZ"
+    blockType: "NETHER_QUARTZ_ORE"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&d%name%"
+      - "&7Tier: &d%tier%"
+      - "&7Spawns each &d%speed% &7seconds &d%spawnItem%"
+      - "&7Sells for &d%sellPrice%"
+    dropDisplayName: "&d&lQuartz Drop"
+    instantBreak: false
+  - name: "&d&lQuartz Block Generator"
+    tier: 18
+    price: 18000.0
+    sellPrice: 1200.0
+    speed: 20
+    spawnItem: "QUARTZ_BLOCK"
+    blockType: "QUARTZ_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&d%name%"
+      - "&7Tier: &d%tier%"
+      - "&7Spawns each &d%speed% &7seconds &d%spawnItem%"
+      - "&7Sells for &d%sellPrice%"
+    dropDisplayName: "&d&lQuartz Block Drop"
+    instantBreak: false
+  - name: "&f&lNetherite Scrap Generator"
+    tier: 19
+    price: 19000.0
+    sellPrice: 1300.0
+    speed: 20
+    spawnItem: "NETHERITE_SCRAP"
+    blockType: "ANCIENT_DEBRIS"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&f%name%"
+      - "&7Tier: &f%tier%"
+      - "&7Spawns each &f%speed% &7seconds &f%spawnItem%"
+      - "&7Sells for &f%sellPrice%"
+    dropDisplayName: "&f&lNetherite Scrap Drop"
+    instantBreak: false
+  - name: "&f&lNetherite Ingot Generator"
+    tier: 20
+    price: 20000.0
+    sellPrice: 1400.0
+    speed: 20
+    spawnItem: "NETHERITE_INGOT"
+    blockType: "NETHERITE_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&f%name%"
+      - "&7Tier: &f%tier%"
+      - "&7Spawns each &f%speed% &7seconds &f%spawnItem%"
+      - "&7Sells for &f%sellPrice%"
+    dropDisplayName: "&f&lNetherite Ingot Drop"
+    instantBreak: false
+  - name: "&5&lAncient Debris Generator"
+    tier: 21
+    price: 21000.0
+    sellPrice: 1500.0
+    speed: 20
+    spawnItem: "ANCIENT_DEBRIS"
+    blockType: "ANCIENT_DEBRIS"
     lore: []
     itemSpawnLore: []
     hologramLines:
@@ -365,12 +570,92 @@ generators:
       - "&7Tier: &5%tier%"
       - "&7Spawns each &5%speed% &7seconds &5%spawnItem%"
       - "&7Sells for &5%sellPrice%"
-    dropDisplayName: "&5&lObsidian Drop"
+    dropDisplayName: "&5&lAncient Debris Drop"
+    instantBreak: false
+  - name: "&5&lNether Star Generator"
+    tier: 22
+    price: 22000.0
+    sellPrice: 1600.0
+    speed: 20
+    spawnItem: "NETHER_STAR"
+    blockType: "BEACON"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&5%name%"
+      - "&7Tier: &5%tier%"
+      - "&7Spawns each &5%speed% &7seconds &5%spawnItem%"
+      - "&7Sells for &5%sellPrice%"
+    dropDisplayName: "&5&lNether Star Drop"
+    instantBreak: false
+  - name: "&c&lCrying Obsidian Generator"
+    tier: 23
+    price: 23000.0
+    sellPrice: 1700.0
+    speed: 20
+    spawnItem: "CRYING_OBSIDIAN"
+    blockType: "CRYING_OBSIDIAN"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&c%name%"
+      - "&7Tier: &c%tier%"
+      - "&7Spawns each &c%speed% &7seconds &c%spawnItem%"
+      - "&7Sells for &c%sellPrice%"
+    dropDisplayName: "&c&lDragon Egg Drop"
+    instantBreak: false
+  - name: "&4&lObsidian Rose Generator"
+    tier: 24
+    price: 24000.0
+    sellPrice: 1800.0
+    speed: 20
+    spawnItem: "WITHER_ROSE"
+    blockType: "RESPAWN_ANCHOR"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&4%name%"
+      - "&7Tier: &4%tier%"
+      - "&7Spawns each &4%speed% &7seconds &4%spawnItem%"
+      - "&7Sells for &4%sellPrice%"
+    dropDisplayName: "&4&lWither Skeleton Skull Drop"
+    instantBreak: false
+  - name: "&8&lReinforced deepslate Generator"
+    tier: 25
+    price: 25000.0
+    sellPrice: 1900.0
+    speed: 20
+    spawnItem: "REINFORCED_DEEPSLATE"
+    blockType: "REINFORCED_DEEPSLATE"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&8%name%"
+      - "&7Tier: &8%tier%"
+      - "&7Spawns each &8%speed% &7seconds &8%spawnItem%"
+      - "&7Sells for &8%sellPrice%"
+    dropDisplayName: "&8&lReinforced deepslate Drop"
+    instantBreak: false
+  - name: "&6&lMagma Block Generator"
+    tier: 26
+    price: 26000.0
+    sellPrice: 2000.0
+    speed: 20
+    spawnItem: "MAGMA_BLOCK"
+    blockType: "MAGMA_BLOCK"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&6%name%"
+      - "&7Tier: &6%tier%"
+      - "&7Spawns each &6%speed% &7seconds &6%spawnItem%"
+      - "&7Sells for &6%sellPrice%"
+    dropDisplayName: "&6&lMagma Block Drop"
     instantBreak: false
   - name: "&4&lBedrock Generator"
-    tier: 10
-    price: 10000.0
-    sellPrice: 400.0
+    tier: 27
+    price: 27000.0
+    sellPrice: 2100.0
     speed: 20
     spawnItem: "BEDROCK"
     blockType: "BEDROCK"
@@ -382,6 +667,22 @@ generators:
       - "&7Spawns each &4%speed% &7seconds &4%spawnItem%"
       - "&7Sells for &4%sellPrice%"
     dropDisplayName: "&4&lBedrock Drop"
+    instantBreak: true
+  - name: "&e&lDragon Egg Generator"
+    tier: 28
+    price: 28000.0
+    sellPrice: 2200.0
+    speed: 20
+    spawnItem: "DRAGON_EGG"
+    blockType: "DRAGON_EGG"
+    lore: []
+    itemSpawnLore: []
+    hologramLines:
+      - "&e%name%"
+      - "&7Tier: &e%tier%"
+      - "&7Spawns each &e%speed% &7seconds &e%spawnItem%"
+      - "&7Sells for &e%sellPrice%"
+    dropDisplayName: "&e&lDragon Egg Drop"
     instantBreak: true
 
 developer-options:

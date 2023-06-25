@@ -31,7 +31,7 @@ public class HologramsUtil {
    * @return The hologram created.
    */
   public static Hologram createHologram(Location location, List<String> text, Material material) {
-    if (!InfiniteForge.getInstance().getConfig().getBoolean("hologram.enabled")) {
+    if (!InfiniteForge.getInstance().getConfig().getBoolean("holograms.enabled")) {
       return null;
     }
 

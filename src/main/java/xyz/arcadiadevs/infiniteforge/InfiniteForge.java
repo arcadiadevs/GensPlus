@@ -122,7 +122,6 @@ public final class InfiniteForge extends JavaPlugin {
     saveDefaultConfig();
 
     saveResource("block_data.json", false);
-    saveResource("holograms.json", false);
     saveResource("messages.yml", false);
 
     setupEconomy();
@@ -190,6 +189,7 @@ public final class InfiniteForge extends JavaPlugin {
     events.add(new BlockInteraction(locationsData, generatorsData));
     events.add(new InstantBreak(locationsData, generatorsData));
     events.add(new OnJoin(generatorsData, getConfig()));
+    events.add(new EggTeleport(locationsData));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
@@ -348,7 +348,7 @@ public final class InfiniteForge extends JavaPlugin {
     hologramPool = new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000));
     placeholders = new Placeholders();
 
-    if (!InfiniteForge.getInstance().getConfig().getBoolean("hologram.enabled")) {
+    if (!InfiniteForge.getInstance().getConfig().getBoolean("holograms.enabled")) {
       return;
     }
 

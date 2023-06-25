@@ -64,7 +64,7 @@ public class Gui implements Listener {
   }
 
   public GuiPage addPage() {
-    GuiPage page = new GuiPage(rows);
+    GuiPage page = new GuiPage(rows, title);
 
     if (pages.size() > 0) {
       GuiPage firstPage = pages.get(0);
@@ -138,7 +138,13 @@ public class Gui implements Listener {
     event.setCancelled(true);
 
     switch (item.type()) {
-      case ITEM, BORDER -> item.action().run();
+      case ITEM, BORDER -> {
+        if (item.action() == null) {
+          return;
+        }
+
+        item.action().run();
+      }
       case NEXT -> {
         int nextPage = pages.indexOf(page) + 1;
 

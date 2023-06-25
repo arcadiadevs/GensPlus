@@ -102,7 +102,10 @@ public record LocationsData(List<GeneratorLocation> locations) {
   }
 
   /**
-   * Represents a generator location.
+   * Gets the generator location by the block location.
+   *
+   * @param location The block location.
+   * @return The generator location.
    */
   public GeneratorLocation getGeneratorLocation(Block location) {
     return locations.stream()

@@ -104,7 +104,7 @@ public class CommandsTabCompletion implements TabCompleter {
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
       if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)
-          || commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
+          || !commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
         return null;
       }
 

@@ -11,18 +11,21 @@ public class GuiPage {
   @Getter
   private final int rows;
 
+  private final String title;
+
   @Getter
   private final GuiItem[][] items;
 
-  public GuiPage(int rows) {
+  public GuiPage(int rows, String title) {
     this.inventory = null;
     this.rows = rows;
     this.items = new GuiItem[rows][9];
+    this.title = title;
   }
 
   public Inventory getInventory(GuiPageType type) {
     if (inventory == null) {
-      inventory = Bukkit.createInventory(null, rows * 9, "");
+      inventory = Bukkit.createInventory(null, rows * 9, title);
 
       for (int i = 0; i < items.length; i++) {
         for (int j = 0; j < items[i].length; j++) {

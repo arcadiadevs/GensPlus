@@ -3,11 +3,14 @@ package xyz.arcadiadevs.infiniteforge.guis;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.samjakob.spigui.item.ItemBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.Gui;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItem;
@@ -15,6 +18,7 @@ import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItemType;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.utils.GuiUtil;
 
 /**
  * The GeneratorsGui class provides functionality for opening the generators GUI in InfiniteForge.
@@ -66,8 +70,8 @@ public class GeneratorsGui {
       lore = lore.stream()
           .map(s -> s.replace("%tier%", String.valueOf(generator.tier())))
           .map(s -> s.replace("%speed%", String.valueOf(generator.speed())))
-          .map(s -> s.replace("%price%", String.valueOf(generator.price())))
-          .map(s -> s.replace("%sellPrice%", String.valueOf(generator.sellPrice())))
+          .map(s -> s.replace("%price%", economy.format(generator.price())))
+          .map(s -> s.replace("%sellPrice%", economy.format(generator.sellPrice())))
           .map(s -> s.replace("%spawnItem%", generator.spawnItem().getType().name()))
           .map(s -> s.replace("%blockType%", generator.blockType().getType().name()))
           .map(ChatUtil::translate)
@@ -78,31 +82,44 @@ public class GeneratorsGui {
           .lore(lore)
           .build();
 
-      menu.setItem(0, new GuiItem(GuiItemType.NEXT, XMaterial.ARROW.parseItem(), () -> {
+      GuiUtil.addBorder(menu, rows, XMaterial.WHITE_STAINED_GLASS_PANE.toString());
 
+      ItemStack nextPage = new ItemBuilder(XMaterial.ARROW.parseItem())
+          .name(ChatUtil.translate("&aNext Page"))
+          .build();
+
+      ItemStack previousPage = new ItemBuilder(XMaterial.DIAMOND_BLOCK.parseItem())
+          .name(ChatUtil.translate("&aPrevious Page"))
+          .build();
+
+      ItemStack closeButton = new ItemBuilder(XMaterial.BARRIER.parseItem())
+          .name(ChatUtil.translate("&cClose"))
+          .build();
+
+      menu.setItem(48, new GuiItem(GuiItemType.PREVIOUS, previousPage, null));
+      menu.setItem(49, new GuiItem(GuiItemType.CLOSE, closeButton, null));
+      menu.setItem(50, new GuiItem(GuiItemType.NEXT, nextPage, null));
+
+      menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
+        if (generator.price() > economy.getBalance(player)) {
+          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+          XSound.ENTITY_VILLAGER_NO.play(player);
+          return;
+        }
+
+        generator.giveItem(player);
+
+        economy.withdrawPlayer(player, generator.price());
+
+        ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_BOUGHT
+            .replace("%generator%", generator.name())
+            .replace("%tier%", String.valueOf(generator.tier()))
+            .replace("%price%", String.valueOf(generator.price()))
+        );
+
+        XSound.ENTITY_PLAYER_LEVELUP.play(player);
       }));
 
-      for (int i = 0; i < 20; i++) {
-        menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
-          if (generator.price() > economy.getBalance(player)) {
-            ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
-            XSound.ENTITY_VILLAGER_NO.play(player);
-            return;
-          }
-
-          generator.giveItem(player);
-
-          economy.withdrawPlayer(player, generator.price());
-
-          ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_BOUGHT
-              .replace("%generator%", generator.name())
-              .replace("%tier%", String.valueOf(generator.tier()))
-              .replace("%price%", String.valueOf(generator.price()))
-          );
-
-          XSound.ENTITY_PLAYER_LEVELUP.play(player);
-        }));
-      }
     }
 
     player.openInventory(menu.getInventory());

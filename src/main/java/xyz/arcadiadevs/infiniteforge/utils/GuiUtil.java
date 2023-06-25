@@ -5,6 +5,9 @@ import com.samjakob.spigui.SGMenu;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.Gui;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItem;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItemType;
 
 /**
  * The GuiUtil class provides utility methods for GUI-related operations.
@@ -17,33 +20,56 @@ public class GuiUtil {
    * @param menu The SGMenu to add the border to.
    * @param rows The number of rows in the menu.
    */
-  public static void addBorder(SGMenu menu, int rows) {
-
+  public static void addBorder(Gui menu, int rows, String material) {
     for (int i = 0; i < 9; i++) {
-      menu.setButton(
+      menu.setItem(
           i,
-          new SGButton(new ItemBuilder(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem()).build())
+          new GuiItem(
+              GuiItemType.BORDER,
+              XMaterial.matchXMaterial(material)
+                  .orElse(XMaterial.WHITE_STAINED_GLASS_PANE)
+                  .parseItem(),
+              null
+          )
       );
     }
 
     for (int i = 0; i < rows; i++) {
-      menu.setButton(
+      menu.setItem(
           i * 9,
-          new SGButton(new ItemBuilder(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem()).build())
+          new GuiItem(
+              GuiItemType.BORDER,
+              XMaterial.matchXMaterial(material)
+                  .orElse(XMaterial.WHITE_STAINED_GLASS_PANE)
+                  .parseItem(),
+              null
+          )
       );
     }
 
     for (int i = 0; i < rows; i++) {
-      menu.setButton(
-          i * 9 + 8,
-          new SGButton(new ItemBuilder(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem()).build())
+      menu.setItem(
+          (i * 9) + 8,
+          new GuiItem(
+              GuiItemType.BORDER,
+              XMaterial.matchXMaterial(material)
+                  .orElse(XMaterial.WHITE_STAINED_GLASS_PANE)
+                  .parseItem(),
+              null
+          )
       );
     }
 
     for (int i = (rows - 1) * 9; i < ((rows - 1) * 9) + 9; i++) {
-      menu.setButton(
+      menu.setItem(
           i,
-          new SGButton(new ItemBuilder(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem()).build())
+          new GuiItem(
+              GuiItemType.BORDER,
+              XMaterial.matchXMaterial(material)
+                  .orElse(XMaterial.WHITE_STAINED_GLASS_PANE)
+                  .parseItem(),
+              null
+          )
       );
     }
   }
@@ -51,8 +77,8 @@ public class GuiUtil {
   /**
    * Fills the specified SGMenu with gray stained glass panes.
    *
-   * @param menu The SGMenu to fill.
-   * @param rows The number of rows in the menu.
+   * @param menu     The SGMenu to fill.
+   * @param rows     The number of rows in the menu.
    * @param material The material to fill the menu with.
    */
   public static void fillInventory(SGMenu menu, int rows, String material, String displayName) {
