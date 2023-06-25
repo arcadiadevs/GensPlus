@@ -41,6 +41,16 @@ guis:
     # Number of rows in the gui
     rows: 6
 
+    border:
+      # If enabled is set to false, the border won't be displayed.
+      enabled: true
+
+      # Material of the border
+      material: "WHITE_STAINED_GLASS_PANE"
+
+      # Name of the border
+      name: " "
+
   # Gui when upgrading generator
   upgrade-gui:
     upgradeOne:
@@ -118,8 +128,10 @@ guis:
     rows: 3
 
 holograms:
+  # If enabled is set to false, holograms will not be shown
   enabled: true
 
+  # The hologram view distance
   view-distance: 300
 
 events:
@@ -235,6 +247,10 @@ default-hologram-lines:
 # spawnItem is the item that generator will spawn
 # blockType is the block type of the generator
 # lore is the lore of the generator (if not specified, the default lore will be used)
+# itemSpawnLore is the lore of the generator drop (if not specified, the default item spawn lore will be used)
+# hologramLines is the hologram lines of the generator (if not specified, the default hologram lines will be used)
+# dropDisplayName is the display name of the generator drop
+# instantBreak is whether the generator can be instantly broken by SHIT + RIGHT-clicking or not
 generators:
   - name: "&e&lWheat Generator"
     tier: 1

@@ -82,13 +82,15 @@ public class GeneratorsGui {
           .lore(lore)
           .build();
 
-      GuiUtil.addBorder(menu, rows, XMaterial.WHITE_STAINED_GLASS_PANE.toString());
+      if (config.getBoolean("guis.generators-gui.border.enabled")) {
+        GuiUtil.addBorder(menu, config.getString("guis.generators-gui.border.material"));
+      }
 
       ItemStack nextPage = new ItemBuilder(XMaterial.ARROW.parseItem())
           .name(ChatUtil.translate("&aNext Page"))
           .build();
 
-      ItemStack previousPage = new ItemBuilder(XMaterial.DIAMOND_BLOCK.parseItem())
+      ItemStack previousPage = new ItemBuilder(XMaterial.ARROW.parseItem())
           .name(ChatUtil.translate("&aPrevious Page"))
           .build();
 
@@ -96,9 +98,9 @@ public class GeneratorsGui {
           .name(ChatUtil.translate("&cClose"))
           .build();
 
-      menu.setItem(48, new GuiItem(GuiItemType.PREVIOUS, previousPage, null));
-      menu.setItem(49, new GuiItem(GuiItemType.CLOSE, closeButton, null));
-      menu.setItem(50, new GuiItem(GuiItemType.NEXT, nextPage, null));
+      menu.setItem(((rows - 1) * 9) + 3, new GuiItem(GuiItemType.PREVIOUS, previousPage, null));
+      menu.setItem(((rows - 1) * 9) + 4, new GuiItem(GuiItemType.CLOSE, closeButton, null));
+      menu.setItem(((rows - 1) * 9) + 5, new GuiItem(GuiItemType.NEXT, nextPage, null));
 
       menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
         if (generator.price() > economy.getBalance(player)) {

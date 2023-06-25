@@ -5,6 +5,7 @@ import com.samjakob.spigui.SGMenu;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.Gui;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItem;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItemType;
@@ -21,23 +22,26 @@ public class GuiUtil {
    * Adds a border to the specified SGMenu with the given number of rows.
    *
    * @param menu The SGMenu to add the border to.
-   * @param rows The number of rows in the menu.
    */
-  public static void addBorder(Gui menu, int rows, String material) {
+  public static void addBorder(Gui menu, String material) {
+    ItemStack borderItem = new ItemBuilder(XMaterial.matchXMaterial(material)
+        .orElse(XMaterial.WHITE_STAINED_GLASS_PANE)
+        .parseItem())
+        .name(InfiniteForge.getInstance().getConfig().getString("guis.generators-gui.border.name"))
+        .build();
+
     for (int i = 0; i < 9; i++) {
       menu.setItem(
           i,
           new GuiItem(
               GuiItemType.BORDER,
-              XMaterial.matchXMaterial(material)
-                  .orElse(XMaterial.WHITE_STAINED_GLASS_PANE)
-                  .parseItem(),
+              borderItem,
               null
           )
       );
     }
 
-    for (int i = 0; i < rows; i++) {
+    for (int i = 0; i < menu.getRows(); i++) {
       menu.setItem(
           i * 9,
           new GuiItem(
@@ -50,7 +54,7 @@ public class GuiUtil {
       );
     }
 
-    for (int i = 0; i < rows; i++) {
+    for (int i = 0; i < menu.getRows(); i++) {
       menu.setItem(
           (i * 9) + 8,
           new GuiItem(
@@ -63,7 +67,7 @@ public class GuiUtil {
       );
     }
 
-    for (int i = (rows - 1) * 9; i < ((rows - 1) * 9) + 9; i++) {
+    for (int i = (menu.getRows() - 1) * 9; i < ((menu.getRows() - 1) * 9) + 9; i++) {
       menu.setItem(
           i,
           new GuiItem(
@@ -76,29 +80,6 @@ public class GuiUtil {
       );
     }
   }
-
-  /**
-   * Fills the specified SGMenu with gray stained glass panes.
-   *
-   * @param menu     The SGMenu to fill.
-   * @param rows     The number of rows in the menu.
-   * @param material The material to fill the menu with.
-   */
-  public static void fillInventory(SGMenu menu, int rows, String material, String displayName) {
-    for (int i = 0; i < rows * 9; i++) {
-      ItemStack itemStack = new ItemBuilder(XMaterial
-          .matchXMaterial(material)
-          .orElseThrow()
-          .parseItem())
-          .name(displayName)
-          .build();
-
-      menu.setButton(i, new SGButton(itemStack));
-    }
-  }
-
-  // Make a function that fills the inventory with random items
-
 
   public static void fillWithRandom(Gui menu, List<String>... materials) {
     Random random = new Random();
@@ -126,38 +107,6 @@ public class GuiUtil {
     // Replace this with your logic to parse the material string into an actual item.
     // Here, we're assuming the material string is a valid material name.
     return new GuiItem(GuiItemType.BORDER, itemstack, null);
-  }
-
-
-  /**
-   * Fills half of the specified SGMenu with green and red stained glass panes. The left half of the
-   * menu will have red panes, the right half will have green panes, and the top and bottom rows
-   * will have a combination of red and green panes.
-   *
-   * @param menu The SGMenu to fill.
-   * @param rows The number of rows in the menu.
-   */
-  public static void fillHalfInventory(SGMenu menu, int rows) {
-    final var greenGlassPane = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-    final var redGlassPane = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-
-    for (int row = 0; row < rows; row++) {
-      for (int col = 0; col < 9; col++) {
-        int index = row * 9 + col;
-        if (col < 4) {
-          menu.setButton(index, new SGButton(new ItemBuilder(redGlassPane).build()));
-        } else if (col > 4) {
-          menu.setButton(index, new SGButton(new ItemBuilder(greenGlassPane).build()));
-        } else if (row == 0) {
-          menu.setButton(index, new SGButton(new ItemBuilder(greenGlassPane).build()));
-        } else if (row == rows - 1) {
-          menu.setButton(index, new SGButton(new ItemBuilder(redGlassPane).build()));
-        } else {
-          menu.setButton(index,
-              new SGButton(new ItemBuilder(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem()).build()));
-        }
-      }
-    }
   }
 
 }
