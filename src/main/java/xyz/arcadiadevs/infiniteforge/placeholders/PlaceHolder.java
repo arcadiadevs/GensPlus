@@ -2,12 +2,11 @@ package xyz.arcadiadevs.infiniteforge.placeholders;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
-import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.models.events.ActiveEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
+import xyz.arcadiadevs.infiniteforge.utils.PlayerUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
 /**
@@ -83,7 +82,6 @@ public class PlaceHolder extends PlaceholderExpansion {
   @Override
   public String onRequest(OfflinePlayer player, String params) {
     final ActiveEvent activeEvent = EventLoop.getActiveEvent();
-    final FileConfiguration config = InfiniteForge.getInstance().getConfig();
 
     return switch (params) {
       case "event_timer" -> {
@@ -92,9 +90,9 @@ public class PlaceHolder extends PlaceholderExpansion {
       }
       case "event_name" ->
           activeEvent.event() == null ? "No Events" : activeEvent.event().getName();
-      case "gen_limit" -> String.valueOf(config.getInt("limit-settings.limit"));
-      case "gen_placed" -> String.valueOf(
-              locationsData.getGeneratorsCountByPlayer(player.getPlayer()));
+      case "gen_limit" -> PlayerUtil.getGeneratorLimit(player.getPlayer()).toString();
+      case "gen_placed" -> locationsData.getGeneratorsCountByPlayer(player.getPlayer()).toString();
+      case "sell_multiplier" -> PlayerUtil.getMultiplier(player.getPlayer()).toString();
       default -> throw new IllegalStateException("Unexpected value: " + params);
     };
   }

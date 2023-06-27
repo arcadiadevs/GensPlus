@@ -11,4 +11,6 @@ public class Permissions {
   public static String GENERATOR_RELOAD = "infiniteforge.admin.reload";
   public static String GENERATOR_DROPS_SELL_ALL = "infiniteforge.drop.sell.all";
   public static String GENERATOR_DROPS_SELL_HAND = "infiniteforge.drop.sell.hand";
+  public static String SELL_MULTIPLIER = "infiniteforge.sell.multiplier.";
+  public static String GENERATOR_LIMIT = "infiniteforge.limit.";
 }

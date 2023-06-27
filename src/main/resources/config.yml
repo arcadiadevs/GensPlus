@@ -26,8 +26,24 @@ limit-settings:
   # If enabled is set to false, the limit will not be checked.
   enabled: true
 
-  # What should be the limit of generators per player.
-  limit: 10
+  # Should we use permissions for generator limit?
+  # If set to true, you will be able to set specific
+  # limits for each player. [infiniteforge.limit.<amount>]
+  # (ex: infiniteforge.limit.20)
+  use-permissions: true
+
+  # The default generator limit for all players
+  default-limit: 20
+
+multiplier:
+  # Should we use permissions for multiplier?
+  # If set to true, you will be able to set specific
+  # multipliers for each player. [infiniteforge.multiplier.<amount>]
+  # (ex: infiniteforge.multiplier.2)
+  use-permissions: true
+
+  # The default multiplier for all players
+  default-multiplier: 1
 
 guis:
   # Gui to view generators by a command

@@ -43,7 +43,7 @@ import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
-import xyz.arcadiadevs.infiniteforge.utils.ItemUtils;
+import xyz.arcadiadevs.infiniteforge.utils.ItemUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
 /**
@@ -289,8 +289,8 @@ public final class InfiniteForge extends JavaPlugin {
         throw new RuntimeException("Duplicate tier found: " + tier);
       }
 
-      ItemStack spawnItemStack = ItemUtils.getUniversalItem(spawnItem);
-      ItemStack blockTypeStack = ItemUtils.getUniversalItem(blockType);
+      ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem);
+      ItemStack blockTypeStack = ItemUtil.getUniversalItem(blockType);
 
       if (spawnItemStack == null || blockTypeStack == null) {
         throw new RuntimeException("Invalid item name");

@@ -3,6 +3,8 @@ package xyz.arcadiadevs.infiniteforge.utils;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,10 +32,9 @@ public class SellUtil {
     final HashMap<Player, Integer> sellAmounts = new HashMap<>();
     final ActiveEvent event = EventLoop.getActiveEvent();
 
-    // Determine the sell multiplier based on the active event
-    long multiplier = (long) (event.event() instanceof SellEvent
-        ? event.event().getMultiplier()
-        : 1.0);
+    final long multiplier = (long) (event.event() instanceof SellEvent
+        ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
+        : 1.0 * PlayerUtil.getMultiplier(player));
 
     // Iterate through the player's inventory to find generator drops
     for (int i = 0; i < player.getInventory().getSize(); i++) {
@@ -102,9 +103,9 @@ public class SellUtil {
     final ActiveEvent event = EventLoop.getActiveEvent();
 
     // Determine the sell multiplier based on the active event
-    long multiplier = (long) (event.event() instanceof SellEvent
-        ? event.event().getMultiplier()
-        : 1.0);
+    final long multiplier = (long) (event.event() instanceof SellEvent
+        ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
+        : 1.0 * PlayerUtil.getMultiplier(player));
 
     ItemStack item = player.getInventory().getItemInMainHand();
     final boolean isAir = item.getType().isAir();

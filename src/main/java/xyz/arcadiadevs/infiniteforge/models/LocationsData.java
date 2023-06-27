@@ -34,7 +34,7 @@ public record LocationsData(List<GeneratorLocation> locations) {
   /**
    * Represents a generator location.
    */
-  public int getGeneratorsCountByPlayer(Player player) {
+  public Integer getGeneratorsCountByPlayer(Player player) {
     return (int) locations.stream()
         .filter(l -> l.getPlacedBy().equals(player))
         .mapToLong(l -> l.getBlockLocations().size())

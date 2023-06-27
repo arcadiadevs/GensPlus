@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * The ItemUtils class provides utility methods for handling item-related operations.
  */
-public class ItemUtils {
+public class ItemUtil {
 
   /**
    * Returns an ItemStack representing a universal multi-version supported item,

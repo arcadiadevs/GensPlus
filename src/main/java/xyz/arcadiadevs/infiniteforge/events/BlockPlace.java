@@ -13,6 +13,7 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
+import xyz.arcadiadevs.infiniteforge.utils.PlayerUtil;
 
 public class BlockPlace implements Listener {
 
@@ -67,7 +68,7 @@ public class BlockPlace implements Listener {
     final Player player = event.getPlayer();
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
-    final int limit = config.getInt("limit-settings.limit");
+    final int limit = PlayerUtil.getGeneratorLimit(player);
     final boolean enabled = config.getBoolean("limit-settings.enabled");
 
     if (locationsData.getGeneratorsCountByPlayer(player) >= limit
