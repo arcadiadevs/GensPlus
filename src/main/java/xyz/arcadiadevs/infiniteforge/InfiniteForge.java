@@ -141,7 +141,7 @@ public final class InfiniteForge extends JavaPlugin {
     events = loadInfiniteForgeEvents();
 
     if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
-      new PlaceHolder(locationsData).register();
+      new PlaceHolder(locationsData, getConfig()).register();
     }
 
     loadHolograms();

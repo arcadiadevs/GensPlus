@@ -197,21 +197,6 @@ public class UpgradeGui {
     final GeneratorsData.Generator nextGenerator =
         instance.getGeneratorsData().getGenerator(current.tier() + 1);
 
-    ArrayList<Block> blocks = currentLoc.getBlockLocations();
-    blocks.remove(clickedBlock);
-
-    locationsData.removeLocation(currentLoc);
-
-    blocks.forEach(block -> {
-      LocationsData.GeneratorLocation loc = locationsData.getGeneratorLocation(block);
-
-      if (loc != null) {
-        return;
-      }
-
-      locationsData.createLocation(player, currentLoc.getGenerator(), block);
-    });
-
     double upgradePrice =
         instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
@@ -227,6 +212,21 @@ public class UpgradeGui {
       player.sendMessage(ChatUtil.translate("An error occurred"));
       return;
     }
+
+    ArrayList<Block> blocks = currentLoc.getBlockLocations();
+    blocks.remove(clickedBlock);
+
+    locationsData.removeLocation(currentLoc);
+
+    blocks.forEach(block -> {
+      LocationsData.GeneratorLocation loc = locationsData.getGeneratorLocation(block);
+
+      if (loc != null) {
+        return;
+      }
+
+      locationsData.createLocation(player, currentLoc.getGenerator(), block);
+    });
 
     locationsData.createLocation(player, currentLoc.getGenerator() + 1, clickedBlock);
 

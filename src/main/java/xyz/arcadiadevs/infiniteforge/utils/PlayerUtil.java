@@ -19,7 +19,7 @@ public class PlayerUtil {
    * @param player The player for which to retrieve the limit.
    * @return The limit value.
    */
-  private static Integer getLimit(Player player, String permissionPrefix, String use, String configKey) {
+  private static Double getLimit(Player player, String permissionPrefix, String use, String configKey) {
     if (config.getBoolean(use + ".use-permissions")) {
 
       List<String> permissions = player.getEffectivePermissions().stream()
@@ -28,18 +28,18 @@ public class PlayerUtil {
           .toList();
 
       if (permissions.isEmpty()) {
-        return config.getInt(configKey);
+        return config.getDouble(configKey);
       }
 
       return permissions.stream()
-          .map(permission -> permission.substring(permissionPrefix.length()))
-          .map(Integer::parseInt)
-          .max(Integer::compareTo)
-          .orElse(config.getInt(configKey));
+          .map(permission -> permission.substring(permissionPrefix.length()).replace(',', '.'))
+          .map(Double::parseDouble)
+          .max(Double::compareTo)
+          .orElse(config.getDouble(configKey));
 
     }
 
-    return config.getInt(configKey);
+    return config.getDouble(configKey);
   }
 
   /**
@@ -48,7 +48,7 @@ public class PlayerUtil {
    * @param player The player for which to retrieve the multiplier.
    * @return The multiplier value.
    */
-  public static Integer getMultiplier(Player player) {
+  public static Double getMultiplier(Player player) {
     return getLimit(player, Permissions.SELL_MULTIPLIER, "multiplier",
         "multiplier.default-multiplier");
   }
@@ -59,7 +59,7 @@ public class PlayerUtil {
    * @param player The player for which to retrieve the generator limit.
    * @return The generator limit value.
    */
-  public static Integer getGeneratorLimit(Player player) {
+  public static Double getGeneratorLimit(Player player) {
     return getLimit(player, Permissions.GENERATOR_LIMIT, "limit-settings",
         "limit-settings.default-limit");
   }
