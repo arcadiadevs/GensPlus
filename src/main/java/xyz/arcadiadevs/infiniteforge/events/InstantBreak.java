@@ -37,10 +37,10 @@ public class InstantBreak implements Listener {
   public void onPlayerInteract(PlayerInteractEvent event) {
 
     String version = Bukkit.getBukkitVersion();
-    final boolean is1_19 = version.contains("1.19");
+    final boolean is1_8 = version.contains("1.8");
     final Player player = event.getPlayer();
 
-    if (is1_19 && event.getHand().toString().equals("OFF_HAND")) {
+    if (!is1_8 && event.getHand().toString().equals("OFF_HAND")) {
       return;
     }
 

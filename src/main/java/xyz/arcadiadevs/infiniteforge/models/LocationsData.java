@@ -12,10 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -48,7 +45,7 @@ public record LocationsData(List<GeneratorLocation> locations) {
    * @param generator The generator tier.
    * @param location  The location of the generator.
    */
-  public GeneratorLocation createLocation(Player player, int generator, Block location) {
+  public GeneratorLocation createLocation(OfflinePlayer player, int generator, Block location) {
     GeneratorLocation[] surroundingBlocks = {
         getGeneratorLocation(location.getRelative(0, 1, 0)),
         getGeneratorLocation(location.getRelative(0, -1, 0)),
@@ -61,6 +58,7 @@ public record LocationsData(List<GeneratorLocation> locations) {
     List<GeneratorLocation> surroundingLocations = Stream.of(surroundingBlocks)
         .filter(Objects::nonNull)
         .filter(l -> l.getGenerator() == generator)
+        .filter(l -> l.getPlacedBy().equals(player))
         .toList();
 
     // remove all surrounding locations from the list
@@ -190,8 +188,8 @@ public record LocationsData(List<GeneratorLocation> locations) {
       blockLocations.remove(SimplifiedLocation.fromLocation(block.getLocation()));
     }
 
-    public Player getPlacedBy() {
-      return Bukkit.getPlayer(UUID.fromString(playerId));
+    public OfflinePlayer getPlacedBy() {
+      return Bukkit.getOfflinePlayer(UUID.fromString(playerId));
     }
 
     public World getWorld() {
@@ -232,7 +230,7 @@ public record LocationsData(List<GeneratorLocation> locations) {
     public void spawn() {
       Location location = getCenter();
 
-      Player player = getPlacedBy();
+      OfflinePlayer player = getPlacedBy();
 
       if (player == null) {
         return;

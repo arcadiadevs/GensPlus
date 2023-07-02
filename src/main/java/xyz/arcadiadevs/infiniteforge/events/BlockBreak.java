@@ -3,6 +3,7 @@ package xyz.arcadiadevs.infiniteforge.events;
 import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,7 +41,7 @@ public class BlockBreak implements Listener {
     GeneratorsData.Generator generator =
         generatorsData.getGenerator(generatorLocation.getGenerator());
 
-    final Player player = generatorLocation.getPlacedBy();
+    final OfflinePlayer player = generatorLocation.getPlacedBy();
     final int tier = generatorLocation.getGenerator();
     ArrayList<Block> blocks = generatorLocation.getBlockLocations();
 

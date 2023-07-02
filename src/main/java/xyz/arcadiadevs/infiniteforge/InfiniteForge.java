@@ -190,6 +190,7 @@ public final class InfiniteForge extends JavaPlugin {
     events.add(new InstantBreak(locationsData, generatorsData));
     events.add(new OnJoin(generatorsData, getConfig()));
     events.add(new EggTeleport(locationsData));
+    events.add(new EntityExplode(locationsData, generatorsData));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
