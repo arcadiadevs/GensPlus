@@ -11,6 +11,15 @@ item-despawn-time: "5m"
 # values and will be turned into a normal block.
 can-drops-be-placed: false
 
+# Each world listed here will have generators disabled.
+# If empty, all worlds will have generators enabled.
+disabled-worlds: []
+
+# Should we give a generator instantly to players inventory
+# when they break a generator? If set to false, the generator
+# will be dropped on the ground.
+instant-pickup: false
+
 on-join:
   # If enabled is set to false, when player joins, he will not receive
   # the generator.

@@ -3,6 +3,7 @@ package xyz.arcadiadevs.infiniteforge.events;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
@@ -20,7 +21,7 @@ public class EggTeleport implements Listener {
    *
    * @param event The PlayerInteractEvent object representing the player interact event.
    */
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onPlayerInteract(PlayerInteractEvent event) {
     final LocationsData.GeneratorLocation location = locationsData.getGeneratorLocation(event.getClickedBlock());
 

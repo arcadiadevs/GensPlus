@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -34,15 +35,15 @@ public class BlockInteraction implements Listener {
    *
    * @param event The PlayerInteractEvent object representing the player's interaction event.
    */
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onBlockClick(PlayerInteractEvent event) {
     Block block = event.getClickedBlock();
     Player player = event.getPlayer();
 
     String version = Bukkit.getBukkitVersion();
-    final boolean is1_19 = version.contains("1.19");
+    final boolean is1_8 = version.contains("1.8");
 
-    if (is1_19 && event.getHand().toString().equals("OFF_HAND")) {
+    if (!is1_8 && event.getHand().toString().equals("OFF_HAND")) {
       return;
     }
 

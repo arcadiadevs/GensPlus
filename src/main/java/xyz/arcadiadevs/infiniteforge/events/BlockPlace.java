@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +34,7 @@ public class BlockPlace implements Listener {
    *
    * @param event The BlockPlaceEvent object representing the block place event.
    */
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onBlockPlace(BlockPlaceEvent event) {
     ItemStack item = event.getItemInHand();
     ItemMeta meta = item.getItemMeta();
@@ -63,6 +64,16 @@ public class BlockPlace implements Listener {
 
     if (!firstLine.contains("Generator tier")) {
       return;
+    }
+
+    final List<String> disabledWorlds = config.getStringList("disabled-worlds");
+
+    for (String world : disabledWorlds) {
+      if (event.getBlockPlaced().getWorld().getName().equals(world)) {
+        ChatUtil.sendMessage(event.getPlayer(), Messages.CANNOT_PLACE_IN_WORLD);
+        event.setCancelled(true);
+        return;
+      }
     }
 
     final Player player = event.getPlayer();

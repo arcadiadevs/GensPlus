@@ -212,6 +212,22 @@ public class UpgradeGui {
       locationsData.createLocation(player, currentLoc.getGenerator(), block);
     });
 
+    double upgradePrice =
+        instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
+
+    if (upgradePrice > instance.getEcon().getBalance(player)) {
+      ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+      XSound.ENTITY_VILLAGER_NO.play(player);
+      return;
+    }
+
+    EconomyResponse response = instance.getEcon().withdrawPlayer(player, upgradePrice);
+
+    if (!response.transactionSuccess()) {
+      player.sendMessage(ChatUtil.translate("An error occurred"));
+      return;
+    }
+
     locationsData.createLocation(player, currentLoc.getGenerator() + 1, clickedBlock);
 
     clickedBlock.setType(nextGenerator.blockType().getType());

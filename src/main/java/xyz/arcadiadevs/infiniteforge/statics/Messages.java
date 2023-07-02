@@ -32,6 +32,8 @@ public class Messages {
   public static String INVALID_AMOUNT;
   public static String GENERATOR_GIVEN_ALL;
   public static String DEFAULT_MESSAGE;
+  public static String CANNOT_PLACE_IN_WORLD;
+  public static String NOT_YOUR_GENERATOR;
 
   /**
    * Initializes the Messages class by loading the messages.yml file.
@@ -146,6 +148,16 @@ public class Messages {
     DEFAULT_MESSAGE = config.getString(
         "default-message",
         "&9InfiniteForge> &7This server is running InfiniteForge &av%version%"
+    );
+
+    CANNOT_PLACE_IN_WORLD = config.getString(
+        "cannot-place-in-world",
+        "&cError> &7You cannot place a generator in this world!"
+    );
+
+    NOT_YOUR_GENERATOR = config.getString(
+        "not-your-generator",
+        "&cError> &7You cannot destroy generator that is not yours!"
     );
 
     try {

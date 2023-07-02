@@ -7,6 +7,7 @@ not-enough-arguments: "&cError> &7Not enough arguments!"
 
 # [limit-settings]
 limit-reached: "&cError> &7You have reached the limit of &c%limit% &7generators!"
+cannot-place-in-world: "&cError> &7You cannot place generators in this world!"
 
 # [events]
 event-started: "&9InfiniteForge> &7%event% has started and will end in &e&n%time%!"
@@ -22,6 +23,7 @@ successfully-destroyed: "&9InfiniteForge> &7Successfully destroyed generator!"
 successfully-placed: "&9InfiniteForge> &7Successfully placed generator tier %tier%!"
 successfully-bought: "&9InfiniteForge> &7Successfully bought generator tier %tier% for %price%!"
 reached-max-tier: "&cError> &7You have reached the maximum tier of generator!"
+not-your-generator: "&cError> &7You cannot destroy generator that is not yours!"
 
 # [admin]
 generator-given: "&9InfiniteForge> &7You gave &a%amount% &7generator(s) of tier &a%tier% &7to &a%targetPlayer%"

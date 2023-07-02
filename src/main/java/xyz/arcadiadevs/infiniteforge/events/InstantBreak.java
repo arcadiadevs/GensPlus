@@ -7,9 +7,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.statics.Messages;
@@ -33,7 +35,7 @@ public class InstantBreak implements Listener {
    *
    * @param event The PlayerInteractEvent object representing the player's interaction event.
    */
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onPlayerInteract(PlayerInteractEvent event) {
 
     String version = Bukkit.getBukkitVersion();
@@ -61,6 +63,11 @@ public class InstantBreak implements Listener {
       return;
     }
 
+    if (generatorLocation.getPlacedBy() != event.getPlayer()) {
+      ChatUtil.sendMessage(event.getPlayer(), Messages.NOT_YOUR_GENERATOR);
+      return;
+    }
+
     GeneratorsData.Generator generator =
         generatorsData.getGenerator(generatorLocation.getGenerator());
 
@@ -78,7 +85,11 @@ public class InstantBreak implements Listener {
     block.setType(Material.AIR);
 
     // Generate and drop the generator item for the player
-    generator.dropItem(event.getPlayer(), block.getLocation());
+    if (InfiniteForge.getInstance().getConfig().getBoolean("instant-pickup")) {
+      generator.giveItem(player);
+    } else {
+      generator.dropItem(event.getPlayer(), block.getLocation());
+    }
 
     blocks.remove(block);
 

@@ -3,6 +3,7 @@ package xyz.arcadiadevs.infiniteforge.events;
 import java.util.List;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
@@ -19,7 +20,7 @@ public record EntityExplode(LocationsData locationsData, GeneratorsData generato
    *
    * @param event The EntityExplodeEvent object representing the entity explode event.
    */
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onEntityExplode(EntityExplodeEvent event) {
     final List<Block> eventBlock = event.blockList();
 
