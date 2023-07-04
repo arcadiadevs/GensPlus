@@ -33,7 +33,8 @@ public class Messages {
   public static String GENERATOR_GIVEN_ALL;
   public static String DEFAULT_MESSAGE;
   public static String CANNOT_PLACE_IN_WORLD;
-  public static String NOT_YOUR_GENERATOR;
+  public static String NOT_YOUR_GENERATOR_DESTROY;
+  public static String NOT_YOUR_GENERATOR_UPGRADE;
 
   /**
    * Initializes the Messages class by loading the messages.yml file.
@@ -155,9 +156,14 @@ public class Messages {
         "&cError> &7You cannot place a generator in this world!"
     );
 
-    NOT_YOUR_GENERATOR = config.getString(
-        "not-your-generator",
+    NOT_YOUR_GENERATOR_DESTROY = config.getString(
+        "not-your-generator-destroy",
         "&cError> &7You cannot destroy generator that is not yours!"
+    );
+
+    NOT_YOUR_GENERATOR_UPGRADE = config.getString(
+        "not-your-generator-upgrade",
+        "&cError> &7You cannot upgrade generator that is not yours!"
     );
 
     try {

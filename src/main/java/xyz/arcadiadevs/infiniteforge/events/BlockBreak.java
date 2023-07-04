@@ -44,7 +44,7 @@ public class BlockBreak implements Listener {
     if (generatorLocation.getPlacedBy() != event.getPlayer()
         && !event.getPlayer().isOp()
         && !event.getPlayer().hasPermission(Permissions.ADMIN)) {
-      ChatUtil.sendMessage(event.getPlayer(), Messages.NOT_YOUR_GENERATOR);
+      ChatUtil.sendMessage(event.getPlayer(), Messages.NOT_YOUR_GENERATOR_DESTROY);
       event.setCancelled(true);
       return;
     }

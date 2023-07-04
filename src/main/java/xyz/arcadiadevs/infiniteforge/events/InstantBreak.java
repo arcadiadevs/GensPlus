@@ -64,7 +64,7 @@ public class InstantBreak implements Listener {
     }
 
     if (generatorLocation.getPlacedBy() != event.getPlayer()) {
-      ChatUtil.sendMessage(event.getPlayer(), Messages.NOT_YOUR_GENERATOR);
+      ChatUtil.sendMessage(event.getPlayer(), Messages.NOT_YOUR_GENERATOR_DESTROY);
       return;
     }
 

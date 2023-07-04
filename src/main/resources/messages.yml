@@ -23,7 +23,8 @@ successfully-destroyed: "&9InfiniteForge> &7Successfully destroyed generator!"
 successfully-placed: "&9InfiniteForge> &7Successfully placed generator tier %tier%!"
 successfully-bought: "&9InfiniteForge> &7Successfully bought generator tier %tier% for %price%!"
 reached-max-tier: "&cError> &7You have reached the maximum tier of generator!"
-not-your-generator: "&cError> &7You cannot destroy generator that is not yours!"
+not-your-generator-destroy: "&cError> &7You cannot destroy generator that is not yours!"
+not-your-generator-upgrade: "&cError> &7You cannot upgrade generator that is not yours!"
 
 # [admin]
 generator-given: "&9InfiniteForge> &7You gave &a%amount% &7generator(s) of tier &a%tier% &7to &a%targetPlayer%"

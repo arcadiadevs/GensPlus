@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
@@ -232,7 +233,7 @@ public record LocationsData(List<GeneratorLocation> locations) {
 
       OfflinePlayer player = getPlacedBy();
 
-      if (player == null) {
+      if (!player.isOnline()) {
         return;
       }
 
@@ -249,10 +250,16 @@ public record LocationsData(List<GeneratorLocation> locations) {
         items.add(item);
       }
 
-      Bukkit.getScheduler()
-          .runTaskLater(InfiniteForge.getInstance(), () -> items.forEach(Item::remove),
-              TimeUtil.parseTime(
-                  InfiniteForge.getInstance().getConfig().getString("item-despawn-time")));
+      final long ticks = TimeUtil.parseTime(
+          InfiniteForge.getInstance().getConfig().getString("item-despawn-time"));
+
+      Bukkit.getScheduler().runTaskLater(InfiniteForge.getInstance(), () -> {
+        getWorld().getEntities().stream()
+            .filter(entity -> entity instanceof Item)
+            .filter(items::contains)
+            .forEach(Entity::remove);
+      }, ticks);
+
     }
 
     /**

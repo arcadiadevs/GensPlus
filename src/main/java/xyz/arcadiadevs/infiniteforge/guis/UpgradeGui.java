@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.infiniteforge.guis;
 
 import com.cryptomorin.xseries.XSound;
-import com.samjakob.spigui.buttons.SGButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +40,13 @@ public class UpgradeGui {
    */
   public static void open(Player player, LocationsData.GeneratorLocation generator,
                           Block clickedBlock) {
+    if (generator.getPlacedBy() != player
+        && !player.hasPermission("infiniteforge.admin")
+        && !player.isOp()) {
+      ChatUtil.sendMessage(player, Messages.NOT_YOUR_GENERATOR_UPGRADE);
+      return;
+    }
+
     final FileConfiguration config = instance.getConfig();
     final Economy economy = instance.getEcon();
 
