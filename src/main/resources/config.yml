@@ -44,8 +44,24 @@ limit-settings:
   # The default generator limit for all players
   default-limit: 20
 
+# Chunk radius defines in how many chunks around the generator the player
+# needs to be in order for the generator to be active.
+#
+# Example: If chunk radius is set to 0, the player needs to be in the same
+# chunk as the generator. If chunk radius is set to 1, the player needs to
+# be in the same chunk as the generator or in the 8 chunks next to it (see image):
+#
+# If radius is set to 1, the generator will be active if the player is in one of the
+# chunks marked with X. The generator (center) is marked with C.
+#
+# [ ] [ ] [ ] [ ] [ ]
+# [ ] [x] [x] [x] [ ]
+# [ ] [x] [C] [x] [ ]
+# [ ] [x] [x] [x] [ ]
+# [ ] [ ] [ ] [ ] [ ]
 chunk-radius:
-  # If enabled is set to false, the chunk radius will not be checked.
+  # If enabled is set to false, generators will always be active, even if
+  # player is not in the chunk radius.
   enabled: true
 
   # Should we use permissions for chunk radius?
@@ -54,7 +70,8 @@ chunk-radius:
   # (ex: infiniteforge.chunkradius.5)
   use-permissions: true
 
-  # The default chunk radius for all players
+  # The default chunk radius used if player has no permission
+  # or if use-permission is set to false.
   default-radius: 1
 
 multiplier:
