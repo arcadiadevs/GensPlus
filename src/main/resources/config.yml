@@ -44,6 +44,19 @@ limit-settings:
   # The default generator limit for all players
   default-limit: 20
 
+chunk-radius:
+  # If enabled is set to false, the chunk radius will not be checked.
+  enabled: true
+
+  # Should we use permissions for chunk radius?
+  # If set to true, you will be able to set specific
+  # chunk radius for each player. [infiniteforge.chunkradius.<amount>]
+  # (ex: infiniteforge.chunkradius.5)
+  use-permissions: true
+
+  # The default chunk radius for all players
+  default-radius: 1
+
 multiplier:
   # Should we use permissions for multiplier?
   # If set to true, you will be able to set specific

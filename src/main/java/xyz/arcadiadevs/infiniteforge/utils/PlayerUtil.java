@@ -19,7 +19,8 @@ public class PlayerUtil {
    * @param player The player for which to retrieve the limit.
    * @return The limit value.
    */
-  private static Double getLimit(Player player, String permissionPrefix, String use, String configKey) {
+  private static Double getLimit(Player player, String permissionPrefix, String use,
+                                 String configKey) {
     if (config.getBoolean(use + ".use-permissions")) {
 
       List<String> permissions = player.getEffectivePermissions().stream()
@@ -62,5 +63,10 @@ public class PlayerUtil {
   public static Double getGeneratorLimit(Player player) {
     return getLimit(player, Permissions.GENERATOR_LIMIT, "limit-settings",
         "limit-settings.default-limit");
+  }
+
+  public static Integer getChunkRadius(Player player) {
+    return getLimit(player, Permissions.CHUNK_RADIUS, "chunk-radius",
+        "chunk-radius.default-radius").intValue();
   }
 }

@@ -13,4 +13,5 @@ public class Permissions {
   public static String GENERATOR_DROPS_SELL_HAND = "infiniteforge.drop.sell.hand";
   public static String SELL_MULTIPLIER = "infiniteforge.sell.multiplier.";
   public static String GENERATOR_LIMIT = "infiniteforge.limit.";
+  public static String CHUNK_RADIUS = "infiniteforge.chunkradius.";
 }

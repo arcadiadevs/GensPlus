@@ -73,16 +73,16 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
-      if (strings[0].equalsIgnoreCase("reload")) {
-        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_RELOAD))) {
-          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
-          return true;
-        }
-
-        InfiniteForge.getInstance().reloadConfig();
-        ChatUtil.sendMessage(player, Messages.CONFIG_RELOADED);
-        return true;
-      }
+//      if (strings[0].equalsIgnoreCase("reload")) {
+//        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_RELOAD))) {
+//          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+//          return true;
+//        }
+//
+//        InfiniteForge.getInstance().reloadConfig();
+//        ChatUtil.sendMessage(player, Messages.CONFIG_RELOADED);
+//        return true;
+//      }
 
       if (strings[0].equalsIgnoreCase("give")) {
         if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE))) {

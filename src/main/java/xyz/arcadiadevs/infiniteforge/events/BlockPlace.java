@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.infiniteforge.events;
 
 import java.util.List;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,6 +15,10 @@ import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.PlayerUtil;
 
+/**
+ * The BlockPlace class provides functionality for handling the BlockPlaceEvent in InfiniteForge.
+ * It handles the placement of generator blocks.
+ */
 public class BlockPlace implements Listener {
 
   private final LocationsData locationsData;

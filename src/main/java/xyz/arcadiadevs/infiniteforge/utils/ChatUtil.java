@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 
 /**
@@ -16,11 +15,30 @@ public class ChatUtil {
   /**
    * Translates color codes in a string by replacing '&' with the section symbol (§).
    *
-   * @param s The string to translate.
-   * @return The translated string with color codes.
+   * @param text The string of text to apply color/effects to
+   * @return Returns a string of text with color/effects applied
    */
-  public static String translate(String s) {
-    return ChatColor.translateAlternateColorCodes('&', s);
+  public static String translate(String text) {
+    final String withDelimiter = "((?<=%1$s)|(?=%1$s))";
+    String[] texts = text.split(String.format(withDelimiter, "&"));
+
+    StringBuilder finalText = new StringBuilder();
+
+    for (int i = 0; i < texts.length; i++) {
+      if (texts[i].equalsIgnoreCase("&")) {
+        i++;
+        if (texts[i].charAt(0) == '#') {
+          finalText.append(net.md_5.bungee.api.ChatColor.of(texts[i].substring(0, 7)))
+              .append(texts[i].substring(7));
+        } else {
+          finalText.append(ChatColor.translateAlternateColorCodes('&', "&" + texts[i]));
+        }
+      } else {
+        finalText.append(texts[i]);
+      }
+    }
+
+    return finalText.toString();
   }
 
   /**
@@ -32,6 +50,16 @@ public class ChatUtil {
   public static List<String> translate(List<String> list) {
     return list.stream().map(s -> ChatColor.translateAlternateColorCodes('&', s))
         .collect(Collectors.toList());
+  }
+
+  /**
+   * Translates color codes in a string by replacing '&' with the section symbol (§).
+   *
+   * @param s The string to translate.
+   * @return The translated string with color codes.
+   */
+  public static String translateOld(String s) {
+    return ChatColor.translateAlternateColorCodes('&', s);
   }
 
   /**

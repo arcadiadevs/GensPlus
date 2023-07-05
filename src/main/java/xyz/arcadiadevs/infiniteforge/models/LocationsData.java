@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -22,6 +23,7 @@ import xyz.arcadiadevs.infiniteforge.models.events.DropEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
+import xyz.arcadiadevs.infiniteforge.utils.PlayerUtil;
 import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 
 /**
@@ -122,6 +124,7 @@ public record LocationsData(List<GeneratorLocation> locations) {
     private final String playerId;
     private final Integer generator;
     private final ArrayList<SimplifiedLocation> blockLocations;
+    private final FileConfiguration config = InfiniteForge.getInstance().getConfig();
 
     @Setter
     private transient Hologram hologram;
@@ -237,6 +240,10 @@ public record LocationsData(List<GeneratorLocation> locations) {
         return;
       }
 
+      if (!hasPlayer() && config.getBoolean("chunk-radius.enabled")) {
+        return;
+      }
+
       List<Item> items = new ArrayList<>();
 
       long itemsToDrop = (EventLoop.getActiveEvent().event() instanceof DropEvent event
@@ -294,6 +301,44 @@ public record LocationsData(List<GeneratorLocation> locations) {
 
       // Retrieve the block at the calculated center coordinates
       return new Location(getWorld(), centerX + 0.5, centerY + 1, centerZ + 0.5);
+    }
+
+    private boolean hasPlayer() {
+      HashSet<Chunk> chunks = new HashSet<>();
+      for (SimplifiedLocation location : blockLocations) {
+        Location loc = location.getLocation();
+        Chunk centerChunk = loc.getChunk();
+        World world = loc.getWorld();
+        int radius = PlayerUtil.getChunkRadius(getPlacedBy().getPlayer());
+
+        int cx = centerChunk.getX();
+        int cz = centerChunk.getZ();
+
+        chunks.add(loc.getChunk());
+
+        // Add surrounding chunks
+        chunks.add(world.getChunkAt(cx + radius, cz));
+        chunks.add(world.getChunkAt(cx - radius, cz));
+        chunks.add(world.getChunkAt(cx, cz + radius));
+        chunks.add(world.getChunkAt(cx, cz - radius));
+
+        // Add diagonal chunks
+        chunks.add(world.getChunkAt(cx + radius, cz + radius));
+        chunks.add(world.getChunkAt(cx + radius, cz - radius));
+        chunks.add(world.getChunkAt(cx - radius, cz + radius));
+        chunks.add(world.getChunkAt(cx - radius, cz - radius));
+
+      }
+
+      for (Chunk chunk : chunks) {
+        for (Entity entity : chunk.getEntities()) {
+          if (entity instanceof Player) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     }
   }
 

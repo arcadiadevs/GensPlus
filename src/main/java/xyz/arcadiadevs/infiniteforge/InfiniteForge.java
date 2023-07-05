@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.samjakob.spigui.SpiGUI;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -121,8 +122,8 @@ public final class InfiniteForge extends JavaPlugin {
 
     saveDefaultConfig();
 
-    saveResource("block_data.json", false);
-    saveResource("messages.yml", false);
+    saveResourceIfNotExists("block_data.json", false);
+    saveResourceIfNotExists("messages.yml", false);
 
     setupEconomy();
 
@@ -346,8 +347,15 @@ public final class InfiniteForge extends JavaPlugin {
   }
 
   private void loadHolograms() {
-    hologramPool = new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000));
-    placeholders = new Placeholders();
+    hologramPool = hologramPool == null
+        ? new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000))
+        : hologramPool;
+
+    placeholders = new Placeholders(1);
+
+    for (Hologram hologram : hologramPool.getHolograms()) {
+      hologramPool.remove(hologram);
+    }
 
     if (!InfiniteForge.getInstance().getConfig().getBoolean("holograms.enabled")) {
       return;
@@ -400,6 +408,21 @@ public final class InfiniteForge extends JavaPlugin {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private void saveResourceIfNotExists(String resourcePath, boolean replace) {
+    File file = new File(getDataFolder(), resourcePath);
+    if (!file.exists()) {
+      saveResource(resourcePath, replace);
+    }
+  }
+
+  public void reload() {
+    reloadConfig();
+    generatorsData = loadGeneratorsData();
+    locationsData = new LocationsData(loadBlockDataFromJson());
+    loadHolograms();
+    placeholders = new Placeholders(1);
   }
 
 }
