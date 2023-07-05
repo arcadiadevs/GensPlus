@@ -351,11 +351,7 @@ public final class InfiniteForge extends JavaPlugin {
         ? new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000))
         : hologramPool;
 
-    placeholders = new Placeholders(1);
-
-    for (Hologram hologram : hologramPool.getHolograms()) {
-      hologramPool.remove(hologram);
-    }
+    placeholders = new Placeholders();
 
     if (!InfiniteForge.getInstance().getConfig().getBoolean("holograms.enabled")) {
       return;
@@ -415,14 +411,6 @@ public final class InfiniteForge extends JavaPlugin {
     if (!file.exists()) {
       saveResource(resourcePath, replace);
     }
-  }
-
-  public void reload() {
-    reloadConfig();
-    generatorsData = loadGeneratorsData();
-    locationsData = new LocationsData(loadBlockDataFromJson());
-    loadHolograms();
-    placeholders = new Placeholders(1);
   }
 
 }
