@@ -130,7 +130,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     private final String playerId;
     private final Integer generator;
     private final ArrayList<SimplifiedLocation> blockLocations;
-    private final FileConfiguration config = InfiniteForge.getInstance().getConfig();
+    private final transient FileConfiguration config = InfiniteForge.getInstance().getConfig();
 
     @Setter
     private transient Hologram hologram;
