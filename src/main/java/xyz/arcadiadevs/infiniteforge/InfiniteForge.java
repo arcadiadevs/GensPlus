@@ -11,12 +11,12 @@ import com.google.gson.GsonBuilder;
 import com.samjakob.spigui.SpiGUI;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
@@ -30,7 +30,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.infiniteforge.commands.Commands;
 import xyz.arcadiadevs.infiniteforge.commands.CommandsTabCompletion;
-import xyz.arcadiadevs.infiniteforge.events.*;
+import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
+import xyz.arcadiadevs.infiniteforge.events.BlockInteraction;
+import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
+import xyz.arcadiadevs.infiniteforge.events.EggTeleport;
+import xyz.arcadiadevs.infiniteforge.events.EntityExplode;
+import xyz.arcadiadevs.infiniteforge.events.InstantBreak;
+import xyz.arcadiadevs.infiniteforge.events.OnJoin;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
 import xyz.arcadiadevs.infiniteforge.models.events.DropEvent;
@@ -401,10 +407,11 @@ public final class InfiniteForge extends JavaPlugin {
     }
   }
 
-  private List<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
+  private CopyOnWriteArrayList<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
     try (FileReader reader = new FileReader(getDataFolder() + "/block_data.json")) {
-      return gson.fromJson(reader, new TypeToken<List<LocationsData.GeneratorLocation>>() {
-      }.getType());
+      return gson.fromJson(reader,
+          new TypeToken<CopyOnWriteArrayList<LocationsData.GeneratorLocation>>() {
+          }.getType());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

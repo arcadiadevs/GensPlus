@@ -8,11 +8,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -29,7 +35,7 @@ import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
 /**
  * Represents the data of all the generator locations in the server.
  */
-public record LocationsData(List<GeneratorLocation> locations) {
+public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
 
   /**
    * Represents a generator location.
