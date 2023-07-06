@@ -60,9 +60,9 @@ public class PlayerUtil {
    * @param player The player for which to retrieve the generator limit.
    * @return The generator limit value.
    */
-  public static Double getGeneratorLimit(Player player) {
+  public static Integer getGeneratorLimit(Player player) {
     return getLimit(player, Permissions.GENERATOR_LIMIT, "limit-settings",
-        "limit-settings.default-limit");
+        "limit-settings.default-limit").intValue();
   }
 
   public static Integer getChunkRadius(Player player) {
