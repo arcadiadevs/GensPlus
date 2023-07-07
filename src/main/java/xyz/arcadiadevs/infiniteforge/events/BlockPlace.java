@@ -82,7 +82,7 @@ public class BlockPlace implements Listener {
     final Player player = event.getPlayer();
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
-    final double limit = PlayerUtil.getGeneratorLimit(player);
+    final int limit = PlayerUtil.getGeneratorLimit(player);
     final boolean enabled = config.getBoolean("limit-settings.enabled");
 
     if (locationsData.getGeneratorsCountByPlayer(player) >= limit
