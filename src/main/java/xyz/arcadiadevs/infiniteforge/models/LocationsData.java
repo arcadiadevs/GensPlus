@@ -130,7 +130,6 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     private final String playerId;
     private final Integer generator;
     private final ArrayList<SimplifiedLocation> blockLocations;
-    private final transient FileConfiguration config = InfiniteForge.getInstance().getConfig();
 
     @Setter
     private transient Hologram hologram;
@@ -246,7 +245,9 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
         return;
       }
 
-      if (!hasPlayer() && config.getBoolean("chunk-radius.enabled")) {
+      final InfiniteForge instance = InfiniteForge.getInstance();
+
+      if (!hasPlayer() && instance.getConfig().getBoolean("chunk-radius.enabled")) {
         return;
       }
 
