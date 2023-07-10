@@ -22,6 +22,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
@@ -256,12 +257,23 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       long itemsToDrop = (EventLoop.getActiveEvent().event() instanceof DropEvent event
           ? event.getMultiplier() : 1) * getBlockLocations().size();
 
-      for (int i = 0; i < itemsToDrop; i++) {
-        Item item = location.getWorld().dropItemNaturally(
-            location.clone().add(0, 1, 0),
-            getGeneratorObject().spawnItem()
-        );
-        items.add(item);
+      if (InfiniteForge.getInstance().getConfig().getBoolean("holograms.enabled")) {
+        for (int i = 0; i < itemsToDrop; i++) {
+          Item item = location.getWorld().dropItemNaturally(
+              location.clone().add(0, 1, 0),
+              getGeneratorObject().spawnItem()
+          );
+          items.add(item);
+        }
+      } else {
+        blockLocations.forEach(loc -> {
+          Item item = loc.getLocation().getWorld().dropItem(
+              loc.getLocation().clone().add(0, 1, 0),
+              getGeneratorObject().spawnItem(
+          )
+          );
+          items.add(item);
+        });
       }
 
       final long ticks = TimeUtil.parseTime(
