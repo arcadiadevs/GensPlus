@@ -6,7 +6,7 @@
 
     <groupId>xyz.arcadiadevs</groupId>
     <artifactId>InfiniteForge</artifactId>
-    <version>1.0-rc2</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>InfiniteForge</name>
