@@ -197,7 +197,7 @@ public class UpgradeGui {
   }
 
   public static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc,
-                                       Block clickedBlock) {
+                                      Block clickedBlock) {
     final LocationsData locationsData = instance.getLocationsData();
     final GeneratorsData.Generator current = currentLoc.getGeneratorObject();
     final GeneratorsData.Generator nextGenerator =

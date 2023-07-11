@@ -24,18 +24,20 @@ public class GuiUtil {
    * @param menu The SGMenu to add the border to.
    */
   public static void addBorder(Gui menu, String material) {
-    ItemStack borderItem = new ItemBuilder(XMaterial.matchXMaterial(material)
+    ItemBuilder itemBuilder = new ItemBuilder(XMaterial.matchXMaterial(material)
         .orElse(XMaterial.WHITE_STAINED_GLASS_PANE)
-        .parseItem())
-        .name(InfiniteForge.getInstance().getConfig().getString("guis.generators-gui.border.name"))
-        .build();
+        .parseItem());
+    if (!material.equals("AIR")) {
+      itemBuilder.name(InfiniteForge.getInstance().getConfig()
+          .getString("guis.generators-gui.border.name"));
+    }
 
     for (int i = 0; i < 9; i++) {
       menu.setItem(
           i,
           new GuiItem(
               GuiItemType.BORDER,
-              borderItem,
+              itemBuilder.build(),
               null
           )
       );
