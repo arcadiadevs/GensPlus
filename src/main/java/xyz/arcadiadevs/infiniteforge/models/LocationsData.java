@@ -20,11 +20,10 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.events.DropEvent;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
@@ -268,10 +267,10 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       } else {
         blockLocations.forEach(loc -> {
           Item item = loc.getLocation().getWorld().dropItem(
-              loc.getLocation().clone().add(0, 1, 0),
-              getGeneratorObject().spawnItem(
-          )
+              loc.getLocation().clone().add(0.5, 1, 0.5),
+              getGeneratorObject().spawnItem()
           );
+          item.setVelocity(new Vector(0, 0, 0));
           items.add(item);
         });
       }
