@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.guis.UpgradeGui;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
@@ -67,8 +68,11 @@ public class BlockInteraction implements Listener {
       return;
     }
 
-    // Open the upgrade GUI for the generator block
-    UpgradeGui.open(player, generatorLocation, block);
+    if (InfiniteForge.getInstance().getConfig().getBoolean("upgarde-gui-enabled")) {
+      UpgradeGui.open(player, generatorLocation, block);
+    } else {
+      UpgradeGui.upgradeGenerator(player, generatorLocation, block);
+    }
   }
 
 }

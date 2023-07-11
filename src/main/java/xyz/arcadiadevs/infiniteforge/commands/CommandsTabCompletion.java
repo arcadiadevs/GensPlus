@@ -12,6 +12,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.statics.Permissions;
 
@@ -95,6 +96,10 @@ public class CommandsTabCompletion implements TabCompleter {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
+      if (!InfiniteForge.getInstance().getConfig().getBoolean("sell-command")) {
+        return null;
+      }
+
       if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)
           || !commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
         return null;

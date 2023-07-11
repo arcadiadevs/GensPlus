@@ -205,6 +205,10 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
+      if (!InfiniteForge.getInstance().getConfig().getBoolean("sell-command")) {
+        return true;
+      }
+
       if (strings.length == 0) {
         ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_ARGUMENTS);
         return true;

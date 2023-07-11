@@ -48,10 +48,7 @@ import xyz.arcadiadevs.infiniteforge.statics.Messages;
 import xyz.arcadiadevs.infiniteforge.tasks.DataSaveTask;
 import xyz.arcadiadevs.infiniteforge.tasks.EventLoop;
 import xyz.arcadiadevs.infiniteforge.tasks.SpawnerTask;
-import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
-import xyz.arcadiadevs.infiniteforge.utils.HologramsUtil;
-import xyz.arcadiadevs.infiniteforge.utils.ItemUtil;
-import xyz.arcadiadevs.infiniteforge.utils.TimeUtil;
+import xyz.arcadiadevs.infiniteforge.utils.*;
 
 /**
  * The main plugin class for InfiniteForge.
@@ -146,6 +143,8 @@ public final class InfiniteForge extends JavaPlugin {
     locationsData = new LocationsData(loadBlockDataFromJson());
 
     events = loadInfiniteForgeEvents();
+
+    Metrics metrics = new Metrics(this, 19054);
 
     if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
       new PlaceHolder(locationsData, getConfig()).register();

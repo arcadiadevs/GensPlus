@@ -196,12 +196,17 @@ public class UpgradeGui {
             .replace("%tier%", String.valueOf(nextGenerator.tier())));
   }
 
-  private static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc,
+  public static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc,
                                        Block clickedBlock) {
     final LocationsData locationsData = instance.getLocationsData();
     final GeneratorsData.Generator current = currentLoc.getGeneratorObject();
     final GeneratorsData.Generator nextGenerator =
         instance.getGeneratorsData().getGenerator(current.tier() + 1);
+
+    if (nextGenerator == null) {
+      ChatUtil.sendMessage(player, Messages.REACHED_MAX_TIER);
+      return;
+    }
 
     double upgradePrice =
         instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());

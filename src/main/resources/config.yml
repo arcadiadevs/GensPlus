@@ -31,6 +31,10 @@ on-join:
   # How many generators should player be given on join.
   generator-amount: 3
 
+sell-command:
+    # If enabled is set to false, the command will not be registered.
+    enabled: true
+
 limit-settings:
   # If enabled is set to false, the limit will not be checked.
   enabled: true
@@ -108,6 +112,11 @@ guis:
 
   # Gui when upgrading generator
   upgrade-gui:
+    # If enabled is set to false, upgrade gui will not be displayed
+    # and the generator will be upgraded instantly by Shift + Right Click-ing.
+    # on the generator.
+    enabled: true
+
     upgradeOne:
       first-line: "&e》 &nClick to upgrade generator!&e 《"
       # If lore is not specified, the default lore will be used.
@@ -184,7 +193,7 @@ guis:
 
 holograms:
   # If enabled is set to false, holograms will not be shown
-  enabled: true
+  enabled: false
 
   # The hologram view distance
   view-distance: 300
