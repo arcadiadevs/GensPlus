@@ -98,4 +98,9 @@ public class PlaceHolder extends PlaceholderExpansion {
     };
   }
 
+  @Override
+  public boolean persist() {
+    return true;
+  }
+
 }
