@@ -23,7 +23,12 @@ public class EggTeleport implements Listener {
    */
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onPlayerInteract(PlayerInteractEvent event) {
-    final LocationsData.GeneratorLocation location = locationsData.getGeneratorLocation(event.getClickedBlock());
+    final LocationsData.GeneratorLocation location =
+        locationsData.getGeneratorLocation(event.getClickedBlock());
+
+    if (location == null) {
+      return;
+    }
 
     if (event.getClickedBlock() != null
         && event.getClickedBlock().getType() == Material.DRAGON_EGG

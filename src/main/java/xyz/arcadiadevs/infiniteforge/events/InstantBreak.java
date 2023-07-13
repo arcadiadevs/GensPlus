@@ -35,7 +35,7 @@ public class InstantBreak implements Listener {
    *
    * @param event The PlayerInteractEvent object representing the player's interaction event.
    */
-  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
   public void onPlayerInteract(PlayerInteractEvent event) {
 
     String version = Bukkit.getBukkitVersion();

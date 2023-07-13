@@ -36,7 +36,7 @@ public class BlockInteraction implements Listener {
    *
    * @param event The PlayerInteractEvent object representing the player's interaction event.
    */
-  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
   public void onBlockClick(PlayerInteractEvent event) {
     Block block = event.getClickedBlock();
     Player player = event.getPlayer();
