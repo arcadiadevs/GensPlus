@@ -68,7 +68,7 @@ public class BlockInteraction implements Listener {
       return;
     }
 
-    if (InfiniteForge.getInstance().getConfig().getBoolean("upgarde-gui-enabled")) {
+    if (InfiniteForge.getInstance().getConfig().getBoolean("guis.upgrade-gui.enabled")) {
       UpgradeGui.open(player, generatorLocation, block);
     } else {
       UpgradeGui.upgradeGenerator(player, generatorLocation, block);

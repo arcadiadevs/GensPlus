@@ -8,7 +8,6 @@ import com.github.unldenis.hologram.placeholder.Placeholders;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.samjakob.spigui.SpiGUI;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,6 +29,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.infiniteforge.commands.Commands;
 import xyz.arcadiadevs.infiniteforge.commands.CommandsTabCompletion;
+import xyz.arcadiadevs.infiniteforge.events.BeaconInteraction;
 import xyz.arcadiadevs.infiniteforge.events.BlockBreak;
 import xyz.arcadiadevs.infiniteforge.events.BlockInteraction;
 import xyz.arcadiadevs.infiniteforge.events.BlockPlace;
@@ -96,12 +96,6 @@ public final class InfiniteForge extends JavaPlugin {
   private GeneratorsData generatorsData;
 
   /**
-   * Gets the SpiGUI instance for GUI management.
-   */
-  @Getter
-  private SpiGUI spiGui;
-
-  /**
    * Gets the economy plugin instance.
    */
   @Getter
@@ -135,8 +129,6 @@ public final class InfiniteForge extends JavaPlugin {
     gson = new GsonBuilder().registerTypeAdapterFactory(RecordTypeAdapterFactory.DEFAULT)
         .setPrettyPrinting()
         .create();
-
-    spiGui = new SpiGUI(this);
 
     generatorsData = loadGeneratorsData();
 
@@ -196,6 +188,7 @@ public final class InfiniteForge extends JavaPlugin {
     events.add(new InstantBreak(locationsData, generatorsData));
     events.add(new OnJoin(generatorsData, getConfig()));
     events.add(new EggTeleport(locationsData));
+    events.add(new BeaconInteraction(locationsData));
     events.add(new EntityExplode(locationsData, generatorsData));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));

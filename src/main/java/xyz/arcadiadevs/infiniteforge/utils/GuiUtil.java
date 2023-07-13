@@ -1,17 +1,14 @@
 package xyz.arcadiadevs.infiniteforge.utils;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.samjakob.spigui.SGMenu;
-import com.samjakob.spigui.buttons.SGButton;
-import com.samjakob.spigui.item.ItemBuilder;
+import java.util.List;
+import java.util.Random;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.Gui;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItem;
 import xyz.arcadiadevs.infiniteforge.guis.guilib.GuiItemType;
-
-import java.util.List;
-import java.util.Random;
+import xyz.arcadiadevs.infiniteforge.guis.guilib.ItemBuilder;
 
 /**
  * The GuiUtil class provides utility methods for GUI-related operations.
@@ -83,6 +80,13 @@ public class GuiUtil {
     }
   }
 
+  /**
+   * Fills the specified SGMenu with the given material.
+   *
+   * @param menu     The SGMenu to fill.
+   * @param materials The material to fill the SGMenu with.
+   */
+  @SafeVarargs
   public static void fillWithRandom(Gui menu, List<String>... materials) {
     Random random = new Random();
     int rows = menu.getRows();
