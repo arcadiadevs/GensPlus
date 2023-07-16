@@ -96,7 +96,7 @@ public class CommandsTabCompletion implements TabCompleter {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      if (!InfiniteForge.getInstance().getConfig().getBoolean("sell-command")) {
+      if (!InfiniteForge.getInstance().getConfig().getBoolean("sell-command.enabled")) {
         return null;
       }
 

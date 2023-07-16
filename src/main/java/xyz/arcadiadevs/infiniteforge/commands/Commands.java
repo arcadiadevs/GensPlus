@@ -206,7 +206,7 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      if (!InfiniteForge.getInstance().getConfig().getBoolean("sell-command")) {
+      if (!InfiniteForge.getInstance().getConfig().getBoolean("sell-command.enabled")) {
         return true;
       }
 
