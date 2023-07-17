@@ -8,6 +8,7 @@ import com.github.unldenis.hologram.placeholder.Placeholders;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dev.lone.itemsadder.api.ItemsAdder;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
@@ -25,6 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.infiniteforge.commands.Commands;
@@ -130,8 +133,6 @@ public final class InfiniteForge extends JavaPlugin {
         .setPrettyPrinting()
         .create();
 
-    generatorsData = loadGeneratorsData();
-
     locationsData = new LocationsData(loadBlockDataFromJson());
 
     events = loadInfiniteForgeEvents();
@@ -142,19 +143,23 @@ public final class InfiniteForge extends JavaPlugin {
       new PlaceHolder(locationsData, getConfig()).register();
     }
 
-    loadHolograms();
-
     // Register events
     loadBukkitEvents();
-
-    // Register tasks
-    registerTasks();
 
     // Register commands
     registerCommands();
 
     // Register tab completion
     registerTabCompletion();
+
+    loadGeneratorsData().thenAccept(data -> {
+      this.generatorsData = data;
+
+      loadHolograms();
+
+      // Register tasks
+      registerTasks();
+    });
   }
 
   @Override
@@ -259,89 +264,103 @@ public final class InfiniteForge extends JavaPlugin {
    * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
    *                          encountered.
    */
-  private GeneratorsData loadGeneratorsData() {
-    List<GeneratorsData.Generator> generators = new ArrayList<>();
-    List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");
+  private CompletableFuture<GeneratorsData> loadGeneratorsData() {
+    return CompletableFuture.supplyAsync(() -> {
+      Plugin itemsAdder = getServer().getPluginManager().getPlugin("ItemsAdder");
 
-    for (Map<?, ?> generator : generatorsConfig) {
-      final String name = (String) generator.get("name");
-      final String dropDisplayName = (String) generator.get("dropDisplayName");
-      final boolean instantBreak = (boolean) generator.get("instantBreak");
-      int tier = (int) generator.get("tier");
-      int speed = (int) generator.get("speed");
-      double price = (double) generator.get("price");
-      double sellPrice = (double) generator.get("sellPrice");
-      String spawnItem = (String) generator.get("spawnItem");
-      String blockType = (String) generator.get("blockType");
-      List<String> lore =
-          ((List<String>) generator.get("lore")).isEmpty() ? getConfig().getStringList(
-              "default-lore") : (List<String>) generator.get("lore");
-
-      lore = lore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
-          .map(s -> s.replace("%speed%", String.valueOf(speed)))
-          .map(s -> s.replace("%price%", String.valueOf(price)))
-          .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
-          .map(s -> s.replace("%spawnItem%", spawnItem))
-          .map(s -> s.replace("%blockType%", blockType))
-          .map(ChatUtil::translate).toList();
-
-      if (generators.stream().anyMatch(g -> g.tier() == tier)) {
-        throw new RuntimeException("Duplicate tier found: " + tier);
+      if (itemsAdder != null && itemsAdder.isEnabled()) {
+        while (!ItemsAdder.areItemsLoaded()) {
+          try {
+            Thread.sleep(100); // Adjust sleep time as needed
+          } catch (InterruptedException e) {
+            // Handle the interruption if necessary
+          }
+        }
       }
 
-      ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem);
-      ItemStack blockTypeStack = ItemUtil.getUniversalItem(blockType);
+      List<GeneratorsData.Generator> generators = new ArrayList<>();
+      List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");
 
-      if (spawnItemStack == null || blockTypeStack == null) {
-        throw new RuntimeException("Invalid item name");
+      for (Map<?, ?> generator : generatorsConfig) {
+        final String name = (String) generator.get("name");
+        final String dropDisplayName = (String) generator.get("dropDisplayName");
+        final boolean instantBreak = (boolean) generator.get("instantBreak");
+        int tier = (int) generator.get("tier");
+        int speed = (int) generator.get("speed");
+        double price = (double) generator.get("price");
+        double sellPrice = (double) generator.get("sellPrice");
+        String spawnItem = (String) generator.get("spawnItem");
+        String blockType = (String) generator.get("blockType");
+        List<String> lore =
+            ((List<String>) generator.get("lore")).isEmpty() ? getConfig().getStringList(
+                "default-lore") : (List<String>) generator.get("lore");
+
+        lore = lore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
+            .map(s -> s.replace("%speed%", String.valueOf(speed)))
+            .map(s -> s.replace("%price%", String.valueOf(price)))
+            .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
+            .map(s -> s.replace("%spawnItem%", spawnItem))
+            .map(s -> s.replace("%blockType%", blockType))
+            .map(ChatUtil::translate).toList();
+
+        if (generators.stream().anyMatch(g -> g.tier() == tier)) {
+          throw new RuntimeException("Duplicate tier found: " + tier);
+        }
+
+        ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem);
+        ItemStack blockTypeStack = ItemUtil.getUniversalItem(blockType);
+
+        if (spawnItemStack == null || blockTypeStack == null) {
+          throw new RuntimeException("Invalid item name");
+        }
+
+        ItemMeta blockTypeMeta = blockTypeStack.getItemMeta();
+        ItemMeta spawnItemMeta = spawnItemStack.getItemMeta();
+
+        if (blockTypeMeta == null || spawnItemMeta == null) {
+          throw new RuntimeException("Invalid item meta");
+        }
+
+        // set lore for generator block
+        List<String> blockTypeLore = new ArrayList<>();
+
+        blockTypeLore.add(ChatUtil.translate("&8Generator tier " + tier));
+        blockTypeLore.addAll(lore);
+
+        blockTypeMeta.setDisplayName(ChatUtil.translate(name));
+        blockTypeMeta.setLore(blockTypeLore);
+
+        blockTypeStack.setItemMeta(blockTypeMeta);
+
+        // set lore for spawned item
+        List<String> spawnLore = new ArrayList<>();
+
+        List<String> itemSpawnLore = ((List<String>) generator.get("itemSpawnLore")).isEmpty()
+            ? getConfig().getStringList("default-item-spawn-lore")
+            : (List<String>) generator.get("itemSpawnLore");
+
+        String formattedSellPrice = econ.format(sellPrice);
+
+        itemSpawnLore = itemSpawnLore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
+            .map(s -> s.replace("%sellPrice%", formattedSellPrice))
+            .map(ChatUtil::translate)
+            .toList();
+
+        spawnLore.add(ChatUtil.translate("&8Generator drop tier " + tier));
+        spawnLore.addAll(itemSpawnLore);
+
+        spawnItemMeta.setDisplayName(ChatUtil.translate(dropDisplayName));
+        spawnItemMeta.setLore(spawnLore);
+
+        spawnItemStack.setItemMeta(spawnItemMeta);
+
+        generators.add(
+            new GeneratorsData.Generator(name, tier, price, sellPrice, speed, spawnItemStack,
+                blockTypeStack, lore, instantBreak));
       }
 
-      ItemMeta blockTypeMeta = blockTypeStack.getItemMeta();
-      ItemMeta spawnItemMeta = spawnItemStack.getItemMeta();
-
-      if (blockTypeMeta == null || spawnItemMeta == null) {
-        throw new RuntimeException("Invalid item meta");
-      }
-
-      // set lore for generator block
-      List<String> blockTypeLore = new ArrayList<>();
-
-      blockTypeLore.add(ChatUtil.translate("&8Generator tier " + tier));
-      blockTypeLore.addAll(lore);
-
-      blockTypeMeta.setDisplayName(ChatUtil.translate(name));
-      blockTypeMeta.setLore(blockTypeLore);
-
-      blockTypeStack.setItemMeta(blockTypeMeta);
-
-      // set lore for spawned item
-      List<String> spawnLore = new ArrayList<>();
-
-      List<String> itemSpawnLore = ((List<String>) generator.get("itemSpawnLore")).isEmpty()
-          ? getConfig().getStringList("default-item-spawn-lore")
-          : (List<String>) generator.get("itemSpawnLore");
-
-      String formattedSellPrice = econ.format(sellPrice);
-
-      itemSpawnLore = itemSpawnLore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
-          .map(s -> s.replace("%sellPrice%", formattedSellPrice))
-          .map(ChatUtil::translate)
-          .toList();
-
-      spawnLore.add(ChatUtil.translate("&8Generator drop tier " + tier));
-      spawnLore.addAll(itemSpawnLore);
-
-      spawnItemMeta.setDisplayName(ChatUtil.translate(dropDisplayName));
-      spawnItemMeta.setLore(spawnLore);
-
-      spawnItemStack.setItemMeta(spawnItemMeta);
-
-      generators.add(
-          new GeneratorsData.Generator(name, tier, price, sellPrice, speed, spawnItemStack,
-              blockTypeStack, lore, instantBreak));
-    }
-
-    return new GeneratorsData(generators);
+      return new GeneratorsData(generators);
+    });
   }
 
   private void loadHolograms() {
