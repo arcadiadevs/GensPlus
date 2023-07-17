@@ -78,9 +78,6 @@ chunk-radius:
   # or if use-permission is set to false.
   default-radius: 1
 
-itemsadder:
-  enabled: false
-
 multiplier:
   # Should we use permissions for multiplier?
   # If set to true, you will be able to set specific
