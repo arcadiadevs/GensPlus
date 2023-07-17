@@ -35,6 +35,7 @@ public class Messages {
   public static String CANNOT_PLACE_IN_WORLD;
   public static String NOT_YOUR_GENERATOR_DESTROY;
   public static String NOT_YOUR_GENERATOR_UPGRADE;
+public static String ONLY_PLAYER_CAN_EXECUTE_COMMAND;
 
   /**
    * Initializes the Messages class by loading the messages.yml file.
@@ -164,6 +165,11 @@ public class Messages {
     NOT_YOUR_GENERATOR_UPGRADE = config.getString(
         "not-your-generator-upgrade",
         "&cError> &7You cannot upgrade generator that is not yours!"
+    );
+
+    ONLY_PLAYER_CAN_EXECUTE_COMMAND = config.getString(
+        "only-player-can-execute-command",
+        "&cError> &7Only player can execute this command!"
     );
 
     try {
