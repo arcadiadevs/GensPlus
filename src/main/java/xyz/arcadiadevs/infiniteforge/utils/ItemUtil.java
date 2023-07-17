@@ -20,23 +20,14 @@ public class ItemUtil {
    * @return The universal item.
    */
   public static ItemStack getUniversalItem(String itemName) {
-    return itemName.contains("custom:")
-        ? OraxenItems.getItemById(itemName.replaceAll("custom:", "")).build()
-        : XMaterial.matchXMaterial(itemName).orElseThrow().parseItem();
-  }
-
-  /**
-   * Returns an ItemStack representing a universal multi-version supported item,
-   * or ItemsAdder's custom item.
-   *
-   * @return The universal item.
-   */
-  public static ItemStack getUniversalItemsAdder(String itemName) {
-    if (!ItemsAdder.isCustomItem(itemName)) {
-      return XMaterial.matchXMaterial(itemName).orElse(XMaterial.STONE).parseItem();
+    if (itemName.contains("oraxen:")) {
+      itemName = itemName.replaceAll("oraxen:", "").trim();
+      return OraxenItems.getItemById(itemName).build();
     }
 
-    if (InfiniteForge.getInstance().getConfig().getBoolean("itemsadder.enabled")) {
+    if (itemName.contains("itemsadder:")) {
+      itemName = itemName.replaceAll("itemsadder:", "").trim();
+
       CustomStack customStack = CustomStack.getInstance(itemName);
 
       if (customStack == null) {
