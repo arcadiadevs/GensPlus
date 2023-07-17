@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
@@ -50,7 +51,7 @@ public class GeneratorsGui {
     List<Map<?, ?>> generatorsConfig = config.getMapList("generators");
 
     for (GeneratorsData.Generator generator : generatorsData.getGenerators()) {
-      final var material = XMaterial.matchXMaterial(generator.blockType()).parseItem();
+      final ItemStack material = generator.blockType();
 
       Map<?, ?> matchingGeneratorConfig = generatorsConfig.stream()
           .filter(generatorConfig -> generatorConfig.get("name").equals(generator.name()))

@@ -12,6 +12,8 @@ import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 import xyz.arcadiadevs.infiniteforge.guis.UpgradeGui;
 import xyz.arcadiadevs.infiniteforge.models.GeneratorsData;
 import xyz.arcadiadevs.infiniteforge.models.LocationsData;
+import xyz.arcadiadevs.infiniteforge.statics.Messages;
+import xyz.arcadiadevs.infiniteforge.utils.ChatUtil;
 
 public class BlockInteraction implements Listener {
 
@@ -71,6 +73,12 @@ public class BlockInteraction implements Listener {
     if (InfiniteForge.getInstance().getConfig().getBoolean("guis.upgrade-gui.enabled")) {
       UpgradeGui.open(player, generatorLocation, block);
     } else {
+      if (generatorLocation.getPlacedBy() != player
+          && !player.hasPermission("infiniteforge.admin")
+          && !player.isOp()) {
+        ChatUtil.sendMessage(player, Messages.NOT_YOUR_GENERATOR_UPGRADE);
+        return;
+      }
       UpgradeGui.upgradeGenerator(player, generatorLocation, block);
     }
   }
