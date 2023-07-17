@@ -17,7 +17,7 @@ public class ItemUtil {
    *
    * @return The universal item.
    */
-  public static ItemStack getUniversalItem(String itemName) {
+  public static ItemStack getUniversalItem(String itemName, boolean enableItemsAdder) {
     // Format: oraxen:ITEM_NAME
     if (itemName.toLowerCase().startsWith("oraxen:")) {
       itemName = itemName.substring(7);
@@ -25,7 +25,7 @@ public class ItemUtil {
     }
 
     // Format: itemsadder:ITEM_NAME
-    if (itemName.toLowerCase().startsWith("itemsadder:")) {
+    if (enableItemsAdder && itemName.toLowerCase().startsWith("itemsadder:")) {
       itemName = itemName.substring(11);
 
       CustomStack customStack = CustomStack.getInstance(itemName);
@@ -38,7 +38,7 @@ public class ItemUtil {
     }
 
     // Format: customId:123;ITEM_NAME
-    if (itemName.contains("customId:")) {
+    if (itemName.toLowerCase().startsWith("customid:")) {
       itemName = itemName.substring(9);
 
       String[] idNameSplit = itemName.split(";");

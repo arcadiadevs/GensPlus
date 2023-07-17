@@ -309,8 +309,8 @@ public final class InfiniteForge extends JavaPlugin {
           throw new RuntimeException("Duplicate tier found: " + tier);
         }
 
-        ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem);
-        ItemStack blockTypeStack = ItemUtil.getUniversalItem(blockType);
+        ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem, true);
+        ItemStack blockTypeStack = ItemUtil.getUniversalItem(blockType, false);
 
         if (spawnItemStack == null || blockTypeStack == null) {
           throw new RuntimeException("Invalid item name");
