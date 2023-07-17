@@ -46,6 +46,7 @@ public class Commands implements CommandExecutor {
   public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
                            @NotNull String s, @NotNull String[] strings) {
     if (!(commandSender instanceof Player player)) {
+      ChatUtil.sendMessage(commandSender, Messages.ONLY_PLAYER_CAN_EXECUTE_COMMAND);
       return false;
     }
 

@@ -6,6 +6,7 @@ import dev.lone.itemsadder.api.ItemsAdder;
 import io.th0rgal.oraxen.api.OraxenItems;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.infiniteforge.InfiniteForge;
 
 /**
@@ -42,6 +43,10 @@ public class ItemUtil {
       if (customStack == null) {
         return null;
       }
+
+      ItemStack itemStack = customStack.getItemStack();
+      ItemMeta itemMeta = itemStack.getItemMeta();
+      itemMeta.setCustomModelData(customStack.getNamespacedID().length());
 
       return customStack.getItemStack();
     }

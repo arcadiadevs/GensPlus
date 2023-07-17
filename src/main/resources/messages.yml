@@ -4,6 +4,7 @@ no-permission: "&cError> &7You don't have permission to do that!"
 config-reloaded: "&9InfiniteForge> &7Configuration reloaded."
 player-not-found: "&cError> &7Player not found!"
 not-enough-arguments: "&cError> &7Not enough arguments!"
+only-player-can-execute-command: "&cError> &7Only player can execute this command!"
 
 # [limit-settings]
 limit-reached: "&cError> &7You have reached the limit of &c%limit% &7generators!"
