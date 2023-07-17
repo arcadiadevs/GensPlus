@@ -135,16 +135,7 @@ public final class InfiniteForge extends JavaPlugin {
 
     locationsData = new LocationsData(loadBlockDataFromJson());
 
-    events = loadInfiniteForgeEvents();
-
     Metrics metrics = new Metrics(this, 19054);
-
-    if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
-      new PlaceHolder(locationsData, getConfig()).register();
-    }
-
-    // Register events
-    loadBukkitEvents();
 
     // Register commands
     registerCommands();
@@ -159,6 +150,17 @@ public final class InfiniteForge extends JavaPlugin {
 
       // Register tasks
       registerTasks();
+
+      // Register events
+      loadBukkitEvents();
+
+      if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
+        new PlaceHolder(locationsData, getConfig()).register();
+      }
+
+      events = loadInfiniteForgeEvents();
+
+      getLogger().info("InfiniteForge has been loaded successfully!");
     });
   }
 
