@@ -1,6 +1,6 @@
-name: InfiniteForge
+name: GensForge
 version: '${project.version}'
-main: xyz.arcadiadevs.infiniteforge.InfiniteForge
+main: xyz.arcadiadevs.gensforge.GensForge
 api-version: 1.19
 authors:
   - Cuftica
@@ -16,9 +16,9 @@ softdepend:
   - ItemsAdder
 
 commands:
-  infiniteforge:
+  gensforge:
     description: Main command
-    usage: /infiniteforge
+    usage: /gensforge
     aliases: [ if, forge ]
   generators:
     description: List all generators in gui

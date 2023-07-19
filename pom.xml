@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>xyz.arcadiadevs</groupId>
-    <artifactId>InfiniteForge</artifactId>
+    <artifactId>GensForge</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>InfiniteForge</name>
+    <name>GensForge</name>
 
     <properties>
         <java.version>17</java.version>
