@@ -19,7 +19,7 @@ commands:
   gensforge:
     description: Main command
     usage: /gensforge
-    aliases: [ if, forge ]
+    aliases: [ gens, gf ]
   generators:
     description: List all generators in gui
     usage: /generators
