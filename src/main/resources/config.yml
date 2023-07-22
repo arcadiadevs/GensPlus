@@ -41,8 +41,8 @@ limit-settings:
 
   # Should we use permissions for generator limit?
   # If set to true, you will be able to set specific
-  # limits for each player. [gensforge.limit.<amount>]
-  # (ex: gensforge.limit.20)
+  # limits for each player. [gensplus.limit.<amount>]
+  # (ex: gensplus.limit.20)
   use-permissions: true
 
   # The default generator limit for all players
@@ -70,8 +70,8 @@ chunk-radius:
 
   # Should we use permissions for chunk radius?
   # If set to true, you will be able to set specific
-  # chunk radius for each player. [gensforge.chunkradius.<amount>]
-  # (ex: gensforge.chunkradius.5)
+  # chunk radius for each player. [gensplus.chunkradius.<amount>]
+  # (ex: gensplus.chunkradius.5)
   use-permissions: true
 
   # The default chunk radius used if player has no permission
@@ -81,8 +81,8 @@ chunk-radius:
 multiplier:
   # Should we use permissions for multiplier?
   # If set to true, you will be able to set specific
-  # multipliers for each player. [gensforge.multiplier.<amount>]
-  # (ex: gensforge.multiplier.2)
+  # multipliers for each player. [gensplus.multiplier.<amount>]
+  # (ex: gensplus.multiplier.2)
   use-permissions: true
 
   # The default multiplier for all players
