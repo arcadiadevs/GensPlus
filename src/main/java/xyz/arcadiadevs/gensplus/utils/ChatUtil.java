@@ -25,15 +25,21 @@ public class ChatUtil {
     StringBuilder finalText = new StringBuilder();
 
     for (int i = 0; i < texts.length; i++) {
-      if (texts[i].equalsIgnoreCase("&")) {
-        i++;
-        if (texts[i].charAt(0) == '#') {
-          finalText.append(net.md_5.bungee.api.ChatColor.of(texts[i].substring(0, 7)))
-              .append(texts[i].substring(7));
+      try {
+        if (texts[i].equalsIgnoreCase("&")) {
+          i++;
+          if (texts[i].charAt(0) == '#') {
+            finalText.append(net.md_5.bungee.api.ChatColor.of(texts[i].substring(0, 7)))
+                .append(texts[i].substring(7));
+          } else {
+            finalText.append(ChatColor.translateAlternateColorCodes('&', "&" + texts[i]));
+          }
         } else {
-          finalText.append(ChatColor.translateAlternateColorCodes('&', "&" + texts[i]));
+          finalText.append(texts[i]);
         }
-      } else {
+      } catch (IllegalArgumentException | StringIndexOutOfBoundsException exception) {
+        Bukkit.getLogger().warning("Could not translate some color codes, please review"
+            + " your config file: " + exception.getMessage());
         finalText.append(texts[i]);
       }
     }

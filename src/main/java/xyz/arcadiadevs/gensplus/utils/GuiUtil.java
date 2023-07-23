@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Random;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
-import xyz.arcadiadevs.gensplus.guis.guilib.Gui;
-import xyz.arcadiadevs.gensplus.guis.guilib.GuiItem;
-import xyz.arcadiadevs.gensplus.guis.guilib.GuiItemType;
-import xyz.arcadiadevs.gensplus.guis.guilib.ItemBuilder;
+import xyz.arcadiadevs.guilib.Gui;
+import xyz.arcadiadevs.guilib.GuiItem;
+import xyz.arcadiadevs.guilib.GuiItemType;
+import xyz.arcadiadevs.guilib.ItemBuilder;
 
 /**
  * The GuiUtil class provides utility methods for GUI-related operations.
