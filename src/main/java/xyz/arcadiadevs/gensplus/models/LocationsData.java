@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.gensplus.models;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.github.unldenis.hologram.Hologram;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -28,7 +26,6 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.DropEvent;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
-import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 
@@ -98,9 +95,6 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
    * @param location The generator location to remove.
    */
   public void removeLocation(GeneratorLocation location) {
-    if (location.getHologram() != null) {
-      HologramsUtil.removeHologram(location.getHologram());
-    }
     locations.remove(location);
   }
 
@@ -130,9 +124,6 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     private final String playerId;
     private final Integer generator;
     private final ArrayList<SimplifiedLocation> blockLocations;
-
-    @Setter
-    private transient Hologram hologram;
 
     /**
      * Represents a generator location.
@@ -189,8 +180,6 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
               String.valueOf(getGeneratorObject().sellPrice())))
           .map(ChatUtil::translate)
           .toList();
-
-      this.hologram = HologramsUtil.createHologram(getCenter(), lines, material);
     }
 
     public void removeBlock(Block block) {

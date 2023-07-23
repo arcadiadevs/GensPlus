@@ -70,17 +70,14 @@ public class BlockInteraction implements Listener {
       return;
     }
 
-    if (GensPlus.getInstance().getConfig().getBoolean("guis.upgrade-gui.enabled")) {
-      UpgradeGui.open(player, generatorLocation, block);
-    } else {
-      if (generatorLocation.getPlacedBy() != player
-          && !player.hasPermission("gensplus.admin")
-          && !player.isOp()) {
-        ChatUtil.sendMessage(player, Messages.NOT_YOUR_GENERATOR_UPGRADE);
-        return;
-      }
-      UpgradeGui.upgradeGenerator(player, generatorLocation, block);
+    if (generatorLocation.getPlacedBy() != player
+        && !player.hasPermission("gensplus.admin")
+        && !player.isOp()) {
+      ChatUtil.sendMessage(player, Messages.NOT_YOUR_GENERATOR_UPGRADE);
+      return;
     }
+
+    UpgradeGui.upgradeGenerator(player, generatorLocation, block);
   }
 
 }

@@ -11,10 +11,6 @@ item-despawn-time: "5m"
 # values and will be turned into a normal block.
 can-drops-be-placed: false
 
-# Each world listed here will have generators disabled.
-# If empty, all worlds will have generators enabled.
-disabled-worlds: []
-
 # Should we give a generator instantly to players inventory
 # when they break a generator? If set to false, the generator
 # will be dropped on the ground.
@@ -109,87 +105,6 @@ guis:
 
       # Name of the border
       name: " "
-
-  # Gui when upgrading generator
-  upgrade-gui:
-    # If enabled is set to false, upgrade gui will not be displayed
-    # and the generator will be upgraded instantly by Shift + Right Click-ing.
-    # on the generator.
-    enabled: true
-
-    upgradeOne:
-      first-line: "&e》 &nClick to upgrade generator!&e 《"
-      # If lore is not specified, the default lore will be used.
-      # The default lore can be specified in the following format:
-      # - %tier%" equals to the generator's tier
-      # - %speed%" is the generator's speed of spawning items
-      # - %price%" is the price of generator
-      # - %sellPrice%" is the sell price of generator drop
-      # - %spawnItem%" equals to what item will generator spawn
-      # - %blockType%" equals to block type of generator
-      # - %nextTier% equals to the next tier of generator
-      # - %nextSpeed% equals to the next speed of generator
-      # - %nextPrice% equals to the next price of generator
-      # - %nextSellPrice% equals to the next sell price of generator
-      # - %nextSpawnItem% equals to the next spawn item of generator
-      # - %nextBlockType% equals to the next block type of generator
-      lore:
-        - ""
-        - "&fMoney: &a%money%"
-        - "&fUpgrade Price: &a%upgradePrice%"
-        - ""
-        - "&eCurrent Details:"
-        - "&e⌈ &fTier: &a%tier%"
-        - "&eⅠ &fSpeed: &a%speed%"
-        - "&eⅠ &fPrice: &a%price%"
-        - "&e⌊ &fSell Price: &a%sellPrice%"
-        - ""
-        - "&eNext Details:"
-        - "&e⌈ &fTier: &a%nextTier%"
-        - "&eⅠ &fSpeed: &a%nextSpeed%"
-        - "&eⅠ &fPrice: &a%nextPrice%"
-        - "&e⌊ &fSell Price: &a%nextSellPrice%"
-        - ""
-
-    upgradeAll:
-        first-line: "&e》 &nClick to upgrade all generators!&e 《"
-        # If lore is not specified, the default lore will be used.
-        # The default lore can be specified in the following format:
-        # - %tier%" equals to the generator's tier
-        # - %speed%" is the generator's speed of spawning items
-        # - %price%" is the price of generator
-        # - %sellPrice%" is the sell price of generator drop
-        # - %spawnItem%" equals to what item will generator spawn
-        # - %blockType%" equals to block type of generator
-        # - %nextTier% equals to the next tier of generator
-        # - %nextSpeed% equals to the next speed of generator
-        # - %nextPrice% equals to the next price of generator
-        # - %nextSellPrice% equals to the next sell price of generator
-        # - %nextSpawnItem% equals to the next spawn item of generator
-        # - %nextBlockType% equals to the next block type of generator
-        lore:
-            - ""
-            - "&fMoney: &a%money%"
-            - "&fUpgrade Price: &a%upgradePrice%"
-            - ""
-            - "&eCurrent Details:"
-            - "&e⌈ &fTier: &a%tier%"
-            - "&eⅠ &fSpeed: &a%speed%"
-            - "&eⅠ &fPrice: &a%price%"
-            - "&e⌊ &fSell Price: &a%sellPrice%"
-            - ""
-            - "&eNext Details:"
-            - "&e⌈ &fTier: &a%nextTier%"
-            - "&eⅠ &fSpeed: &a%nextSpeed%"
-            - "&eⅠ &fPrice: &a%nextPrice%"
-            - "&e⌊ &fSell Price: &a%nextSellPrice%"
-            - ""
-
-    # Title of the gui
-    title: "Upgrade Generator"
-
-    # Number of rows in the gui
-    rows: 3
 
 holograms:
   # If enabled is set to false, holograms will not be shown

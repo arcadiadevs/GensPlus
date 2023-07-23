@@ -1,10 +1,5 @@
 package xyz.arcadiadevs.gensplus;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.github.unldenis.hologram.Hologram;
-import com.github.unldenis.hologram.HologramPool;
-import com.github.unldenis.hologram.IHologramPool;
-import com.github.unldenis.hologram.placeholder.Placeholders;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,8 +15,6 @@ import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,7 +24,9 @@ import xyz.arcadiadevs.gensplus.commands.Commands;
 import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
 import xyz.arcadiadevs.gensplus.events.BeaconInteraction;
 import xyz.arcadiadevs.gensplus.events.BlockBreak;
+import xyz.arcadiadevs.gensplus.events.BlockFromTo;
 import xyz.arcadiadevs.gensplus.events.BlockInteraction;
+import xyz.arcadiadevs.gensplus.events.BlockPhysics;
 import xyz.arcadiadevs.gensplus.events.BlockPlace;
 import xyz.arcadiadevs.gensplus.events.EggTeleport;
 import xyz.arcadiadevs.gensplus.events.EntityExplode;
@@ -48,7 +43,10 @@ import xyz.arcadiadevs.gensplus.statics.Messages;
 import xyz.arcadiadevs.gensplus.tasks.DataSaveTask;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.tasks.SpawnerTask;
-import xyz.arcadiadevs.gensplus.utils.*;
+import xyz.arcadiadevs.gensplus.utils.ChatUtil;
+import xyz.arcadiadevs.gensplus.utils.ItemUtil;
+import xyz.arcadiadevs.gensplus.utils.Metrics;
+import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 
 /**
  * The main plugin class for GensPlus.
@@ -60,22 +58,6 @@ public final class GensPlus extends JavaPlugin {
    */
   @Getter
   public static GensPlus instance;
-
-  /**
-   * Gets the hologram pool instance for hologram management.
-   *
-   * @implNote Null if holograms are disabled.
-   */
-  @Getter
-  private IHologramPool hologramPool;
-
-  /**
-   * Gets placeholders instance.
-   *
-   * @implNote Null if holograms are disabled.
-   */
-  @Getter
-  private Placeholders placeholders;
 
   /**
    * Gets the Gson instance used for JSON serialization/deserialization.
@@ -141,8 +123,6 @@ public final class GensPlus extends JavaPlugin {
       new PlaceHolder(locationsData, getConfig()).register();
     }
 
-    loadHolograms();
-
     // Register events
     loadBukkitEvents();
 
@@ -189,6 +169,8 @@ public final class GensPlus extends JavaPlugin {
     events.add(new EggTeleport(locationsData));
     events.add(new BeaconInteraction(locationsData));
     events.add(new EntityExplode(locationsData, generatorsData));
+    events.add(new BlockFromTo(locationsData));
+    events.add(new BlockPhysics(locationsData));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
@@ -341,57 +323,6 @@ public final class GensPlus extends JavaPlugin {
     }
 
     return new GeneratorsData(generators);
-  }
-
-  private void loadHolograms() {
-    hologramPool = hologramPool == null
-        ? new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000))
-        : hologramPool;
-
-    placeholders = new Placeholders();
-
-    if (!GensPlus.getInstance().getConfig().getBoolean("holograms.enabled")) {
-      return;
-    }
-
-    List<Map<?, ?>> generatorsConfig = instance.getConfig().getMapList("generators");
-
-    for (LocationsData.GeneratorLocation location : getLocationsData().locations()) {
-      GeneratorsData.Generator generator = generatorsData.getGenerator(location.getGenerator());
-
-      Material material = XMaterial.matchXMaterial(generator.blockType().getType().toString())
-          .orElseThrow(() -> new RuntimeException("Invalid item stack"))
-          .parseItem()
-          .getType();
-
-      Map<?, ?> matchingGeneratorConfig = generatorsConfig.stream()
-          .filter(generatorConfig -> generatorConfig.get("name").equals(generator.name()))
-          .findFirst()
-          .orElse(null);
-
-      if (matchingGeneratorConfig == null) {
-        continue;
-      }
-
-      List<String> lines = ((List<String>) matchingGeneratorConfig.get("hologramLines")).isEmpty()
-          ? GensPlus.getInstance().getConfig().getStringList("default-hologram-lines")
-          : (List<String>) matchingGeneratorConfig.get("hologramLines");
-
-      lines = lines
-          .stream()
-          .map(line -> line.replace("%name%", generator.name()))
-          .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))
-          .map(line -> line.replace("%speed%", String.valueOf(generator.speed())))
-          .map(line -> line.replace("%spawnItem%", generator.spawnItem().getType().toString()))
-          .map(line -> line.replace("%sellPrice%", String.valueOf(generator.sellPrice())))
-          .map(ChatUtil::translate)
-          .toList();
-
-      Location center = location.getCenter();
-      Hologram hologram = HologramsUtil.createHologram(center, lines, material);
-      location.setHologram(hologram);
-      hologramPool.takeCareOf(hologram);
-    }
   }
 
   private CopyOnWriteArrayList<LocationsData.GeneratorLocation> loadBlockDataFromJson() {

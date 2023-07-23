@@ -69,16 +69,6 @@ public class BlockPlace implements Listener {
       return;
     }
 
-    final List<String> disabledWorlds = config.getStringList("disabled-worlds");
-
-    for (String world : disabledWorlds) {
-      if (event.getBlockPlaced().getWorld().getName().equals(world)) {
-        ChatUtil.sendMessage(event.getPlayer(), Messages.CANNOT_PLACE_IN_WORLD);
-        event.setCancelled(true);
-        return;
-      }
-    }
-
     final Player player = event.getPlayer();
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
