@@ -14,6 +14,7 @@ import xyz.arcadiadevs.gensplus.GensPlus;
  */
 public enum Messages {
 
+  // List of Messages with their corresponding default values
   NO_PERMISSION("no-permission", "&cError> &7You don't have permission to do that!"),
   CONFIG_RELOADED("config-reloaded", "&9GensPlus> &7Configuration reloaded."),
   PLAYER_NOT_FOUND("player-not-found", "&cError> &7Player not found!"),
@@ -90,27 +91,50 @@ public enum Messages {
     this.defaultMessage = defaultMessage;
   }
 
+  /**
+   * Returns the path of the message.
+   *
+   * @return The path of the message.
+   */
   public String getPath() {
     return name().toLowerCase().replace("_", "-");
   }
 
   /**
-   * Deep Copy !!
+   * Returns a cached list containing the default message.
    *
-   * @return Message updated based on what's in the config files
+   * @return A list containing the default message.
    */
   public List<String> getCached() {
     return new ArrayList<>(Collections.singletonList(defaultMessage));
   }
 
+  /**
+   * Formats the message with provided placeholders.
+   *
+   * @param placeholders The values to replace the placeholders in the message.
+   * @return A formatted PlayerMessage with the placeholders replaced.
+   */
   public PlayerMessage format(Object... placeholders) {
     return new PlayerMessage(this).format(placeholders);
   }
 
+  /**
+   * Returns the default message for this enum constant.
+   *
+   * @return The default message.
+   */
   public String getDefaultMessage() {
     return defaultMessage;
   }
 
+  /**
+   * Returns the message with placeholders replaced by provided values.
+   *
+   * @param replacements Pairs of placeholder-replacement values
+   *                     (in the format of [placeholder, replacement]).
+   * @return The message with placeholders replaced.
+   */
   public String getMessage(String... replacements) {
     String message = defaultMessage;
     for (int i = 0; i < replacements.length - 1; i += 2) {
