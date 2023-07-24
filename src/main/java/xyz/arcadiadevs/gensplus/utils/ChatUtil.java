@@ -1,6 +1,8 @@
 package xyz.arcadiadevs.gensplus.utils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,32 +21,18 @@ public class ChatUtil {
    * @return Returns a string of text with color/effects applied
    */
   public static String translate(String text) {
-    final String withDelimiter = "((?<=%1$s)|(?=%1$s))";
-    String[] texts = text.split(String.format(withDelimiter, "&"));
+    text = ChatColor.translateAlternateColorCodes('&', text);
 
-    StringBuilder finalText = new StringBuilder();
+    Pattern hexPattern = Pattern.compile("&#([A-Fa-f0-9]{6})");
+    Matcher matcher = hexPattern.matcher(text);
+    StringBuilder buffer = new StringBuilder();
 
-    for (int i = 0; i < texts.length; i++) {
-      try {
-        if (texts[i].equalsIgnoreCase("&")) {
-          i++;
-          if (texts[i].charAt(0) == '#') {
-            finalText.append(net.md_5.bungee.api.ChatColor.of(texts[i].substring(0, 7)))
-                .append(texts[i].substring(7));
-          } else {
-            finalText.append(ChatColor.translateAlternateColorCodes('&', "&" + texts[i]));
-          }
-        } else {
-          finalText.append(texts[i]);
-        }
-      } catch (IllegalArgumentException | StringIndexOutOfBoundsException exception) {
-        Bukkit.getLogger().warning("Could not translate some color codes, please review"
-            + " your config file: " + exception.getMessage());
-        finalText.append(texts[i]);
-      }
+    while (matcher.find()) {
+      String color = matcher.group(1);
+      matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of("#" + color).toString());
     }
 
-    return finalText.toString();
+    return matcher.appendTail(buffer).toString();
   }
 
   /**
