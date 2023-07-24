@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 
@@ -73,7 +73,7 @@ public class BlockPlace implements Listener {
 
     for (String world : disabledWorlds) {
       if (event.getBlockPlaced().getWorld().getName().equals(world)) {
-        ChatUtil.sendMessage(event.getPlayer(), Messages.CANNOT_PLACE_IN_WORLD);
+        Messages.CANNOT_PLACE_IN_WORLD.format("world", world).send(event.getPlayer());
         event.setCancelled(true);
         return;
       }
@@ -87,8 +87,7 @@ public class BlockPlace implements Listener {
 
     if (locationsData.getGeneratorsCountByPlayer(player) >= limit
         && enabled) {
-      ChatUtil.sendMessage(event.getPlayer(), Messages.LIMIT_REACHED
-          .replace("%limit%", String.valueOf(limit)));
+      Messages.LIMIT_REACHED.format("limit", limit).send(player);
       event.setCancelled(true);
       return;
     }
@@ -96,8 +95,7 @@ public class BlockPlace implements Listener {
     locationsData.createLocation(player, tier, event.getBlockPlaced());
 
     // Send a notification to the player
-    ChatUtil.sendMessage(event.getPlayer(), Messages.SUCCESSFULLY_PLACED.replace("%tier%",
-        String.valueOf(tier)));
+    Messages.SUCCESSFULLY_PLACED.format("tier", tier).send(player);
   }
 
 }

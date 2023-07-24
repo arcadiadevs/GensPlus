@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.models.events.Event;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 
@@ -53,20 +53,21 @@ public class EventLoop extends BukkitRunnable {
 
     String eventEndTime = plugin.getConfig().getString("events.event-duration");
 
-    ChatUtil.sendBroadcast(
-        Messages.EVENT_STARTED
-            .replace("%event%", activeEvent.event().getName())
-            .replace("%time%", eventEndTime), false);
+
+    Messages.EVENT_STARTED.format(
+            "event", activeEvent.event().getName(),
+            "time", eventEndTime)
+        .send(true);
 
     new BukkitRunnable() {
       public void run() {
 
         String eventStartTime = plugin.getConfig().getString("events.time-between-events");
 
-        ChatUtil.sendBroadcast(
-            Messages.EVENT_ENDED
-                .replace("%event%", activeEvent.event().getName())
-                .replace("%time%", eventStartTime), false);
+        Messages.EVENT_ENDED.format(
+                "event", activeEvent.event().getName(),
+                "time", eventStartTime)
+            .send(true);
 
         activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
             System.currentTimeMillis() + TimeUtil.parseTimeMillis(plugin

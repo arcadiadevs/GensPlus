@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.statics.Permissions;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
@@ -45,7 +45,7 @@ public class Commands implements CommandExecutor {
   public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
                            @NotNull String s, @NotNull String[] strings) {
     if (!(commandSender instanceof Player player)) {
-      ChatUtil.sendMessage(commandSender, Messages.ONLY_PLAYER_CAN_EXECUTE_COMMAND);
+      Messages.ONLY_PLAYER_CAN_EXECUTE_COMMAND.format().send(commandSender);
       return false;
     }
 
@@ -53,8 +53,8 @@ public class Commands implements CommandExecutor {
 
     if (command.getName().equalsIgnoreCase("gensplus")) {
       if (strings.length == 0) {
-        ChatUtil.sendMessage(player, Messages.DEFAULT_MESSAGE.replace("%version%",
-            GensPlus.getInstance().getDescription().getVersion()));
+        Messages.DEFAULT_MESSAGE.format("version",
+            GensPlus.getInstance().getDescription().getVersion()).send(player);
         return true;
       }
 
@@ -87,18 +87,18 @@ public class Commands implements CommandExecutor {
 
       if (strings[0].equalsIgnoreCase("give")) {
         if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE))) {
-          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          Messages.NO_PERMISSION.format().send(player);
           return true;
         }
 
         if (strings.length < 3) {
-          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_ARGUMENTS);
+          Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
           return true;
         }
 
         Player targetPlayer = Bukkit.getPlayer(strings[1]);
         if (targetPlayer == null) {
-          ChatUtil.sendMessage(player, Messages.PLAYER_NOT_FOUND);
+          Messages.PLAYER_NOT_FOUND.format().send(player);
           return true;
         }
 
@@ -106,7 +106,7 @@ public class Commands implements CommandExecutor {
         try {
           tier = Integer.parseInt(strings[2]);
         } catch (NumberFormatException e) {
-          ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
+          Messages.INVALID_GENERATOR_TIER.format().send(player);
           return true;
         }
 
@@ -115,14 +115,14 @@ public class Commands implements CommandExecutor {
           try {
             amount = Integer.parseInt(strings[3]);
           } catch (NumberFormatException e) {
-            ChatUtil.sendMessage(player, Messages.INVALID_AMOUNT);
+            Messages.INVALID_AMOUNT.format().send(player);
             return true;
           }
         }
 
         GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
         if (generator == null) {
-          ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
+          Messages.INVALID_GENERATOR_TIER.format().send(player);
           return true;
         }
 
@@ -130,26 +130,28 @@ public class Commands implements CommandExecutor {
           generator.giveItem(targetPlayer);
         }
 
-        ChatUtil.sendMessage(player, Messages.GENERATOR_GIVEN
-            .replace("%targetPlayer%", targetPlayer.getName())
-            .replace("%tier%", String.valueOf(tier))
-            .replace("%amount%", String.valueOf(amount)));
+        Messages.GENERATOR_GIVEN.format(
+                "targetPlayer", targetPlayer.getName(),
+                "tier", String.valueOf(tier),
+                "amount", String.valueOf(amount))
+            .send(player);
 
-        ChatUtil.sendMessage(targetPlayer, Messages.GENERATOR_RECEIVED
-            .replace("%tier%", String.valueOf(tier))
-            .replace("%amount%", String.valueOf(amount)));
+        Messages.GENERATOR_RECEIVED.format(
+                "tier", String.valueOf(tier),
+                "amount", String.valueOf(amount))
+            .send(targetPlayer);
 
         return true;
       }
 
       if (strings[0].equalsIgnoreCase("giveall")) {
         if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE_ALL))) {
-          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          Messages.NO_PERMISSION.format().send(player);
           return true;
         }
 
         if (strings.length < 2) {
-          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_ARGUMENTS);
+          Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
           return true;
         }
 
@@ -157,7 +159,7 @@ public class Commands implements CommandExecutor {
         try {
           tier = Integer.parseInt(strings[1]);
         } catch (NumberFormatException e) {
-          ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
+          Messages.INVALID_GENERATOR_TIER.format().send(player);
           return true;
         }
 
@@ -166,14 +168,14 @@ public class Commands implements CommandExecutor {
           try {
             amount = Integer.parseInt(strings[2]);
           } catch (NumberFormatException e) {
-            ChatUtil.sendMessage(player, Messages.INVALID_AMOUNT);
+            Messages.INVALID_AMOUNT.format().send(player);
             return true;
           }
         }
 
         GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
         if (generator == null) {
-          ChatUtil.sendMessage(player, Messages.INVALID_GENERATOR_TIER);
+          Messages.INVALID_GENERATOR_TIER.format().send(player);
           return true;
         }
 
@@ -186,10 +188,11 @@ public class Commands implements CommandExecutor {
           givenCount++;
         }
 
-        ChatUtil.sendMessage(player, Messages.GENERATOR_GIVEN_ALL
-            .replace("%tier%", String.valueOf(tier))
-            .replace("%amount%", String.valueOf(amount))
-            .replace("%count%", String.valueOf(givenCount)));
+        Messages.GENERATOR_GIVEN_ALL.format(
+                "tier", String.valueOf(tier),
+                "amount", String.valueOf(amount),
+                "count", String.valueOf(givenCount))
+            .send(player);
 
         return true;
       }
@@ -197,7 +200,7 @@ public class Commands implements CommandExecutor {
 
     if (command.getName().equalsIgnoreCase("generators")) {
       if (!(adminPermission || player.hasPermission(Permissions.GENERATORS_GUI))) {
-        ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+        Messages.NO_PERMISSION.format().send(player);
         return true;
       }
 
@@ -211,13 +214,13 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings.length == 0) {
-        ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_ARGUMENTS);
+        Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
         return true;
       }
 
       if (strings[0].equalsIgnoreCase("all")) {
         if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)) {
-          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          Messages.NO_PERMISSION.format().send(player);
           return true;
         }
 
@@ -227,7 +230,7 @@ public class Commands implements CommandExecutor {
 
       if (strings[0].equalsIgnoreCase("hand")) {
         if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
-          ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
+          Messages.NO_PERMISSION.format().send(player);
           return true;
         }
 

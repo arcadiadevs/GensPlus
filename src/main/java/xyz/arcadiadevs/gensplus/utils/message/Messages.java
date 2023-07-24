@@ -1,0 +1,122 @@
+package xyz.arcadiadevs.gensplus.utils.message;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import xyz.arcadiadevs.gensplus.GensPlus;
+
+/**
+ * The Messages class contains all the messages used in GensPlus.
+ */
+public enum Messages {
+
+  NO_PERMISSION("no-permission", "&cError> &7You don't have permission to do that!"),
+  CONFIG_RELOADED("config-reloaded", "&9GensPlus> &7Configuration reloaded."),
+  PLAYER_NOT_FOUND("player-not-found", "&cError> &7Player not found!"),
+  INVALID_GENERATOR_TIER("invalid-generator-tier", "&cError> &7Invalid generator tier!"),
+  GENERATOR_GIVEN("generator-given",
+      "&9GensPlus> &7You gave &a%amount% &7generator(s) of tier &a%tier% &7to &a%targetPlayer%"),
+  GENERATOR_RECEIVED("generator-received",
+      "&9GensPlus> &7You received &a%amount% &7generator(s) of tier &a%tier%"),
+  LIMIT_REACHED("limit-reached",
+      "&cError> &7You have reached the limit of &c%limit% &7generators!"),
+  EVENT_STARTED("event-started", "&9GensPlus> &7%event% has started and will end in &e&n%time%!"),
+  EVENT_ENDED("event-ended",
+      "&9GensPlus> &7%event% has ended and a new event will be started in &e&n%time%!"),
+  SUCCESSFULLY_UPGRADED("successfully-upgraded",
+      "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"),
+  SUCCESSFULLY_SOLD("successfully-sold", "&9GensPlus> &7Successfully sold drops for &a%price%"),
+  NOT_ENOUGH_MONEY("not-enough-money", "&cError> &7You don't have enough money to do that!"),
+  NOTHING_TO_SELL("nothing-to-sell", "&cError> &7You don't have any drops to sell!"),
+  SUCCESSFULLY_DESTROYED("successfully-destroyed",
+      "&9GensPlus> &7Successfully destroyed generator!"
+  ),
+  SUCCESSFULLY_PLACED("successfully-placed",
+      "&9GensPlus> &7Successfully placed generator tier %tier%!"
+  ),
+  SUCCESSFULLY_BOUGHT("successfully-bought",
+      "&9GensPlus> &7Successfully bought generator tier %tier% for %price%!"
+  ),
+  REACHED_MAX_TIER("reached-max-tier",
+      "&cError> &7You have reached the maximum tier of the generator!"
+  ),
+  NOT_ENOUGH_ARGUMENTS("not-enough-arguments", "&cError> &7Not enough arguments!"),
+  INVALID_AMOUNT("invalid-amount", "&cError> &7Invalid amount!"),
+  GENERATOR_GIVEN_ALL("generator-given-all",
+      "&9GensPlus> &7You gave &a%amount% &7generator(s) of tier &a%tier% &7to all players! (&a%count%&7)"
+  ),
+  DEFAULT_MESSAGE("default-message", "&9GensPlus> &7This server is running GensPlus &av%version%"
+  ),
+  CANNOT_PLACE_IN_WORLD("cannot-place-in-world",
+      "&cError> &7You cannot place a generator in this world!"
+  ),
+  NOT_YOUR_GENERATOR_DESTROY("not-your-generator-destroy",
+      "&cError> &7You cannot destroy a generator that is not yours!"
+  ),
+  NOT_YOUR_GENERATOR_UPGRADE("not-your-generator-upgrade",
+      "&cError> &7You cannot upgrade a generator that is not yours!"
+  ),
+  ONLY_PLAYER_CAN_EXECUTE_COMMAND("only-player-can-execute-command",
+      "&cError> &7Only a player can execute this command!"
+  );
+
+  private final String key;
+  private String defaultMessage;
+
+  /**
+   * Initializes the Messages enum by loading the messages.yml file.
+   */
+  public static void init() {
+    final File file = new File(GensPlus.getInstance().getDataFolder(), "messages.yml");
+    final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+    for (Messages message : Messages.values()) {
+      message.defaultMessage = config.getString(message.key, message.defaultMessage);
+    }
+
+    try {
+      config.save(file);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  Messages(String key, String defaultMessage) {
+    this.key = key;
+    this.defaultMessage = defaultMessage;
+  }
+
+  public String getPath() {
+    return name().toLowerCase().replace("_", "-");
+  }
+
+  /**
+   * Deep Copy !!
+   *
+   * @return Message updated based on what's in the config files
+   */
+  public List<String> getCached() {
+    return new ArrayList<>(Collections.singletonList(defaultMessage));
+  }
+
+  public PlayerMessage format(Object... placeholders) {
+    return new PlayerMessage(this).format(placeholders);
+  }
+
+  public String getDefaultMessage() {
+    return defaultMessage;
+  }
+
+  public String getMessage(String... replacements) {
+    String message = defaultMessage;
+    for (int i = 0; i < replacements.length - 1; i += 2) {
+      message = message.replace(replacements[i], replacements[i + 1]);
+    }
+    return message;
+  }
+
+}

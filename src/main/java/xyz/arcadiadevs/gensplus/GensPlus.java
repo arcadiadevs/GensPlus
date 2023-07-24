@@ -44,11 +44,15 @@ import xyz.arcadiadevs.gensplus.models.events.Event;
 import xyz.arcadiadevs.gensplus.models.events.SellEvent;
 import xyz.arcadiadevs.gensplus.models.events.SpeedEvent;
 import xyz.arcadiadevs.gensplus.placeholders.PlaceHolder;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.tasks.DataSaveTask;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.tasks.SpawnerTask;
-import xyz.arcadiadevs.gensplus.utils.*;
+import xyz.arcadiadevs.gensplus.utils.ChatUtil;
+import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
+import xyz.arcadiadevs.gensplus.utils.ItemUtil;
+import xyz.arcadiadevs.gensplus.utils.Metrics;
+import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 
 /**
  * The main plugin class for GensPlus.

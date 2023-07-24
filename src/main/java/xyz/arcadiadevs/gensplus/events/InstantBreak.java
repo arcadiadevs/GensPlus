@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 
 /**
@@ -64,7 +64,7 @@ public class InstantBreak implements Listener {
     }
 
     if (generatorLocation.getPlacedBy() != event.getPlayer() && !player.isOp()) {
-      ChatUtil.sendMessage(event.getPlayer(), Messages.NOT_YOUR_GENERATOR_DESTROY);
+      Messages.NOT_YOUR_GENERATOR_DESTROY.format().send(event.getPlayer());
       return;
     }
 
@@ -106,7 +106,7 @@ public class InstantBreak implements Listener {
     });
 
     // Send a notification to the player
-    ChatUtil.sendMessage(event.getPlayer(), Messages.SUCCESSFULLY_DESTROYED);
+    Messages.SUCCESSFULLY_DESTROYED.format().send(event.getPlayer());
     event.setCancelled(true);
   }
 }

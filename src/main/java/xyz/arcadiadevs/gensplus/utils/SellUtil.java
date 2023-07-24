@@ -10,7 +10,7 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.models.events.SellEvent;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 
 /**
@@ -79,12 +79,13 @@ public class SellUtil {
       final Economy economy = GensPlus.getInstance().getEcon();
 
       economy.depositPlayer(player, totalSellAmount);
-      ChatUtil.sendMessage(player,
-          Messages.SUCCESSFULLY_SOLD.replace("%price%", (economy.format(
-              totalSellAmount))));
+
+      Messages.SUCCESSFULLY_SOLD.format(
+          "price", economy.format(totalSellAmount))
+          .send(player);
 
     } else {
-      ChatUtil.sendMessage(player, Messages.NOTHING_TO_SELL);
+      Messages.NOTHING_TO_SELL.format().send(player);
     }
 
     sellAmounts.remove(player);
@@ -110,21 +111,21 @@ public class SellUtil {
     ItemMeta meta = item.getItemMeta();
 
     if (isAir || meta == null || !meta.hasLore() || meta.getLore() == null) {
-      ChatUtil.sendMessage(player, Messages.NOTHING_TO_SELL);
+      Messages.NOTHING_TO_SELL.format().send(player);
       return;
     }
 
     List<String> lore = meta.getLore();
 
     if (lore == null) {
-      ChatUtil.sendMessage(player, Messages.NOTHING_TO_SELL);
+      Messages.NOTHING_TO_SELL.format().send(player);
       return;
     }
 
     String firstLine = lore.get(0);
 
     if (!firstLine.contains("Generator drop tier")) {
-      ChatUtil.sendMessage(player, Messages.NOTHING_TO_SELL);
+      Messages.NOTHING_TO_SELL.format().send(player);
       return;
     }
 
@@ -141,8 +142,10 @@ public class SellUtil {
     final Economy economy = GensPlus.getInstance().getEcon();
 
     economy.depositPlayer(player, sellAmount);
-    ChatUtil.sendMessage(player,
-        Messages.SUCCESSFULLY_SOLD.replace("%price%", (economy.format(
-            sellAmount))));
+
+    Messages.SUCCESSFULLY_SOLD.format(
+        "price", economy.format(sellAmount))
+        .send(player);
+
   }
 }

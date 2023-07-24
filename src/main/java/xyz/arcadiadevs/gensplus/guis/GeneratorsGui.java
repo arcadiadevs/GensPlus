@@ -14,7 +14,7 @@ import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
 import xyz.arcadiadevs.guilib.ItemBuilder;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.GuiUtil;
 
@@ -102,7 +102,7 @@ public class GeneratorsGui {
 
       menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
         if (generator.price() > economy.getBalance(player)) {
-          ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+          Messages.NOT_ENOUGH_MONEY.format().send(player);
           XSound.ENTITY_VILLAGER_NO.play(player);
           return;
         }
@@ -111,11 +111,11 @@ public class GeneratorsGui {
 
         economy.withdrawPlayer(player, generator.price());
 
-        ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_BOUGHT
-            .replace("%generator%", generator.name())
-            .replace("%tier%", String.valueOf(generator.tier()))
-            .replace("%price%", String.valueOf(generator.price()))
-        );
+        Messages.SUCCESSFULLY_BOUGHT.format(
+            "generator", generator.name(),
+            "tier", generator.tier(),
+            "price", generator.price())
+            .send(player);
 
         XSound.ENTITY_PLAYER_LEVELUP.play(player);
       }));
