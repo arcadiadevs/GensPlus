@@ -20,7 +20,7 @@ import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.GuiUtil;
 
@@ -43,7 +43,7 @@ public class UpgradeGui {
     if (generator.getPlacedBy() != player
         && !player.hasPermission("gensplus.admin")
         && !player.isOp()) {
-      ChatUtil.sendMessage(player, Messages.NOT_YOUR_GENERATOR_UPGRADE);
+      Messages.NOT_YOUR_GENERATOR_UPGRADE.format().send(player);
       return;
     }
 
@@ -62,7 +62,7 @@ public class UpgradeGui {
         instance.getGeneratorsData().getGenerator(current.tier() + 1);
 
     if (nextGenerator == null) {
-      ChatUtil.sendMessage(player, Messages.REACHED_MAX_TIER);
+      Messages.REACHED_MAX_TIER.format().send(player);
       return;
     }
 
@@ -159,7 +159,7 @@ public class UpgradeGui {
         instance.getGeneratorsData().getGenerator(current.tier() + 1);
 
     if (nextGenerator == null) {
-      ChatUtil.sendMessage(player, Messages.REACHED_MAX_TIER);
+      Messages.REACHED_MAX_TIER.format().send(player);
       return;
     }
 
@@ -168,7 +168,7 @@ public class UpgradeGui {
             * currentLoc.getBlockLocations().size();
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
-      ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+      Messages.NOT_ENOUGH_MONEY.format().send(player);
       XSound.ENTITY_VILLAGER_NO.play(player);
       return;
     }
@@ -191,11 +191,16 @@ public class UpgradeGui {
 
     spawnFirework(currentLoc.getCenter());
 
-    ChatUtil.sendMessage(player,
-        Messages.SUCCESSFULLY_UPGRADED
-            .replace("%tier%", String.valueOf(nextGenerator.tier())));
+    Messages.SUCCESSFULLY_UPGRADED.format("tier", nextGenerator.tier()).send(player);
   }
 
+  /**
+   * Upgrades the specified generator to the next tier for the given player.
+   *
+   * @param player       The Player object who is upgrading the generator.
+   * @param currentLoc   The GeneratorLocation representing the generator to be upgraded.
+   * @param clickedBlock The Block object that was clicked to open the upgrade GUI.
+   */
   public static void upgradeGenerator(Player player, LocationsData.GeneratorLocation currentLoc,
                                       Block clickedBlock) {
     final LocationsData locationsData = instance.getLocationsData();
@@ -204,7 +209,7 @@ public class UpgradeGui {
         instance.getGeneratorsData().getGenerator(current.tier() + 1);
 
     if (nextGenerator == null) {
-      ChatUtil.sendMessage(player, Messages.REACHED_MAX_TIER);
+      Messages.REACHED_MAX_TIER.format().send(player);
       return;
     }
 
@@ -212,7 +217,7 @@ public class UpgradeGui {
         instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
-      ChatUtil.sendMessage(player, Messages.NOT_ENOUGH_MONEY);
+      Messages.NOT_ENOUGH_MONEY.format().send(player);
       XSound.ENTITY_VILLAGER_NO.play(player);
       return;
     }
@@ -245,8 +250,7 @@ public class UpgradeGui {
 
     spawnFirework(currentLoc.getCenter());
 
-    ChatUtil.sendMessage(player, Messages.SUCCESSFULLY_UPGRADED
-        .replace("%tier%", String.valueOf(currentLoc.getGenerator() + 1)));
+    Messages.SUCCESSFULLY_UPGRADED.format("tier", nextGenerator.tier()).send(player);
   }
 
   private static void spawnFirework(Location location) {

@@ -12,7 +12,7 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.UpgradeGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.statics.Messages;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 
 public class BlockInteraction implements Listener {
@@ -76,7 +76,7 @@ public class BlockInteraction implements Listener {
       if (generatorLocation.getPlacedBy() != player
           && !player.hasPermission("gensplus.admin")
           && !player.isOp()) {
-        ChatUtil.sendMessage(player, Messages.NOT_YOUR_GENERATOR_UPGRADE);
+        Messages.NOT_YOUR_GENERATOR_UPGRADE.format().send(player);
         return;
       }
       UpgradeGui.upgradeGenerator(player, generatorLocation, block);

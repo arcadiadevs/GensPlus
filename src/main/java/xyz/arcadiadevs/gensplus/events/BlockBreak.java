@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
 import java.util.ArrayList;
-
 import lombok.AllArgsConstructor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -13,9 +12,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.statics.Messages;
 import xyz.arcadiadevs.gensplus.statics.Permissions;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
 
 /**
  * Handles the BlockBreakEvent triggered when a player breaks a block.
@@ -44,7 +42,7 @@ public class BlockBreak implements Listener {
     if (generatorLocation.getPlacedBy() != event.getPlayer()
         && !event.getPlayer().isOp()
         && !event.getPlayer().hasPermission(Permissions.ADMIN)) {
-      ChatUtil.sendMessage(event.getPlayer(), Messages.NOT_YOUR_GENERATOR_DESTROY);
+      Messages.NOT_YOUR_GENERATOR_UPGRADE.format().send(event.getPlayer());
       event.setCancelled(true);
       return;
     }
@@ -80,7 +78,7 @@ public class BlockBreak implements Listener {
     event.setDropItems(false);
 
     // Send a notification to the player
-    ChatUtil.sendMessage(event.getPlayer(), Messages.SUCCESSFULLY_DESTROYED);
+    Messages.SUCCESSFULLY_DESTROYED.format().send(event.getPlayer());
   }
 
 }
