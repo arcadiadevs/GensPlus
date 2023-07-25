@@ -52,6 +52,7 @@ import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.Metrics;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 
 /**
@@ -164,7 +165,7 @@ public final class GensPlus extends JavaPlugin {
   public void onDisable() {
     dataSaveTask.saveBlockDataToJson();
 
-    if (getConfig().getBoolean("developer-options.debug")) {
+    if (getConfig().getBoolean(ConfigPaths.DEVELOPER_OPTIONS.getPath())) {
       // Remove all files
       new File(getDataFolder(), "block_data.json").delete();
       new File(getDataFolder(), "holograms.json").delete();
@@ -209,7 +210,9 @@ public final class GensPlus extends JavaPlugin {
 
     // Start event loop
     new EventLoop(this, events).runTaskLaterAsynchronously(this,
-        TimeUtil.parseTime(getConfig().getString("events.time-between-events")));
+        TimeUtil.parseTime(
+            getConfig().getString(ConfigPaths.EVENTS_TIME_BETWEEN_EVENTS.getPath()))
+    );
   }
 
   /**
@@ -240,18 +243,24 @@ public final class GensPlus extends JavaPlugin {
    */
   private ArrayList<Event> loadGensPlusEvents() {
     ArrayList<Event> events = new ArrayList<>();
-    if (getConfig().getBoolean("events.drop-event.enabled")) {
-      events.add(new DropEvent(getConfig().getLong("events.drop-event.multiplier"),
-          getConfig().getString("events.drop-event.name")));
+    if (getConfig().getBoolean(ConfigPaths.EVENTS_DROP_EVENT_ENABLED.getPath())) {
+      events.add(
+          new DropEvent(getConfig().getLong(ConfigPaths.EVENTS_DROP_EVENT_MULTIPLIER.getPath()),
+              getConfig().getString(ConfigPaths.EVENTS_DROP_EVENT_NAME.getPath())));
     }
-    if (getConfig().getBoolean("events.sell-event.enabled")) {
-      events.add(new SellEvent(getConfig().getLong("events.sell-event.multiplier"),
-          getConfig().getString("events.sell-event.name")));
+
+    if (getConfig().getBoolean(ConfigPaths.EVENTS_SPEED_EVENT_ENABLED.getPath())) {
+      events.add(
+          new SpeedEvent(getConfig().getLong(ConfigPaths.EVENTS_SPEED_EVENT_MULTIPLIER.getPath()),
+              getConfig().getString(ConfigPaths.EVENTS_SPEED_EVENT_NAME.getPath())));
     }
-    if (getConfig().getBoolean("events.speed-event.enabled")) {
-      events.add(new SpeedEvent(getConfig().getLong("events.speed-event.multiplier"),
-          getConfig().getString("events.speed-event.name")));
+
+    if (getConfig().getBoolean(ConfigPaths.EVENTS_SELL_EVENT_ENABLED.getPath())) {
+      events.add(
+          new SellEvent(getConfig().getLong(ConfigPaths.EVENTS_SELL_EVENT_MULTIPLIER.getPath()),
+              getConfig().getString(ConfigPaths.EVENTS_SELL_EVENT_NAME.getPath())));
     }
+
     return events;
   }
 
