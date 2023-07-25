@@ -69,6 +69,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>iridiumdevelopment</id>
+            <url>https://nexus.iridiumdevelopment.net/repository/maven-releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -160,6 +164,11 @@
             <artifactId>api-itemsadder</artifactId>
             <version>3.5.0b</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.iridium</groupId>
+            <artifactId>IridiumSkyblock</artifactId>
+            <version>LATEST</version>
         </dependency>
     </dependencies>
 </project>

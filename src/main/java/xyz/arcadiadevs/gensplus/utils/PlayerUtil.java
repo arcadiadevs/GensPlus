@@ -4,7 +4,7 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.gensplus.GensPlus;
-import xyz.arcadiadevs.gensplus.statics.Permissions;
+import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 
 /**
  * Utility class for handling player-related operations and configurations.
@@ -50,7 +50,7 @@ public class PlayerUtil {
    * @return The multiplier value.
    */
   public static Double getMultiplier(Player player) {
-    return getLimit(player, Permissions.SELL_MULTIPLIER, "multiplier",
+    return getLimit(player, Permissions.SELL_MULTIPLIER.getPermission(), "multiplier",
         "multiplier.default-multiplier");
   }
 
@@ -61,12 +61,12 @@ public class PlayerUtil {
    * @return The generator limit value.
    */
   public static Integer getGeneratorLimit(Player player) {
-    return getLimit(player, Permissions.GENERATOR_LIMIT, "limit-settings",
+    return getLimit(player, Permissions.GENERATOR_LIMIT.getPermission(), "limit-settings",
         "limit-settings.default-limit").intValue();
   }
 
   public static Integer getChunkRadius(Player player) {
-    return getLimit(player, Permissions.CHUNK_RADIUS, "chunk-radius",
+    return getLimit(player, Permissions.CHUNK_RADIUS.getPermission(), "chunk-radius",
         "chunk-radius.default-radius").intValue();
   }
 }

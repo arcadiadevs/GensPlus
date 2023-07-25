@@ -10,7 +10,7 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.statics.Permissions;
+import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
 
@@ -49,7 +49,7 @@ public class Commands implements CommandExecutor {
       return false;
     }
 
-    final boolean adminPermission = player.hasPermission(Permissions.ADMIN);
+    final boolean adminPermission = player.hasPermission(Permissions.ADMIN.getPermission());
 
     if (command.getName().equalsIgnoreCase("gensplus")) {
       if (strings.length == 0) {
@@ -86,7 +86,8 @@ public class Commands implements CommandExecutor {
       }*/
 
       if (strings[0].equalsIgnoreCase("give")) {
-        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE))) {
+        if (!(adminPermission
+            || player.hasPermission(Permissions.GENERATOR_GIVE.getPermission()))) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
         }
@@ -145,7 +146,8 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("giveall")) {
-        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE_ALL))) {
+        if (!(adminPermission
+            || player.hasPermission(Permissions.GENERATOR_GIVE_ALL.getPermission()))) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
         }
@@ -199,7 +201,7 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("generators")) {
-      if (!(adminPermission || player.hasPermission(Permissions.GENERATORS_GUI))) {
+      if (!(adminPermission || player.hasPermission(Permissions.GENERATORS_GUI.getPermission()))) {
         Messages.NO_PERMISSION.format().send(player);
         return true;
       }
@@ -219,7 +221,7 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("all")) {
-        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)) {
+        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL.getPermission())) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
         }
@@ -229,7 +231,7 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("hand")) {
-        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
+        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND.getPermission())) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
         }

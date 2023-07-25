@@ -1,5 +1,7 @@
 package xyz.arcadiadevs.gensplus.events;
 
+import com.iridium.iridiumcore.IridiumCore;
+import com.iridium.iridiumskyblock.IridiumSkyblock;
 import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -78,6 +80,8 @@ public class BlockPlace implements Listener {
         return;
       }
     }
+
+    IridiumSkyblock.getInstance().getIslandManager().getTeamViaNameOrPlayer("").get().getName();
 
     final Player player = event.getPlayer();
 

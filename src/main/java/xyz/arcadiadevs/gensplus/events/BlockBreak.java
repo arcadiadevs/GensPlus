@@ -12,7 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.statics.Permissions;
+import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 
 /**
@@ -41,7 +41,7 @@ public class BlockBreak implements Listener {
 
     if (generatorLocation.getPlacedBy() != event.getPlayer()
         && !event.getPlayer().isOp()
-        && !event.getPlayer().hasPermission(Permissions.ADMIN)) {
+        && !event.getPlayer().hasPermission(Permissions.ADMIN.getPermission())) {
       Messages.NOT_YOUR_GENERATOR_UPGRADE.format().send(event.getPlayer());
       event.setCancelled(true);
       return;

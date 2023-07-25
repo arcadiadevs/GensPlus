@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
-import xyz.arcadiadevs.gensplus.statics.Permissions;
+import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 
 /**
  * The CommandsTabCompletion class implements the TabCompleter interface to provide tab completion
@@ -32,12 +32,12 @@ public class CommandsTabCompletion implements TabCompleter {
                                     @NotNull String s,
                                     @NotNull String[] strings) {
 
-    final boolean adminPermission = commandSender.hasPermission(Permissions.ADMIN);
+    final boolean adminPermission = commandSender.hasPermission(Permissions.ADMIN.getPermission());
 
     if (command.getName().equalsIgnoreCase("gensplus")) {
 
       if (strings.length == 1) {
-        if (!(adminPermission || commandSender.hasPermission(Permissions.ADMIN))) {
+        if (!(adminPermission || commandSender.hasPermission(Permissions.ADMIN.getPermission()))) {
           return null;
         }
 
@@ -45,7 +45,7 @@ public class CommandsTabCompletion implements TabCompleter {
       }
 
       if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("give"))) {
-        if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_GIVE))) {
+        if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_GIVE.getPermission()))) {
           return null;
         }
 
@@ -73,7 +73,7 @@ public class CommandsTabCompletion implements TabCompleter {
       }
 
       if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("giveall"))) {
-        if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_GIVE_ALL))) {
+        if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_GIVE_ALL.getPermission()))) {
           return null;
         }
 
@@ -99,8 +99,8 @@ public class CommandsTabCompletion implements TabCompleter {
         return null;
       }
 
-      if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)
-          || !commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
+      if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL.getPermission())
+          || !commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND.getPermission())) {
         return null;
       }
 
