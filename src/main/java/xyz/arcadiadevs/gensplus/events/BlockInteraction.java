@@ -43,13 +43,6 @@ public class BlockInteraction implements Listener {
     Block block = event.getClickedBlock();
     Player player = event.getPlayer();
 
-    String version = Bukkit.getBukkitVersion();
-    final boolean is1_8 = version.contains("1.8");
-
-    if (!is1_8 && event.getHand().toString().equals("OFF_HAND")) {
-      return;
-    }
-
     if (block == null) {
       return;
     }
