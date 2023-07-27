@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
+import xyz.arcadiadevs.gensplus.utils.WandsUtil;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
@@ -71,6 +72,37 @@ public class Commands implements CommandExecutor {
             "&7- /selldrops hand/all: Sell all drops in your hand or inventory");
         ChatUtil.sendMessage(player,
             "&7- /generators: view all generators");
+        return true;
+      }
+
+      if (strings[0].equalsIgnoreCase("wand")) {
+        if (strings[1].equalsIgnoreCase("sell")) {
+          if (!adminPermission) {
+            Messages.NO_PERMISSION.format().send(player);
+            return true;
+          }
+
+          final Player targetPlayer = Bukkit.getPlayer(strings[2]);
+
+          player.getInventory().addItem(WandsUtil.getSellWand());
+          Messages.SELL_WAND_GIVEN.format().send(player);
+          Messages.SELL_WAND_RECEIVED.format().send(targetPlayer);
+          return true;
+        }
+
+        if (strings[1].equalsIgnoreCase("upgrade")) {
+          if (!adminPermission) {
+            Messages.NO_PERMISSION.format().send(player);
+            return true;
+          }
+
+          final Player targetPlayer = Bukkit.getPlayer(strings[2]);
+
+          player.getInventory().addItem(WandsUtil.getUpgradeWand());
+          Messages.UPGRADE_WAND_GIVEN.format().send(player);
+          Messages.UPGRADE_WAND_RECEIVED.format().send(targetPlayer);
+          return true;
+        }
         return true;
       }
 

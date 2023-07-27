@@ -63,6 +63,12 @@ public enum Messages {
   ),
   ONLY_PLAYER_CAN_EXECUTE_COMMAND("only-player-can-execute-command",
       "&cError> &7Only a player can execute this command!"
+  ),
+  SELL_WAND_GIVEN("sell-wand-given", "&9GensPlus> &7You have been given a sell wand!"),
+  SELL_WAND_RECEIVED("sell-wand-received", "&9GensPlus> &7You have received a sell wand!"),
+  UPGRADE_WAND_GIVEN("upgrade-wand-given", "&9GensPlus> &7You have been given an upgrade wand!"),
+  UPGRADE_WAND_RECEIVED("upgrade-wand-received",
+      "&9GensPlus> &7You have received an upgrade wand!"
   );
 
   private final String key;

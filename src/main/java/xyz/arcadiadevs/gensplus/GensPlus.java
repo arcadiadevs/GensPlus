@@ -273,7 +273,7 @@ public final class GensPlus extends JavaPlugin {
    */
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
-    List<Map<?, ?>> generatorsConfig = getConfig().getMapList("generators");
+    List<Map<?, ?>> generatorsConfig = getConfig().getMapList(ConfigPaths.GENERATORS.getPath());
 
     for (Map<?, ?> generator : generatorsConfig) {
       final String name = (String) generator.get("name");
@@ -287,7 +287,7 @@ public final class GensPlus extends JavaPlugin {
       String blockType = (String) generator.get("blockType");
       List<String> lore =
           ((List<String>) generator.get("lore")).isEmpty() ? getConfig().getStringList(
-              "default-lore") : (List<String>) generator.get("lore");
+              ConfigPaths.DEFAULT_LORE.getPath()) : (List<String>) generator.get("lore");
 
       lore = lore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
           .map(s -> s.replace("%speed%", String.valueOf(speed)))
@@ -330,7 +330,7 @@ public final class GensPlus extends JavaPlugin {
       List<String> spawnLore = new ArrayList<>();
 
       List<String> itemSpawnLore = ((List<String>) generator.get("itemSpawnLore")).isEmpty()
-          ? getConfig().getStringList("default-item-spawn-lore")
+          ? getConfig().getStringList(ConfigPaths.DEFAULT_ITEM_SPAWN_LORE.getPath())
           : (List<String>) generator.get("itemSpawnLore");
 
       String formattedSellPrice = econ.format(sellPrice);
@@ -358,12 +358,12 @@ public final class GensPlus extends JavaPlugin {
 
   private void loadHolograms() {
     hologramPool = hologramPool == null
-        ? new HologramPool(this, getConfig().getInt("holograms.view-distance", 2000))
+        ? new HologramPool(this, getConfig().getInt(ConfigPaths.HOLOGRAMS_VIEW_DISTANCE.getPath(), 2000))
         : hologramPool;
 
     placeholders = new Placeholders();
 
-    if (!GensPlus.getInstance().getConfig().getBoolean("holograms.enabled")) {
+    if (!GensPlus.getInstance().getConfig().getBoolean(ConfigPaths.HOLOGRAMS_ENABLED.getPath())) {
       return;
     }
 

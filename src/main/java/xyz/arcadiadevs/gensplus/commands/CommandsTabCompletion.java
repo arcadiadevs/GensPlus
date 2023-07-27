@@ -34,7 +34,9 @@ public class CommandsTabCompletion implements TabCompleter {
 
     final boolean adminPermission = commandSender.hasPermission(Permissions.ADMIN.getPermission());
 
-    if (command.getName().equalsIgnoreCase("gensplus")) {
+    if (command.getName().equalsIgnoreCase("gensplus")
+        || command.getName().equalsIgnoreCase("gens")
+        || command.getName().equalsIgnoreCase("gp")) {
 
       if (strings.length == 1) {
         if (!(adminPermission || commandSender.hasPermission(Permissions.ADMIN.getPermission()))) {
@@ -45,7 +47,8 @@ public class CommandsTabCompletion implements TabCompleter {
       }
 
       if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("give"))) {
-        if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_GIVE.getPermission()))) {
+        if (!(adminPermission
+            || commandSender.hasPermission(Permissions.GENERATOR_GIVE.getPermission()))) {
           return null;
         }
 
@@ -73,7 +76,8 @@ public class CommandsTabCompletion implements TabCompleter {
       }
 
       if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("giveall"))) {
-        if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_GIVE_ALL.getPermission()))) {
+        if (!(adminPermission
+            || commandSender.hasPermission(Permissions.GENERATOR_GIVE_ALL.getPermission()))) {
           return null;
         }
 
@@ -88,6 +92,16 @@ public class CommandsTabCompletion implements TabCompleter {
 
         if (strings.length == 3) {
           return List.of("[amount]");
+        }
+      }
+
+      if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("wand"))) {
+        if (!(adminPermission || commandSender.hasPermission(Permissions.ADMIN.getPermission()))) {
+          return null;
+        }
+
+        if (strings.length == 2) {
+          return List.of("sell", "upgrade");
         }
       }
 

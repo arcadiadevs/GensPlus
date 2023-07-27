@@ -88,6 +88,42 @@ multiplier:
   # The default multiplier for all players
   default-multiplier: 1
 
+wands:
+  sell-wand:
+    enabled: true
+
+    # The material of the sell wand
+    material: "BLAZE_ROD"
+
+    # The name of the sell wand
+    name: "&e&lSell Wand"
+
+    # The lore of the sell wand
+    lore:
+      - ""
+      - "&7Right click on a chest or a hopper to sell all drops!"
+      - "&e⌈ &fUses: &a%uses%"
+      - "&e⌊ &fMultiplier: &a%multiplier%"
+      - ""
+
+  upgrade-wand:
+    enabled: true
+
+    # The material of the upgrade wand
+    material: "STICK"
+
+    # The name of the upgrade wand
+    name: "&e&lUpgrade Wand"
+
+    # The lore of the upgrade wand
+    lore:
+      - ""
+      - "&7Right click on a generator to upgrade it!"
+      - "&e⌈ &fUses: &a%uses%"
+      - "&eⅠ Radius: &a%radius%"
+      - "&e⌊ &fMultiplier: &a%multiplier%"
+      - ""
+
 guis:
   # Gui to view generators by a command
   generators-gui:
