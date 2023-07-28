@@ -210,7 +210,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new EggTeleport(locationsData));
     events.add(new BeaconInteraction(locationsData));
     events.add(new EntityExplode(locationsData, generatorsData));
-    events.add(new OnWandUse(wandData));
+    events.add(new OnWandUse());
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }

@@ -1,7 +1,7 @@
 package xyz.arcadiadevs.gensplus.utils;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Material;
@@ -26,7 +26,6 @@ public class WandsUtil {
    * @return The ItemStack representing the sell wand.
    */
   public static ItemStack getSellWand(int uses, double multiplier) {
-
     WandData wandData = GensPlus.getInstance().getWandData();
     WandData.Wand wand = wandData.create(WandData.Wand.WandType.SELL_WAND, uses, multiplier, 0);
 
@@ -40,7 +39,11 @@ public class WandsUtil {
         .name(ChatUtil.translate(config.getString("wands.sell-wand.name")))
         .lore(lore);
 
-    return itemBuilder.build();
+    ItemStack item = itemBuilder.build();
+
+    item = NBTEditor.set(item, UUID.randomUUID().toString(), "sell-wand");
+
+    return item;
   }
 
   /**
@@ -64,6 +67,10 @@ public class WandsUtil {
         .name(ChatUtil.translate(config.getString("wands.upgrade-wand.name")))
         .lore(lore);
 
-    return itemBuilder.build();
+    ItemStack item = itemBuilder.build();
+
+    item = NBTEditor.set(item, UUID.randomUUID().toString(), "upgrade-wand");
+
+    return item;
   }
 }

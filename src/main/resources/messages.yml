@@ -18,7 +18,7 @@ event-ended: "&9GensPlus> &7%event% has ended and new event will be started in &
 # [generators]
 successfully-upgraded: "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"
 successfully-sold: "&9GensPlus> &7Successfully sold drops for &a%price%"
-not-enough-money: "&cError> &7You don't have enough money to do that!"
+not-enough-money: "&cError> &7You don't have enough money to do that! %currentBalance%/%price%"
 nothing-to-sell: "&cError> &7You don't have any drops to sell!"
 invalid-generator-tier: "&cError> &7Invalid generator tier!"
 successfully-destroyed: "&9GensPlus> &7Successfully destroyed generator!"

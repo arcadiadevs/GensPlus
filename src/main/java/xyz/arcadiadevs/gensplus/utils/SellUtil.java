@@ -5,6 +5,7 @@ import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
@@ -92,7 +93,13 @@ public class SellUtil {
     sellAmounts.remove(player);
   }
 
-  public static void sellWand(List<ItemStack> items, Player player) {
+  /**
+   * Sells generator drops for a player.
+   *
+   * @param player    The player who wants to sell their generator drops.
+   * @param inventory The inventory to sell from.
+   */
+  public static void sellWand(Player player, Inventory inventory) {
     int totalSellAmount = 0;
     final HashMap<Player, Double> sellAmounts = new HashMap<>();
     final ActiveEvent event = EventLoop.getActiveEvent();
@@ -101,11 +108,13 @@ public class SellUtil {
         ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
         : 1.0 * PlayerUtil.getMultiplier(player));
 
-    if (items == null) {
-      return;
-    }
+    for (int i = 0; i < inventory.getSize(); i++) {
+      ItemStack item = inventory.getItem(i);
 
-    for (ItemStack item : items) {
+      if (item == null) {
+        continue;
+      }
+
       ItemMeta meta = item.getItemMeta();
 
       if (meta == null) {
@@ -133,8 +142,8 @@ public class SellUtil {
         final double itemAmount = item.getAmount();
         final double sellPrice = generator.sellPrice();
         double sellAmount = (sellPrice * itemAmount * multiplier);
-        item.setType(null);
         totalSellAmount += sellAmount;
+        inventory.removeItem(item);
         sellAmounts.put(player, sellAmounts.getOrDefault(player, 0.0) + sellAmount);
       }
     }

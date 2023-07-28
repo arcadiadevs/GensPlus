@@ -173,7 +173,11 @@ public class UpgradeGui {
             * currentLoc.getBlockLocations().size();
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
-      Messages.NOT_ENOUGH_MONEY.format().send(player);
+      Messages.NOT_ENOUGH_MONEY.format(
+              "currentBalance", instance.getEcon().getBalance(player),
+              "price", instance.getEcon().format(upgradePrice))
+          .send(player);
+
       XSound.ENTITY_VILLAGER_NO.play(player);
       return;
     }
@@ -222,7 +226,11 @@ public class UpgradeGui {
         instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
-      Messages.NOT_ENOUGH_MONEY.format().send(player);
+      Messages.NOT_ENOUGH_MONEY.format(
+              "currentBalance", instance.getEcon().getBalance(player),
+              "price", instance.getEcon().format(upgradePrice))
+          .send(player);
+
       XSound.ENTITY_VILLAGER_NO.play(player);
       return;
     }

@@ -107,7 +107,7 @@ public class GeneratorsGui {
         if (generator.price() > economy.getBalance(player)) {
           Messages.NOT_ENOUGH_MONEY.format(
               "currentBalance", economy.getBalance(player),
-              "price", generator.price())
+              "price", economy.currencyNameSingular() + generator.price())
               .send(player);
 
           XSound.ENTITY_VILLAGER_NO.play(player);
