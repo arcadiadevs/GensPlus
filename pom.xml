@@ -73,6 +73,10 @@
             <id>iridiumdevelopment</id>
             <url>https://nexus.iridiumdevelopment.net/repository/maven-releases/</url>
         </repository>
+        <repository>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -169,6 +173,11 @@
             <groupId>com.iridium</groupId>
             <artifactId>IridiumSkyblock</artifactId>
             <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bananapuncher714</groupId>
+            <artifactId>nbteditor</artifactId>
+            <version>7.18.5</version>
         </dependency>
     </dependencies>
 </project>

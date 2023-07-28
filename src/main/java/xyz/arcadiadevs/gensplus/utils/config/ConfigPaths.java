@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.utils.config;
 
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
 import java.util.Map;
 import lombok.Getter;
