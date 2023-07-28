@@ -28,6 +28,7 @@ public class DataSaveTask extends BukkitRunnable {
   @Override
   public void run() {
     saveBlockDataToJson();
+    saveWandDataToJson();
   }
 
   /**
@@ -35,8 +36,16 @@ public class DataSaveTask extends BukkitRunnable {
    * it to a file.
    */
   public void saveBlockDataToJson() {
-    try (FileWriter writer = new FileWriter(instance.getDataFolder() + "/block_data.json")) {
+    try (FileWriter writer = new FileWriter(instance.getDataFolder() + "/data/block_data.json")) {
       instance.getGson().toJson(instance.getLocationsData().locations(), writer);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void saveWandDataToJson() {
+    try (FileWriter writer = new FileWriter(instance.getDataFolder() + "/data/wands_data.json")) {
+      instance.getGson().toJson(instance.getWandData().wands(), writer);
     } catch (IOException e) {
       e.printStackTrace();
     }

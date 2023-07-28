@@ -31,6 +31,7 @@ import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 
 /**
  * Represents the data of all the generator locations in the server.
@@ -173,7 +174,8 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       }
 
       List<String> lines = ((List<String>) matchingGeneratorConfig.get("hologramLines")).isEmpty()
-          ? GensPlus.getInstance().getConfig().getStringList("default-hologram-lines")
+          ? GensPlus.getInstance().getConfig()
+          .getStringList(ConfigPaths.DEFAULT_HOLOGRAM_LINES.getPath())
           : (List<String>) matchingGeneratorConfig.get("hologramLines");
 
       lines = lines
@@ -247,7 +249,8 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
 
       final GensPlus instance = GensPlus.getInstance();
 
-      if (!hasPlayer() && instance.getConfig().getBoolean("chunk-radius.enabled")) {
+      if (!hasPlayer()
+          && instance.getConfig().getBoolean(ConfigPaths.CHUNK_RADIUS_ENABLED.getPath())) {
         return;
       }
 
@@ -276,7 +279,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       }
 
       final long ticks = TimeUtil.parseTime(
-          GensPlus.getInstance().getConfig().getString("item-despawn-time"));
+          GensPlus.getInstance().getConfig().getString(ConfigPaths.ITEM_DESPAWN_TIME.getPath()));
 
       Bukkit.getScheduler().runTaskLater(GensPlus.getInstance(), () -> {
         getWorld().getEntities().stream()

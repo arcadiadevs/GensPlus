@@ -1,10 +1,8 @@
 package xyz.arcadiadevs.gensplus.guis;
 
 import com.cryptomorin.xseries.XSound;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Location;
@@ -15,21 +13,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.models.GeneratorsData;
+import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.utils.ChatUtil;
+import xyz.arcadiadevs.gensplus.utils.GuiUtil;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
-import xyz.arcadiadevs.gensplus.models.GeneratorsData;
-import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
-import xyz.arcadiadevs.gensplus.utils.GuiUtil;
 
 /**
  * The UpgradeGui class provides functionality for opening the upgrade GUI for generators in
  * GensPlus. It allows players to upgrade their generators to the next tier.
  */
 public class UpgradeGui {
-
   private static final GensPlus instance = GensPlus.getInstance();
 
   /**
@@ -41,7 +40,7 @@ public class UpgradeGui {
   public static void open(Player player, LocationsData.GeneratorLocation generator,
                           Block clickedBlock) {
     if (generator.getPlacedBy() != player
-        && !player.hasPermission("gensplus.admin")
+        && !player.hasPermission(Permissions.ADMIN.getPermission())
         && !player.isOp()) {
       Messages.NOT_YOUR_GENERATOR_UPGRADE.format().send(player);
       return;
@@ -50,9 +49,9 @@ public class UpgradeGui {
     final FileConfiguration config = instance.getConfig();
     final Economy economy = instance.getEcon();
 
-    final var rows = config.getInt("guis.upgrade-gui.rows");
+    final var rows = config.getInt(ConfigPaths.GUIS_UPGRADE_GUI_ROWS.getPath());
     final var menu = new Gui(
-        ChatUtil.translate(config.getString("guis.upgrade-gui.title")),
+        ChatUtil.translate(config.getString(ConfigPaths.GUIS_UPGRADE_GUI_TITLE.getPath())),
         rows,
         instance
     );
@@ -70,11 +69,14 @@ public class UpgradeGui {
     final ItemMeta itemMetaUpgradeOne = itemStackUpgradeOne.getItemMeta();
 
     itemMetaUpgradeOne.setDisplayName(ChatUtil.translate(config.getString(
-        "guis.upgrade-gui.upgradeOne.first-line")));
+        ConfigPaths.GUIS_UPGRADE_GUI_UPGRADE_ONE_FIRST_LINE.getPath()))
+    );
 
     double price = instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
-    List<String> lore = config.getStringList("guis.upgrade-gui.upgradeOne.lore");
+    List<String> lore =
+        config.getStringList(ConfigPaths.GUIS_UPGRADE_GUI_UPGRADE_ONE_LORE.getPath());
+
     lore = lore.stream()
         .map(s -> s.replace("%tier%", String.valueOf(current.tier())))
         .map(s -> s.replace("%speed%", String.valueOf(current.speed())))
@@ -100,9 +102,12 @@ public class UpgradeGui {
     final ItemMeta itemMetaUpgradeAll = itemStackUpgradeAll.getItemMeta();
 
     itemMetaUpgradeAll.setDisplayName(ChatUtil.translate(config.getString(
-        "guis.upgrade-gui.upgradeAll.first-line")));
+        ConfigPaths.GUIS_UPGRADE_GUI_UPGRADE_ALL_FIRST_LINE.getPath()))
+    );
 
-    List<String> loreAll = config.getStringList("guis.upgrade-gui.upgradeAll.lore");
+    List<String> loreAll =
+        config.getStringList(ConfigPaths.GUIS_UPGRADE_GUI_UPGRADE_ALL_LORE.getPath());
+
     double priceForAll = price * generator.getBlockLocations().size();
     loreAll = loreAll.stream()
         .map(s -> s.replace("%tier%", String.valueOf(current.tier())))
@@ -168,7 +173,11 @@ public class UpgradeGui {
             * currentLoc.getBlockLocations().size();
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
-      Messages.NOT_ENOUGH_MONEY.format().send(player);
+      Messages.NOT_ENOUGH_MONEY.format(
+              "currentBalance", instance.getEcon().getBalance(player),
+              "price", instance.getEcon().format(upgradePrice))
+          .send(player);
+
       XSound.ENTITY_VILLAGER_NO.play(player);
       return;
     }
@@ -217,7 +226,11 @@ public class UpgradeGui {
         instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
-      Messages.NOT_ENOUGH_MONEY.format().send(player);
+      Messages.NOT_ENOUGH_MONEY.format(
+              "currentBalance", instance.getEcon().getBalance(player),
+              "price", instance.getEcon().format(upgradePrice))
+          .send(player);
+
       XSound.ENTITY_VILLAGER_NO.play(player);
       return;
     }
@@ -255,15 +268,15 @@ public class UpgradeGui {
 
   private static void spawnFirework(Location location) {
     FileConfiguration config = GensPlus.getInstance().getConfig();
-    XSound.matchXSound(config.getString("particles.sound"))
+    XSound.matchXSound(config.getString(ConfigPaths.PARTICLES_SOUND.getPath()))
         .orElse(XSound.ENTITY_FIREWORK_ROCKET_BLAST)
         .play(location);
 
-    if (!config.getBoolean("particles.enabled")) {
+    if (!config.getBoolean(ConfigPaths.PARTICLES_ENABLED.getPath())) {
       return;
     }
 
-    String particle = config.getString("particles.type");
+    String particle = config.getString(ConfigPaths.PARTICLES_TYPE.getPath());
     location.getWorld()
         .spawnParticle(
             Particle.valueOf(particle),

@@ -9,8 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
+import xyz.arcadiadevs.gensplus.utils.WandsUtil;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.statics.Permissions;
+import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
 
@@ -49,7 +51,7 @@ public class Commands implements CommandExecutor {
       return false;
     }
 
-    final boolean adminPermission = player.hasPermission(Permissions.ADMIN);
+    final boolean adminPermission = player.hasPermission(Permissions.ADMIN.getPermission());
 
     if (command.getName().equalsIgnoreCase("gensplus")) {
       if (strings.length == 0) {
@@ -74,6 +76,62 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
+      if (strings[0].equalsIgnoreCase("wand")) {
+        if (strings[1].equalsIgnoreCase("sell")) {
+          if (!adminPermission) {
+            Messages.NO_PERMISSION.format().send(player);
+            return true;
+          }
+
+          if (strings.length < 5) {
+            Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
+            return true;
+          }
+
+          if (!strings[3].matches("\\d+") || !strings[4].matches("\\d+")) {
+            Messages.INVALID_FORMAT.format().send(player);
+            return true;
+          }
+
+          final Player targetPlayer = Bukkit.getPlayer(strings[2]);
+
+          player.getInventory().addItem(WandsUtil.getSellWand(Integer.parseInt(strings[3]),
+              Double.parseDouble(strings[4])));
+          Messages.SELL_WAND_GIVEN.format().send(player);
+          Messages.SELL_WAND_RECEIVED.format().send(targetPlayer);
+          return true;
+        }
+
+        if (strings[1].equalsIgnoreCase("upgrade")) {
+          if (!adminPermission) {
+            Messages.NO_PERMISSION.format().send(player);
+            return true;
+          }
+
+          if (strings.length < 6) {
+            Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
+            return true;
+          }
+
+          if (!strings[3].matches("\\d+") || !strings[4].matches("\\d+")
+              || !strings[5].matches("\\d+")) {
+            Messages.INVALID_FORMAT.format().send(player);
+            return true;
+          }
+
+
+          final Player targetPlayer = Bukkit.getPlayer(strings[2]);
+
+          player.getInventory().addItem(
+              WandsUtil.getUpgradeWand(Integer.parseInt(strings[3]), Double.parseDouble(strings[4]),
+                  Integer.parseInt(strings[5])));
+          Messages.UPGRADE_WAND_GIVEN.format().send(player);
+          Messages.UPGRADE_WAND_RECEIVED.format().send(targetPlayer);
+          return true;
+        }
+        return true;
+      }
+
       /*if (strings[0].equalsIgnoreCase("reload")) {
         if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_RELOAD))) {
           ChatUtil.sendMessage(player, Messages.NO_PERMISSION);
@@ -86,7 +144,8 @@ public class Commands implements CommandExecutor {
       }*/
 
       if (strings[0].equalsIgnoreCase("give")) {
-        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE))) {
+        if (!(adminPermission
+            || player.hasPermission(Permissions.GENERATOR_GIVE.getPermission()))) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
         }
@@ -145,7 +204,8 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("giveall")) {
-        if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_GIVE_ALL))) {
+        if (!(adminPermission
+            || player.hasPermission(Permissions.GENERATOR_GIVE_ALL.getPermission()))) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
         }
@@ -199,7 +259,7 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("generators")) {
-      if (!(adminPermission || player.hasPermission(Permissions.GENERATORS_GUI))) {
+      if (!(adminPermission || player.hasPermission(Permissions.GENERATORS_GUI.getPermission()))) {
         Messages.NO_PERMISSION.format().send(player);
         return true;
       }
@@ -209,7 +269,8 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      if (!GensPlus.getInstance().getConfig().getBoolean("sell-command.enabled")) {
+      if (!GensPlus.getInstance().getConfig()
+          .getBoolean(ConfigPaths.SELL_COMMAND_ENABLED.getPath())) {
         return true;
       }
 
@@ -219,7 +280,7 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("all")) {
-        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL)) {
+        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL.getPermission())) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
         }
@@ -229,7 +290,7 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("hand")) {
-        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND)) {
+        if (!player.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND.getPermission())) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
         }

@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 
 /**
@@ -60,7 +60,8 @@ public class BlockPlace implements Listener {
 
     final FileConfiguration config = GensPlus.getInstance().getConfig();
 
-    if (firstLine.contains("Generator drop tier") && !config.getBoolean("can-drops-be-placed")) {
+    if (firstLine.contains("Generator drop tier") &&
+        !config.getBoolean(ConfigPaths.CAN_DROPS_BE_PLACED.getPath())) {
       event.setCancelled(true);
       return;
     }
@@ -69,7 +70,7 @@ public class BlockPlace implements Listener {
       return;
     }
 
-    final List<String> disabledWorlds = config.getStringList("disabled-worlds");
+    final List<String> disabledWorlds = config.getStringList(ConfigPaths.DISABLED_WORLDS.getPath());
 
     for (String world : disabledWorlds) {
       if (event.getBlockPlaced().getWorld().getName().equals(world)) {
@@ -79,11 +80,13 @@ public class BlockPlace implements Listener {
       }
     }
 
+    //IridiumSkyblock.getInstance().getIslandManager().getTeamViaNameOrPlayer("").get().getName();
+
     final Player player = event.getPlayer();
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
     final int limit = PlayerUtil.getGeneratorLimit(player);
-    final boolean enabled = config.getBoolean("limit-settings.enabled");
+    final boolean enabled = config.getBoolean(ConfigPaths.LIMIT_SETTINGS_ENABLED.getPath());
 
     if (locationsData.getGeneratorsCountByPlayer(player) >= limit
         && enabled) {

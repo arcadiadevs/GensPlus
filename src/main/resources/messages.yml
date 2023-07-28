@@ -5,6 +5,7 @@ config-reloaded: "&9GensPlus> &7Configuration reloaded."
 player-not-found: "&cError> &7Player not found!"
 not-enough-arguments: "&cError> &7Not enough arguments!"
 only-player-can-execute-command: "&cError> &7Only player can execute this command!"
+invalid-format: "&cError> &7Invalid format!"
 
 # [limit-settings]
 limit-reached: "&cError> &7You have reached the limit of &c%limit% &7generators!"
@@ -17,7 +18,7 @@ event-ended: "&9GensPlus> &7%event% has ended and new event will be started in &
 # [generators]
 successfully-upgraded: "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"
 successfully-sold: "&9GensPlus> &7Successfully sold drops for &a%price%"
-not-enough-money: "&cError> &7You don't have enough money to do that!"
+not-enough-money: "&cError> &7You don't have enough money to do that! %currentBalance%/%price%"
 nothing-to-sell: "&cError> &7You don't have any drops to sell!"
 invalid-generator-tier: "&cError> &7Invalid generator tier!"
 successfully-destroyed: "&9GensPlus> &7Successfully destroyed generator!"
@@ -31,3 +32,9 @@ not-your-generator-upgrade: "&cError> &7You cannot upgrade generator that is not
 generator-given: "&9GensPlus> &7You gave &a%amount% &7generator(s) of tier &a%tier% &7to &a%targetPlayer%"
 generator-given-all: "&9GensPlus> &7You gave &a%amount% &7generator of tier &a%tier% &7to all players! (&a%count%&7)"
 generator-received: "&9GensPlus> &7You received &a%amount% &7generator(s) of tier &a%tier%"
+
+# [wands]
+sell-wand-given: "&9GensPlus> &7You have been given a sell wand!"
+sell-wand-received: "&9GensPlus> &7You have received a sell wand!"
+upgrade-wand-given: "&9GensPlus> &7You have been given a upgrade wand!"
+upgrade-wand-received: "&9GensPlus> &7You have received an upgrade wand!"

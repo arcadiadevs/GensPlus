@@ -4,7 +4,8 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.gensplus.GensPlus;
-import xyz.arcadiadevs.gensplus.statics.Permissions;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 
 /**
  * Utility class for handling player-related operations and configurations.
@@ -50,8 +51,8 @@ public class PlayerUtil {
    * @return The multiplier value.
    */
   public static Double getMultiplier(Player player) {
-    return getLimit(player, Permissions.SELL_MULTIPLIER, "multiplier",
-        "multiplier.default-multiplier");
+    return getLimit(player, Permissions.SELL_MULTIPLIER.getPermission(), "multiplier",
+        ConfigPaths.MULTIPLIER_DEFAULT_MULTIPLIER.getPath());
   }
 
   /**
@@ -61,12 +62,12 @@ public class PlayerUtil {
    * @return The generator limit value.
    */
   public static Integer getGeneratorLimit(Player player) {
-    return getLimit(player, Permissions.GENERATOR_LIMIT, "limit-settings",
-        "limit-settings.default-limit").intValue();
+    return getLimit(player, Permissions.GENERATOR_LIMIT.getPermission(), "limit-settings",
+        ConfigPaths.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath()).intValue();
   }
 
   public static Integer getChunkRadius(Player player) {
-    return getLimit(player, Permissions.CHUNK_RADIUS, "chunk-radius",
-        "chunk-radius.default-radius").intValue();
+    return getLimit(player, Permissions.CHUNK_RADIUS.getPermission(), "chunk-radius",
+        ConfigPaths.CHUNK_RADIUS_DEFAULT_RADIUS.getPath()).intValue();
   }
 }

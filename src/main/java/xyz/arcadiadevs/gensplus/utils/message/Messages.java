@@ -14,10 +14,12 @@ import xyz.arcadiadevs.gensplus.GensPlus;
  */
 public enum Messages {
 
+  // List of Messages with their corresponding default values
   NO_PERMISSION("no-permission", "&cError> &7You don't have permission to do that!"),
   CONFIG_RELOADED("config-reloaded", "&9GensPlus> &7Configuration reloaded."),
   PLAYER_NOT_FOUND("player-not-found", "&cError> &7Player not found!"),
   INVALID_GENERATOR_TIER("invalid-generator-tier", "&cError> &7Invalid generator tier!"),
+  INVALID_FORMAT("invalid-format", "&cError> &7Invalid format!"),
   GENERATOR_GIVEN("generator-given",
       "&9GensPlus> &7You gave &a%amount% &7generator(s) of tier &a%tier% &7to &a%targetPlayer%"),
   GENERATOR_RECEIVED("generator-received",
@@ -30,7 +32,8 @@ public enum Messages {
   SUCCESSFULLY_UPGRADED("successfully-upgraded",
       "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"),
   SUCCESSFULLY_SOLD("successfully-sold", "&9GensPlus> &7Successfully sold drops for &a%price%"),
-  NOT_ENOUGH_MONEY("not-enough-money", "&cError> &7You don't have enough money to do that!"),
+  NOT_ENOUGH_MONEY("not-enough-money",
+      "&cError> &7You don't have enough money to do that! (%currentBalance%/&a%price%&7)"),
   NOTHING_TO_SELL("nothing-to-sell", "&cError> &7You don't have any drops to sell!"),
   SUCCESSFULLY_DESTROYED("successfully-destroyed",
       "&9GensPlus> &7Successfully destroyed generator!"
@@ -62,6 +65,12 @@ public enum Messages {
   ),
   ONLY_PLAYER_CAN_EXECUTE_COMMAND("only-player-can-execute-command",
       "&cError> &7Only a player can execute this command!"
+  ),
+  SELL_WAND_GIVEN("sell-wand-given", "&9GensPlus> &7You have been given a sell wand!"),
+  SELL_WAND_RECEIVED("sell-wand-received", "&9GensPlus> &7You have received a sell wand!"),
+  UPGRADE_WAND_GIVEN("upgrade-wand-given", "&9GensPlus> &7You have been given an upgrade wand!"),
+  UPGRADE_WAND_RECEIVED("upgrade-wand-received",
+      "&9GensPlus> &7You have received an upgrade wand!"
   );
 
   private final String key;
@@ -90,27 +99,50 @@ public enum Messages {
     this.defaultMessage = defaultMessage;
   }
 
+  /**
+   * Returns the path of the message.
+   *
+   * @return The path of the message.
+   */
   public String getPath() {
     return name().toLowerCase().replace("_", "-");
   }
 
   /**
-   * Deep Copy !!
+   * Returns a cached list containing the default message.
    *
-   * @return Message updated based on what's in the config files
+   * @return A list containing the default message.
    */
   public List<String> getCached() {
     return new ArrayList<>(Collections.singletonList(defaultMessage));
   }
 
+  /**
+   * Formats the message with provided placeholders.
+   *
+   * @param placeholders The values to replace the placeholders in the message.
+   * @return A formatted PlayerMessage with the placeholders replaced.
+   */
   public PlayerMessage format(Object... placeholders) {
     return new PlayerMessage(this).format(placeholders);
   }
 
+  /**
+   * Returns the default message for this enum constant.
+   *
+   * @return The default message.
+   */
   public String getDefaultMessage() {
     return defaultMessage;
   }
 
+  /**
+   * Returns the message with placeholders replaced by provided values.
+   *
+   * @param replacements Pairs of placeholder-replacement values
+   *                     (in the format of [placeholder, replacement]).
+   * @return The message with placeholders replaced.
+   */
   public String getMessage(String... replacements) {
     String message = defaultMessage;
     for (int i = 0; i < replacements.length - 1; i += 2) {

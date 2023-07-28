@@ -9,6 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
@@ -34,20 +35,20 @@ public class GeneratorsGui {
     final var config = instance.getConfig();
     final Economy economy = instance.getEcon();
 
-    if (!config.getBoolean("guis.generators-gui.enabled")) {
+    if (!config.getBoolean(ConfigPaths.GUIS_GENERATORS_GUI_ENABLED.getPath())) {
       return;
     }
 
-    final var rows = config.getInt("guis.generators-gui.rows");
+    final var rows = config.getInt(ConfigPaths.GUIS_GENERATORS_GUI_ROWS.getPath());
 
     final var menu = new Gui(
-        ChatUtil.translate(config.getString("guis.generators-gui.title")),
+        ChatUtil.translate(config.getString(ConfigPaths.GUIS_GENERATORS_GUI_TITLE.getPath())),
         rows,
         instance
     );
 
     GeneratorsData generatorsData = instance.getGeneratorsData();
-    List<Map<?, ?>> generatorsConfig = config.getMapList("generators");
+    List<Map<?, ?>> generatorsConfig = config.getMapList(ConfigPaths.GENERATORS.getPath());
 
     for (GeneratorsData.Generator generator : generatorsData.getGenerators()) {
       final ItemStack material = new ItemStack(generator.blockType());
@@ -80,8 +81,10 @@ public class GeneratorsGui {
           .lore(lore)
           .build();
 
-      if (config.getBoolean("guis.generators-gui.border.enabled")) {
-        GuiUtil.addBorder(menu, config.getString("guis.generators-gui.border.material"));
+      if (config.getBoolean(ConfigPaths.GUIS_GENERATORS_GUI_BORDER_ENABLED.getPath())) {
+        GuiUtil.addBorder(menu,
+            config.getString(ConfigPaths.GUIS_GENERATORS_GUI_BORDER_MATERIAL.getPath())
+        );
       }
 
       ItemStack nextPage = new ItemBuilder(XMaterial.ARROW.parseItem())
@@ -102,7 +105,11 @@ public class GeneratorsGui {
 
       menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
         if (generator.price() > economy.getBalance(player)) {
-          Messages.NOT_ENOUGH_MONEY.format().send(player);
+          Messages.NOT_ENOUGH_MONEY.format(
+              "currentBalance", economy.getBalance(player),
+              "price", economy.currencyNameSingular() + generator.price())
+              .send(player);
+
           XSound.ENTITY_VILLAGER_NO.play(player);
           return;
         }
@@ -112,9 +119,9 @@ public class GeneratorsGui {
         economy.withdrawPlayer(player, generator.price());
 
         Messages.SUCCESSFULLY_BOUGHT.format(
-            "generator", generator.name(),
-            "tier", generator.tier(),
-            "price", generator.price())
+                "generator", generator.name(),
+                "tier", generator.tier(),
+                "price", generator.price())
             .send(player);
 
         XSound.ENTITY_PLAYER_LEVELUP.play(player);
