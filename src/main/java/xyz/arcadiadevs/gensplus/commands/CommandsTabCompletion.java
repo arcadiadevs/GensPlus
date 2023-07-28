@@ -44,7 +44,7 @@ public class CommandsTabCompletion implements TabCompleter {
           return null;
         }
 
-        return List.of("help", "give", "giveall");
+        return List.of("help", "give", "giveall", "wand");
       }
 
       if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("give"))) {
@@ -104,13 +104,36 @@ public class CommandsTabCompletion implements TabCompleter {
         if (strings.length == 2) {
           return List.of("sell", "upgrade");
         }
+
+        if (strings.length == 3) {
+          List<String> playerNames = new ArrayList<>();
+          for (Player player : commandSender.getServer().getOnlinePlayers()) {
+            playerNames.add(player.getName());
+          }
+
+          return playerNames;
+        }
+
+        if (strings.length == 4) {
+          return List.of("<uses>");
+        }
+
+        if (strings.length == 5) {
+          return List.of("<multiplier>", "unlimited");
+        }
+
+        if (strings.length == 6 && strings[1].equalsIgnoreCase("upgrade")) {
+          return List.of("<radius>");
+        }
+
       }
 
       return null;
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      if (!GensPlus.getInstance().getConfig().getBoolean(ConfigPaths.SELL_COMMAND_ENABLED.getPath())) {
+      if (!GensPlus.getInstance().getConfig()
+          .getBoolean(ConfigPaths.SELL_COMMAND_ENABLED.getPath())) {
         return null;
       }
 

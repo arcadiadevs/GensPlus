@@ -19,6 +19,7 @@ public enum Messages {
   CONFIG_RELOADED("config-reloaded", "&9GensPlus> &7Configuration reloaded."),
   PLAYER_NOT_FOUND("player-not-found", "&cError> &7Player not found!"),
   INVALID_GENERATOR_TIER("invalid-generator-tier", "&cError> &7Invalid generator tier!"),
+  INVALID_FORMAT("invalid-format", "&cError> &7Invalid format!"),
   GENERATOR_GIVEN("generator-given",
       "&9GensPlus> &7You gave &a%amount% &7generator(s) of tier &a%tier% &7to &a%targetPlayer%"),
   GENERATOR_RECEIVED("generator-received",
@@ -31,7 +32,8 @@ public enum Messages {
   SUCCESSFULLY_UPGRADED("successfully-upgraded",
       "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"),
   SUCCESSFULLY_SOLD("successfully-sold", "&9GensPlus> &7Successfully sold drops for &a%price%"),
-  NOT_ENOUGH_MONEY("not-enough-money", "&cError> &7You don't have enough money to do that!"),
+  NOT_ENOUGH_MONEY("not-enough-money",
+      "&cError> &7You don't have enough money to do that! (%currentBalance%/&a%price%&7)"),
   NOTHING_TO_SELL("nothing-to-sell", "&cError> &7You don't have any drops to sell!"),
   SUCCESSFULLY_DESTROYED("successfully-destroyed",
       "&9GensPlus> &7Successfully destroyed generator!"

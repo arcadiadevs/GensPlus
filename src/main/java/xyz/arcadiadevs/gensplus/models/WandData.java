@@ -21,8 +21,8 @@ public record WandData(List<Wand> wands) {
    * @param multiplier The multiplier of the wand.
    * @return The Wand object representing the wand.
    */
-  public Wand create(Wand.WandType type, int uses, int radius, double multiplier) {
-    Wand wandData = new Wand(UUID.randomUUID(), type, uses, radius, multiplier);
+  public Wand create(Wand.WandType type, int uses, double multiplier, int radius) {
+    Wand wandData = new Wand(UUID.randomUUID(), type, uses, multiplier, radius);
     wands.add(wandData);
     return wandData;
   }
@@ -31,7 +31,7 @@ public record WandData(List<Wand> wands) {
    * The WandData record represents a wand in GensPlus. It contains various properties
    * associated with the wand.
    */
-  public record Wand(UUID uuid, WandType type, int uses, int radius, double multiplier)
+  public record Wand(UUID uuid, WandType type, int uses, double multiplier, int radius)
       implements Formattable {
 
     @Override

@@ -105,7 +105,11 @@ public class GeneratorsGui {
 
       menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
         if (generator.price() > economy.getBalance(player)) {
-          Messages.NOT_ENOUGH_MONEY.format().send(player);
+          Messages.NOT_ENOUGH_MONEY.format(
+              "currentBalance", economy.getBalance(player),
+              "price", generator.price())
+              .send(player);
+
           XSound.ENTITY_VILLAGER_NO.play(player);
           return;
         }

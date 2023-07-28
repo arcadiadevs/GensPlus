@@ -83,9 +83,20 @@ public class Commands implements CommandExecutor {
             return true;
           }
 
+          if (strings.length < 5) {
+            Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
+            return true;
+          }
+
+          if (!strings[3].matches("\\d+") || !strings[4].matches("\\d+")) {
+            Messages.INVALID_FORMAT.format().send(player);
+            return true;
+          }
+
           final Player targetPlayer = Bukkit.getPlayer(strings[2]);
 
-          player.getInventory().addItem(WandsUtil.getSellWand());
+          player.getInventory().addItem(WandsUtil.getSellWand(Integer.parseInt(strings[3]),
+              Double.parseDouble(strings[4])));
           Messages.SELL_WAND_GIVEN.format().send(player);
           Messages.SELL_WAND_RECEIVED.format().send(targetPlayer);
           return true;
@@ -97,9 +108,23 @@ public class Commands implements CommandExecutor {
             return true;
           }
 
+          if (strings.length < 6) {
+            Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
+            return true;
+          }
+
+          if (!strings[3].matches("\\d+") || !strings[4].matches("\\d+")
+              || !strings[5].matches("\\d+")) {
+            Messages.INVALID_FORMAT.format().send(player);
+            return true;
+          }
+
+
           final Player targetPlayer = Bukkit.getPlayer(strings[2]);
 
-          player.getInventory().addItem(WandsUtil.getUpgradeWand());
+          player.getInventory().addItem(
+              WandsUtil.getUpgradeWand(Integer.parseInt(strings[3]), Double.parseDouble(strings[4]),
+                  Integer.parseInt(strings[5])));
           Messages.UPGRADE_WAND_GIVEN.format().send(player);
           Messages.UPGRADE_WAND_RECEIVED.format().send(targetPlayer);
           return true;

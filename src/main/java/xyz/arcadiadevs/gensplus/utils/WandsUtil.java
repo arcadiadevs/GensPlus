@@ -25,10 +25,10 @@ public class WandsUtil {
    *
    * @return The ItemStack representing the sell wand.
    */
-  public static ItemStack getSellWand() {
+  public static ItemStack getSellWand(int uses, double multiplier) {
 
     WandData wandData = GensPlus.getInstance().getWandData();
-    WandData.Wand wand = wandData.create(WandData.Wand.WandType.SELL_WAND, 200, 0, 10);
+    WandData.Wand wand = wandData.create(WandData.Wand.WandType.SELL_WAND, uses, multiplier, 0);
 
     List<String> lore = Formatter.format(wand, config.getStringList("wands.sell-wand.lore"));
 
@@ -48,9 +48,10 @@ public class WandsUtil {
    *
    * @return The ItemStack representing the upgrade wand.
    */
-  public static ItemStack getUpgradeWand() {
+  public static ItemStack getUpgradeWand(int uses, double multiplier, int radius) {
     WandData wandData = GensPlus.getInstance().getWandData();
-    WandData.Wand wand = wandData.create(WandData.Wand.WandType.UPGRADE_WAND, 10, 0, 0);
+    WandData.Wand wand =
+        wandData.create(WandData.Wand.WandType.UPGRADE_WAND, uses, multiplier, radius);
 
     List<String> lore = Formatter.format(wand, config.getStringList("wands.upgrade-wand.lore"));
 
