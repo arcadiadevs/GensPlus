@@ -11,6 +11,9 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,8 +40,10 @@ import xyz.arcadiadevs.gensplus.events.EggTeleport;
 import xyz.arcadiadevs.gensplus.events.EntityExplode;
 import xyz.arcadiadevs.gensplus.events.InstantBreak;
 import xyz.arcadiadevs.gensplus.events.OnJoin;
+import xyz.arcadiadevs.gensplus.events.OnWandUse;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.models.WandData;
 import xyz.arcadiadevs.gensplus.models.events.DropEvent;
 import xyz.arcadiadevs.gensplus.models.events.Event;
 import xyz.arcadiadevs.gensplus.models.events.SellEvent;
@@ -95,6 +100,12 @@ public final class GensPlus extends JavaPlugin {
   private LocationsData locationsData;
 
   /**
+   * Gets the data handler for wands.
+   */
+  @Getter
+  private WandData wandData;
+
+  /**
    * Gets the data handler for generators.
    */
   @Getter
@@ -123,7 +134,10 @@ public final class GensPlus extends JavaPlugin {
 
     saveDefaultConfig();
 
-    saveResourceIfNotExists("block_data.json", false);
+    moveBlockData();
+
+    saveResourceIfNotExists("data/block_data.json", false);
+    saveResourceIfNotExists("data/wands_data.json", false);
     saveResourceIfNotExists("messages.yml", false);
 
     setupEconomy();
@@ -137,6 +151,8 @@ public final class GensPlus extends JavaPlugin {
     generatorsData = loadGeneratorsData();
 
     locationsData = new LocationsData(loadBlockDataFromJson());
+
+    wandData = new WandData(loadWandsDataFromJson());
 
     events = loadGensPlusEvents();
 
@@ -164,11 +180,11 @@ public final class GensPlus extends JavaPlugin {
   @Override
   public void onDisable() {
     dataSaveTask.saveBlockDataToJson();
+    dataSaveTask.saveWandDataToJson();
 
     if (getConfig().getBoolean(ConfigPaths.DEVELOPER_OPTIONS.getPath())) {
       // Remove all files
-      new File(getDataFolder(), "block_data.json").delete();
-      new File(getDataFolder(), "holograms.json").delete();
+      new File(getDataFolder(), "data/block_data.json").delete();
     }
   }
 
@@ -194,6 +210,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new EggTeleport(locationsData));
     events.add(new BeaconInteraction(locationsData));
     events.add(new EntityExplode(locationsData, generatorsData));
+    events.add(new OnWandUse(wandData));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
@@ -358,7 +375,8 @@ public final class GensPlus extends JavaPlugin {
 
   private void loadHolograms() {
     hologramPool = hologramPool == null
-        ? new HologramPool(this, getConfig().getInt(ConfigPaths.HOLOGRAMS_VIEW_DISTANCE.getPath(), 2000))
+        ? new HologramPool(this,
+        getConfig().getInt(ConfigPaths.HOLOGRAMS_VIEW_DISTANCE.getPath(), 2000))
         : hologramPool;
 
     placeholders = new Placeholders();
@@ -387,7 +405,8 @@ public final class GensPlus extends JavaPlugin {
       }
 
       List<String> lines = ((List<String>) matchingGeneratorConfig.get("hologramLines")).isEmpty()
-          ? GensPlus.getInstance().getConfig().getStringList("default-hologram-lines")
+          ? GensPlus.getInstance().getConfig()
+          .getStringList(ConfigPaths.DEFAULT_HOLOGRAM_LINES.getPath())
           : (List<String>) matchingGeneratorConfig.get("hologramLines");
 
       lines = lines
@@ -408,12 +427,46 @@ public final class GensPlus extends JavaPlugin {
   }
 
   private CopyOnWriteArrayList<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
-    try (FileReader reader = new FileReader(getDataFolder() + "/block_data.json")) {
+    try (FileReader reader = new FileReader(getDataFolder() + "/data/block_data.json")) {
       return gson.fromJson(reader,
           new TypeToken<CopyOnWriteArrayList<LocationsData.GeneratorLocation>>() {
           }.getType());
     } catch (IOException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  private List<WandData.Wand> loadWandsDataFromJson() {
+    try (FileReader reader = new FileReader(getDataFolder() + "/data/wands_data.json")) {
+      return gson.fromJson(reader,
+          new TypeToken<List<WandData.Wand>>() {
+          }.getType());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  // Create a function that will move block_data.json to /data/ if the block_data.json exists
+  public void moveBlockData() {
+    // Check if "block_data.json" exists in the plugin's data folder
+    File blockDataFile = new File(getDataFolder(), "/block_data.json");
+    if (blockDataFile.exists()) {
+      // Create the "/data/" directory if it doesn't exist
+      File targetDirectory = new File(getDataFolder(), "data");
+      if (!targetDirectory.exists()) {
+        targetDirectory.mkdirs();
+      }
+
+      try {
+        // Move the file to the "/data/" directory
+        Path sourcePath = Paths.get(blockDataFile.toURI());
+        Path targetPath = Paths.get(getDataFolder().getPath(), "/data/block_data.json");
+        Files.move(sourcePath, targetPath);
+        getLogger().info("block_data.json moved to /data/ directory successfully.");
+      } catch (Exception e) {
+        getLogger().warning(
+            "Failed to move block_data.json to /data/ directory: " + e.getMessage());
+      }
     }
   }
 

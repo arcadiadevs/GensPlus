@@ -10,6 +10,7 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.utils.WandsUtil;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
@@ -243,7 +244,8 @@ public class Commands implements CommandExecutor {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      if (!GensPlus.getInstance().getConfig().getBoolean("sell-command.enabled")) {
+      if (!GensPlus.getInstance().getConfig()
+          .getBoolean(ConfigPaths.SELL_COMMAND_ENABLED.getPath())) {
         return true;
       }
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
@@ -26,7 +27,7 @@ public class GuiUtil {
         .parseItem());
     if (!material.equals("AIR")) {
       itemBuilder.name(GensPlus.getInstance().getConfig()
-          .getString("guis.generators-gui.border.name"));
+          .getString(ConfigPaths.GUIS_GENERATORS_GUI_BORDER_NAME.getPath()));
     }
 
     for (int i = 0; i < 9; i++) {

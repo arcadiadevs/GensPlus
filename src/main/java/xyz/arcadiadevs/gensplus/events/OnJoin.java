@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 
 /**
  * Handles the PlayerJoinEvent triggered when a player joins the server.
@@ -24,7 +25,7 @@ public class OnJoin implements Listener {
    */
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
-    if (!config.getBoolean("on-join.enabled")) {
+    if (!config.getBoolean(ConfigPaths.ON_JOIN_ENABLED.getPath())) {
       return;
     }
 
@@ -33,8 +34,8 @@ public class OnJoin implements Listener {
     }
 
     final Player player = event.getPlayer();
-    final int tier = config.getInt("on-join.generator-tier");
-    final int amount = config.getInt("on-join.generator-amount");
+    final int tier = config.getInt(ConfigPaths.ON_JOIN_GENERATOR_TIER.getPath());
+    final int amount = config.getInt(ConfigPaths.ON_JOIN_GENERATOR_AMOUNT.getPath());
     generatorsData.giveItemByTier(player, tier, amount);
   }
 }

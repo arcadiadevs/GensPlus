@@ -3,10 +3,13 @@ package xyz.arcadiadevs.gensplus.utils;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.models.WandData;
+import xyz.arcadiadevs.gensplus.utils.formatter.Formatter;
 import xyz.arcadiadevs.guilib.ItemBuilder;
 
 /**
@@ -24,13 +27,10 @@ public class WandsUtil {
    */
   public static ItemStack getSellWand() {
 
-    List<String> lore = config.getStringList("wands.sell-wand.lore");
+    WandData wandData = GensPlus.getInstance().getWandData();
+    WandData.Wand wand = wandData.create(WandData.Wand.WandType.SELL_WAND, 200, 0, 10);
 
-    lore = lore.stream()
-        .map(s -> s.replace("%uses%", "uses"))
-        .map(s -> s.replace("%multiplier%", "multiplier"))
-        .map(ChatUtil::translate)
-        .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+    List<String> lore = Formatter.format(wand, config.getStringList("wands.sell-wand.lore"));
 
     final Material material = XMaterial.matchXMaterial(config.getString("wands.sell-wand.material"))
         .orElseThrow()
@@ -49,18 +49,15 @@ public class WandsUtil {
    * @return The ItemStack representing the upgrade wand.
    */
   public static ItemStack getUpgradeWand() {
-    List<String> lore = config.getStringList("wands.upgrade-wand.lore");
+    WandData wandData = GensPlus.getInstance().getWandData();
+    WandData.Wand wand = wandData.create(WandData.Wand.WandType.UPGRADE_WAND, 10, 0, 0);
 
-    lore = lore.stream()
-        .map(s -> s.replace("%uses%", "uses"))
-        .map(s -> s.replace("%radius%", "radius"))
-        .map(s -> s.replace("%multiplier%", "multiplier"))
-        .map(ChatUtil::translate)
-        .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+    List<String> lore = Formatter.format(wand, config.getStringList("wands.upgrade-wand.lore"));
 
-    final Material material = XMaterial.matchXMaterial(config.getString("wands.upgrade-wand.material"))
-        .orElseThrow()
-        .parseMaterial();
+    final Material material =
+        XMaterial.matchXMaterial(config.getString("wands.upgrade-wand.material"))
+            .orElseThrow()
+            .parseMaterial();
 
     ItemBuilder itemBuilder = new ItemBuilder(material)
         .name(ChatUtil.translate(config.getString("wands.upgrade-wand.name")))

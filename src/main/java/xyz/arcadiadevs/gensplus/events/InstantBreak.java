@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 
@@ -85,7 +86,7 @@ public class InstantBreak implements Listener {
     block.setType(Material.AIR);
 
     // Generate and drop the generator item for the player
-    if (GensPlus.getInstance().getConfig().getBoolean("instant-pickup")) {
+    if (GensPlus.getInstance().getConfig().getBoolean(ConfigPaths.INSTANT_PICKUP.getPath())) {
       generator.giveItem(player);
     } else {
       generator.dropItem(event.getPlayer(), block.getLocation());

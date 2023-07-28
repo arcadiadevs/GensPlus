@@ -3,6 +3,7 @@ package xyz.arcadiadevs.gensplus.utils;
 import java.util.HashMap;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -81,7 +82,7 @@ public class SellUtil {
       economy.depositPlayer(player, totalSellAmount);
 
       Messages.SUCCESSFULLY_SOLD.format(
-          "price", economy.format(totalSellAmount))
+              "price", economy.format(totalSellAmount))
           .send(player);
 
     } else {
@@ -90,6 +91,71 @@ public class SellUtil {
 
     sellAmounts.remove(player);
   }
+
+  public static void sellWand(List<ItemStack> items, Player player) {
+    int totalSellAmount = 0;
+    final HashMap<Player, Double> sellAmounts = new HashMap<>();
+    final ActiveEvent event = EventLoop.getActiveEvent();
+
+    final double multiplier = (event.event() instanceof SellEvent
+        ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
+        : 1.0 * PlayerUtil.getMultiplier(player));
+
+    if (items == null) {
+      return;
+    }
+
+    for (ItemStack item : items) {
+      ItemMeta meta = item.getItemMeta();
+
+      if (meta == null) {
+        continue;
+      }
+
+      if (!meta.hasLore()) {
+        continue;
+      }
+
+      List<String> lore = meta.getLore();
+
+      if (lore == null) {
+        continue;
+      }
+
+      String firstLine = lore.get(0);
+
+      // Check if the item is a generator drop
+      if (firstLine.contains("Generator drop tier")) {
+        int tier = Integer.parseInt(firstLine.split(" ")[3]);
+        final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
+        final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
+
+        final double itemAmount = item.getAmount();
+        final double sellPrice = generator.sellPrice();
+        double sellAmount = (sellPrice * itemAmount * multiplier);
+        item.setType(null);
+        totalSellAmount += sellAmount;
+        sellAmounts.put(player, sellAmounts.getOrDefault(player, 0.0) + sellAmount);
+      }
+    }
+
+    // Perform the selling operation if there are generator drops to sell
+    if (totalSellAmount > 0) {
+      final Economy economy = GensPlus.getInstance().getEcon();
+
+      economy.depositPlayer(player, totalSellAmount);
+
+      Messages.SUCCESSFULLY_SOLD.format(
+              "price", economy.format(totalSellAmount))
+          .send(player);
+
+    } else {
+      Messages.NOTHING_TO_SELL.format().send(player);
+    }
+
+    sellAmounts.remove(player);
+  }
+
 
   /**
    * Sells the generator drop the player is holding.
@@ -144,7 +210,7 @@ public class SellUtil {
     economy.depositPlayer(player, sellAmount);
 
     Messages.SUCCESSFULLY_SOLD.format(
-        "price", economy.format(sellAmount))
+            "price", economy.format(sellAmount))
         .send(player);
 
   }

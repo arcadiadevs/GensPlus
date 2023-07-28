@@ -4,6 +4,7 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
 
 /**
@@ -51,7 +52,7 @@ public class PlayerUtil {
    */
   public static Double getMultiplier(Player player) {
     return getLimit(player, Permissions.SELL_MULTIPLIER.getPermission(), "multiplier",
-        "multiplier.default-multiplier");
+        ConfigPaths.MULTIPLIER_DEFAULT_MULTIPLIER.getPath());
   }
 
   /**
@@ -62,11 +63,11 @@ public class PlayerUtil {
    */
   public static Integer getGeneratorLimit(Player player) {
     return getLimit(player, Permissions.GENERATOR_LIMIT.getPermission(), "limit-settings",
-        "limit-settings.default-limit").intValue();
+        ConfigPaths.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath()).intValue();
   }
 
   public static Integer getChunkRadius(Player player) {
     return getLimit(player, Permissions.CHUNK_RADIUS.getPermission(), "chunk-radius",
-        "chunk-radius.default-radius").intValue();
+        ConfigPaths.CHUNK_RADIUS_DEFAULT_RADIUS.getPath()).intValue();
   }
 }

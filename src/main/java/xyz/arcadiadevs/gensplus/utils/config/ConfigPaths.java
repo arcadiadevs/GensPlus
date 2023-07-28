@@ -1,13 +1,9 @@
 package xyz.arcadiadevs.gensplus.utils.config;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import lombok.Getter;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * The ConfigManager class provides functionality for handling the configuration file in GensPlus.
@@ -15,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public enum ConfigPaths {
   ITEM_DESPAWN_TIME("item-despawn-time", "5m"),
-  CAN_ITEMS_BE_PLACED("can-items-be-placed", false),
+  CAN_DROPS_BE_PLACED("can-items-be-placed", false),
   DISABLED_WORLDS("disabled-worlds", new ArrayList<String>()),
   INSTANT_PICKUP("instant-pickup", false),
   ON_JOIN_ENABLED("on-join.enabled", true),
