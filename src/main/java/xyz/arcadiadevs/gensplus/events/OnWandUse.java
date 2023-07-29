@@ -82,7 +82,7 @@ public class OnWandUse implements Listener {
         return;
       }
 
-      if (inventory.isEmpty()) {
+      if (inventory.getContents().length == 0) {
         Messages.NOTHING_TO_SELL.format().send(player);
         return;
       }

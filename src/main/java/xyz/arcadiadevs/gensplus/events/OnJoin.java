@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.utils.Config;
+import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 
 /**
  * Handles the PlayerJoinEvent triggered when a player joins the server.
@@ -44,5 +45,7 @@ public class OnJoin implements Listener {
     final int tier = config.getInt(Config.ON_JOIN_GENERATOR_TIER.getPath());
     final int amount = config.getInt(Config.ON_JOIN_GENERATOR_AMOUNT.getPath());
     generatorsData.giveItemByTier(player, tier, amount);
+
+    ItemUtil.upgradeGens(player.getInventory());
   }
 }

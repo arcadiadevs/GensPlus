@@ -4,6 +4,7 @@ import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.HashMap;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -147,7 +148,7 @@ public class SellUtil {
         : 1.0 * PlayerUtil.getMultiplier(player));
 
     ItemStack item = player.getInventory().getItemInMainHand();
-    final boolean isAir = item.getType().isAir();
+    final boolean isAir = item.getType() == Material.AIR;
 
     if (!NBTEditor.contains(item, "gensplus", "spawnitem", "tier") || isAir) {
       Messages.NOTHING_TO_SELL.format().send(player);

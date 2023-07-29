@@ -2,7 +2,10 @@ package xyz.arcadiadevs.gensplus.utils;
 
 import com.cryptomorin.xseries.XMaterial;
 import dev.lone.itemsadder.api.CustomStack;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import io.th0rgal.oraxen.api.OraxenItems;
+import java.util.List;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -55,6 +58,58 @@ public class ItemUtil {
     }
 
     return XMaterial.matchXMaterial(itemName).orElseThrow().parseItem();
+  }
+
+  public static void upgradeGens(Inventory inventory) {
+    for (int i = 0; i < inventory.getSize(); i++) {
+      ItemStack item = inventory.getItem(i);
+
+      if (item == null) {
+        continue;
+      }
+
+      ItemMeta meta = item.getItemMeta();
+
+      if (meta == null) {
+        continue;
+      }
+
+      if (!meta.hasLore()) {
+        continue;
+      }
+
+      List<String> lore = meta.getLore();
+
+      if (lore == null) {
+        continue;
+      }
+
+      String firstLine = lore.get(0);
+
+      if (firstLine.contains("Generator drop tier")) {
+        int tier = Integer.parseInt(firstLine.split(" ")[3]);
+        item = NBTEditor.set(item, tier, "gensplus", "spawnitem", "tier");
+
+        lore.remove(0);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+
+        inventory.setItem(i, item);
+
+        continue;
+      }
+
+      if (firstLine.contains("Generator tier")) {
+        int tier = Integer.parseInt(firstLine.split(" ")[2]);
+        item = NBTEditor.set(item, tier, "gensplus", "blocktype", "tier");
+
+        lore.remove(0);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+
+        inventory.setItem(i, item);
+      }
+    }
   }
 
 }
