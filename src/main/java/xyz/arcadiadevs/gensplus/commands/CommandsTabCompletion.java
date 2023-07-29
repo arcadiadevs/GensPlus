@@ -140,7 +140,7 @@ public class CommandsTabCompletion implements TabCompleter {
         }
 
         if (strings.length == 5) {
-          return List.of("<multiplier>", "unlimited");
+          return List.of("<multiplier>");
         }
       }
 

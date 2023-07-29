@@ -115,7 +115,7 @@ public class Commands implements CommandExecutor {
             return true;
           }
 
-          if (!strings[3].matches("\\d+") || !strings[4].matches("\\d+")) {
+          if (!strings[3].matches("\\d+") || !strings[4].matches("\\d+\\.?\\d*")) {
             Messages.INVALID_FORMAT.format().send(player);
             return true;
           }

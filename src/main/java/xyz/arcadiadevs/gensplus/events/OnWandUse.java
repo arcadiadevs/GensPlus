@@ -87,8 +87,7 @@ public class OnWandUse implements Listener {
         return;
       }
 
-      SellUtil.sellWand(player, inventory, wand.getMultiplier());
-      wand.setUses(wand.getUses() - 1);
+      SellUtil.sellWand(player, inventory, wand.getMultiplier(), wand);
 
       if (wand.getUses() <= 0) {
         player.getInventory().remove(itemInMainHand);

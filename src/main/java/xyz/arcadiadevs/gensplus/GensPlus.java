@@ -40,6 +40,7 @@ import xyz.arcadiadevs.gensplus.events.BlockPlace;
 import xyz.arcadiadevs.gensplus.events.EggTeleport;
 import xyz.arcadiadevs.gensplus.events.EntityExplode;
 import xyz.arcadiadevs.gensplus.events.InstantBreak;
+import xyz.arcadiadevs.gensplus.events.OnInventoryOpen;
 import xyz.arcadiadevs.gensplus.events.OnJoin;
 import xyz.arcadiadevs.gensplus.events.OnWandUse;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
@@ -223,6 +224,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new BeaconInteraction(locationsData));
     events.add(new EntityExplode(locationsData, generatorsData));
     events.add(new OnWandUse(wandData, getConfig()));
+    events.add(new OnInventoryOpen());
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }

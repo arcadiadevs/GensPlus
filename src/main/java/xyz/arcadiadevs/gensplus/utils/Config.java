@@ -24,6 +24,7 @@ public enum Config {
   LIMIT_SETTINGS_USE_PERMISSIONS("limit-settings.use-permissions", false),
   LIMIT_SETTINGS_USE_COMMANDS("limit-settings.use-commands", true),
   LIMIT_SETTINGS_DEFAULT_LIMIT("limit-settings.default-limit", 20),
+  LIMIT_SETTINGS_UNLIMITED_PLACEHOLDER("limit-settings.unlimited-placeholder", "unlimited"),
   CHUNK_RADIUS_ENABLED("chunk-radius.enabled", true),
   CHUNK_RADIUS_USE_PERMISSIONS("chunk-radius.use-permissions", true),
   CHUNK_RADIUS_DEFAULT_RADIUS("chunk-radius.default-radius", 1),

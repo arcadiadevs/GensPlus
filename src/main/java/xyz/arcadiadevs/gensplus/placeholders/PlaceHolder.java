@@ -100,8 +100,8 @@ public class PlaceHolder extends PlaceholderExpansion {
           activeEvent.event() == null ? "No Events" : activeEvent.event().getName();
 
       case "gen_limit" -> {
-        if (!config.getBoolean(Config.LIMIT_SETTINGS_ENABLED.getPath())) {
-          yield config.getString("limit-settings.unlimited-placeholder");
+        if (!Config.LIMIT_SETTINGS_ENABLED.getBoolean()) {
+          yield Config.LIMIT_SETTINGS_UNLIMITED_PLACEHOLDER.getString();
         }
 
         if (usePermissions) {
@@ -112,7 +112,7 @@ public class PlaceHolder extends PlaceholderExpansion {
           yield String.valueOf(playerData.getData(player.getUniqueId()).getLimit());
         }
 
-        yield config.getString(Config.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath());
+        yield Config.LIMIT_SETTINGS_DEFAULT_LIMIT.getString();
       }
 
       case "gen_placed" -> locationsData.getGeneratorsCountByPlayer(player.getPlayer()).toString();

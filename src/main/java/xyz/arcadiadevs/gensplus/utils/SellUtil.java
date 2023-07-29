@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.utils;
 
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.HashMap;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
+import xyz.arcadiadevs.gensplus.models.WandData;
 import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.models.events.SellEvent;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
@@ -43,27 +45,8 @@ public class SellUtil {
         continue;
       }
 
-      ItemMeta meta = item.getItemMeta();
-
-      if (meta == null) {
-        continue;
-      }
-
-      if (!meta.hasLore()) {
-        continue;
-      }
-
-      List<String> lore = meta.getLore();
-
-      if (lore == null) {
-        continue;
-      }
-
-      String firstLine = lore.get(0);
-
-      // Check if the item is a generator drop
-      if (firstLine.contains("Generator drop tier")) {
-        int tier = Integer.parseInt(firstLine.split(" ")[3]);
+      if (NBTEditor.contains(item, "gensplus", "spawnitem", "tier")) {
+        int tier = NBTEditor.getInt(item, "gensplus", "spawnitem", "tier");
         final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
         final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
 
@@ -99,7 +82,8 @@ public class SellUtil {
    * @param player    The player who wants to sell their generator drops.
    * @param inventory The inventory to sell from.
    */
-  public static void sellWand(Player player, Inventory inventory, double wandMultiplier) {
+  public static void sellWand(Player player, Inventory inventory, double wandMultiplier,
+                              WandData.Wand wand) {
     int totalSellAmount = 0;
     final HashMap<Player, Double> sellAmounts = new HashMap<>();
     final ActiveEvent event = EventLoop.getActiveEvent();
@@ -115,42 +99,25 @@ public class SellUtil {
         continue;
       }
 
-      ItemMeta meta = item.getItemMeta();
-
-      if (meta == null) {
+      if (!NBTEditor.contains(item, "gensplus", "spawnitem", "tier")) {
         continue;
       }
 
-      if (!meta.hasLore()) {
-        continue;
-      }
+      int tier = NBTEditor.getInt(item, "gensplus", "spawnitem", "tier");
+      final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
+      final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
 
-      List<String> lore = meta.getLore();
-
-      if (lore == null) {
-        continue;
-      }
-
-      String firstLine = lore.get(0);
-
-      // Check if the item is a generator drop
-      if (firstLine.contains("Generator drop tier")) {
-        int tier = Integer.parseInt(firstLine.split(" ")[3]);
-        final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
-        final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
-
-        final double itemAmount = item.getAmount();
-        final double sellPrice = generator.sellPrice();
-        double sellAmount = (sellPrice * itemAmount * multiplier);
-        totalSellAmount += sellAmount;
-        inventory.removeItem(item);
-        sellAmounts.put(player, sellAmounts.getOrDefault(player, 0.0) + sellAmount);
-      }
+      final double itemAmount = item.getAmount();
+      final double sellPrice = generator.sellPrice();
+      double sellAmount = (sellPrice * itemAmount * multiplier);
+      totalSellAmount += sellAmount;
+      inventory.removeItem(item);
+      sellAmounts.put(player, sellAmounts.getOrDefault(player, 0.0) + sellAmount);
     }
 
-    // Perform the selling operation if there are generator drops to sell
     if (totalSellAmount > 0) {
       final Economy economy = GensPlus.getInstance().getEcon();
+      wand.setUses(wand.getUses() - 1);
 
       economy.depositPlayer(player, totalSellAmount);
 
@@ -175,7 +142,6 @@ public class SellUtil {
 
     final ActiveEvent event = EventLoop.getActiveEvent();
 
-    // Determine the sell multiplier based on the active event
     final double multiplier = (event.event() instanceof SellEvent
         ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
         : 1.0 * PlayerUtil.getMultiplier(player));
@@ -183,28 +149,12 @@ public class SellUtil {
     ItemStack item = player.getInventory().getItemInMainHand();
     final boolean isAir = item.getType().isAir();
 
-    ItemMeta meta = item.getItemMeta();
-
-    if (isAir || meta == null || !meta.hasLore() || meta.getLore() == null) {
+    if (!NBTEditor.contains(item, "gensplus", "spawnitem", "tier") || isAir) {
       Messages.NOTHING_TO_SELL.format().send(player);
       return;
     }
 
-    List<String> lore = meta.getLore();
-
-    if (lore == null) {
-      Messages.NOTHING_TO_SELL.format().send(player);
-      return;
-    }
-
-    String firstLine = lore.get(0);
-
-    if (!firstLine.contains("Generator drop tier")) {
-      Messages.NOTHING_TO_SELL.format().send(player);
-      return;
-    }
-
-    int tier = Integer.parseInt(firstLine.split(" ")[3]);
+    int tier = NBTEditor.getInt(item, "gensplus", "spawnitem", "tier");
     final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
     final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
 

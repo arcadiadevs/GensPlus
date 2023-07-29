@@ -45,6 +45,7 @@ limit-settings:
   # (ex: gensplus.limit.20)
   use-permissions: false
 
+  # [OVERRIDES USE-PERMISSIONS]
   # Should we use commands for generator limit?
   # If set to true, you can set specific limits for each player
   # by using the command /gensplus setlimit <player> <limit>
