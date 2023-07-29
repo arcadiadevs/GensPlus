@@ -99,14 +99,14 @@ public class SellUtil {
    * @param player    The player who wants to sell their generator drops.
    * @param inventory The inventory to sell from.
    */
-  public static void sellWand(Player player, Inventory inventory) {
+  public static void sellWand(Player player, Inventory inventory, double wandMultiplier) {
     int totalSellAmount = 0;
     final HashMap<Player, Double> sellAmounts = new HashMap<>();
     final ActiveEvent event = EventLoop.getActiveEvent();
 
     final double multiplier = (event.event() instanceof SellEvent
         ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
-        : 1.0 * PlayerUtil.getMultiplier(player));
+        : 1.0 * PlayerUtil.getMultiplier(player)) * wandMultiplier;
 
     for (int i = 0; i < inventory.getSize(); i++) {
       ItemStack item = inventory.getItem(i);

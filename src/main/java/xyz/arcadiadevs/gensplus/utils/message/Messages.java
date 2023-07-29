@@ -71,7 +71,9 @@ public enum Messages {
   UPGRADE_WAND_GIVEN("upgrade-wand-given", "&9GensPlus> &7You have been given an upgrade wand!"),
   UPGRADE_WAND_RECEIVED("upgrade-wand-received",
       "&9GensPlus> &7You have received an upgrade wand!"
-  );
+  ),
+  WAND_BROKE("wand-broke", "&cError> &7Your wand broke!"),
+  LIMIT_UPDATED("limit-updated", "&9GensPlus> &7You have changed %player%'s gens limit to &a%limit%&7!");
 
   private final String key;
   private String defaultMessage;

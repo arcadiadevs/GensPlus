@@ -102,7 +102,7 @@ public class CommandsTabCompletion implements TabCompleter {
         }
 
         if (strings.length == 2) {
-          return List.of("sell", "upgrade");
+          return List.of("sell");
         }
 
         if (strings.length == 3) {
@@ -121,11 +121,6 @@ public class CommandsTabCompletion implements TabCompleter {
         if (strings.length == 5) {
           return List.of("<multiplier>", "unlimited");
         }
-
-        if (strings.length == 6 && strings[1].equalsIgnoreCase("upgrade")) {
-          return List.of("<radius>");
-        }
-
       }
 
       return null;

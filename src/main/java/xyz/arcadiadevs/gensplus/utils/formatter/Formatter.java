@@ -2,6 +2,7 @@ package xyz.arcadiadevs.gensplus.utils.formatter;
 
 import java.util.ArrayList;
 import java.util.List;
+import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 
 public class Formatter {
 
@@ -10,7 +11,7 @@ public class Formatter {
       input = input.replace(entry.getKey(), entry.getValue());
     }
 
-    return input;
+    return ChatUtil.translate(input);
   }
 
   public static <T extends Formattable> List<String> format(T t, List<String> input) {

@@ -43,6 +43,7 @@ import xyz.arcadiadevs.gensplus.events.OnJoin;
 import xyz.arcadiadevs.gensplus.events.OnWandUse;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.models.WandData;
 import xyz.arcadiadevs.gensplus.models.events.DropEvent;
 import xyz.arcadiadevs.gensplus.models.events.Event;
@@ -106,6 +107,12 @@ public final class GensPlus extends JavaPlugin {
   private WandData wandData;
 
   /**
+   * Gets the data handler for player data.
+   */
+  @Getter
+  private PlayerData playerData;
+
+  /**
    * Gets the data handler for generators.
    */
   @Getter
@@ -138,6 +145,7 @@ public final class GensPlus extends JavaPlugin {
 
     saveResourceIfNotExists("data/block_data.json", false);
     saveResourceIfNotExists("data/wands_data.json", false);
+    saveResourceIfNotExists("data/player_data.json", false);
     saveResourceIfNotExists("messages.yml", false);
 
     setupEconomy();
@@ -151,6 +159,8 @@ public final class GensPlus extends JavaPlugin {
     generatorsData = loadGeneratorsData();
 
     locationsData = new LocationsData(loadBlockDataFromJson());
+
+    playerData = new PlayerData(loadPlayerDataFromJson());
 
     wandData = new WandData(loadWandsDataFromJson());
 
@@ -189,9 +199,9 @@ public final class GensPlus extends JavaPlugin {
   }
 
   private void registerCommands() {
-    getCommand("gensplus").setExecutor(new Commands(generatorsData));
-    getCommand("generators").setExecutor(new Commands(generatorsData));
-    getCommand("selldrops").setExecutor(new Commands(generatorsData));
+    getCommand("gensplus").setExecutor(new Commands(generatorsData, playerData));
+    getCommand("generators").setExecutor(new Commands(generatorsData, playerData));
+    getCommand("selldrops").setExecutor(new Commands(generatorsData, playerData));
   }
 
   private void registerTabCompletion() {
@@ -210,7 +220,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new EggTeleport(locationsData));
     events.add(new BeaconInteraction(locationsData));
     events.add(new EntityExplode(locationsData, generatorsData));
-    events.add(new OnWandUse());
+    events.add(new OnWandUse(wandData, getConfig()));
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
@@ -440,6 +450,16 @@ public final class GensPlus extends JavaPlugin {
     try (FileReader reader = new FileReader(getDataFolder() + "/data/wands_data.json")) {
       return gson.fromJson(reader,
           new TypeToken<List<WandData.Wand>>() {
+          }.getType());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private List<PlayerData.Data> loadPlayerDataFromJson() {
+    try (FileReader reader = new FileReader(getDataFolder() + "/data/player_data.json")) {
+      return gson.fromJson(reader,
+          new TypeToken<List<PlayerData.Data>>() {
           }.getType());
     } catch (IOException e) {
       throw new RuntimeException(e);

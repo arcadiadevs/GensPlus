@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.commands;
 
+import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,30 +10,25 @@ import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
+import xyz.arcadiadevs.gensplus.models.PlayerData;
+import xyz.arcadiadevs.gensplus.tasks.EventLoop;
+import xyz.arcadiadevs.gensplus.utils.ChatUtil;
+import xyz.arcadiadevs.gensplus.utils.SellUtil;
 import xyz.arcadiadevs.gensplus.utils.WandsUtil;
 import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
-import xyz.arcadiadevs.gensplus.utils.SellUtil;
 
 /**
  * The Commands class implements the CommandExecutor interface to handle custom commands in
  * GensPlus. It provides functionality for various commands related to generators and the
  * plugin itself.
  */
+@AllArgsConstructor
 public class Commands implements CommandExecutor {
 
   private final GeneratorsData generatorsData;
-
-  /**
-   * Constructs a Commands object with the specified GensPlus instance and GeneratorsData.
-   *
-   * @param generatorsData The GeneratorsData object containing information about generators.
-   */
-  public Commands(GeneratorsData generatorsData) {
-    this.generatorsData = generatorsData;
-  }
+  private final PlayerData playerData;
 
   /**
    * Executes a command issued by a CommandSender.
@@ -70,9 +66,38 @@ public class Commands implements CommandExecutor {
         ChatUtil.sendMessage(player,
             "&7- /gensplus giveall <tier> [amount]: Give a generator to all players");
         ChatUtil.sendMessage(player,
+            "&7- /gensplus wand sell <player> <uses> <multiplier>: Give a sell wand to a player");
+        ChatUtil.sendMessage(player,
+            "&7- /gensplus setlimit <player> <limit>: Set a player's generator limit");
+        ChatUtil.sendMessage(player,
             "&7- /selldrops hand/all: Sell all drops in your hand or inventory");
         ChatUtil.sendMessage(player,
             "&7- /generators: view all generators");
+        return true;
+      }
+
+      if (strings[1].equalsIgnoreCase("setlimit")) {
+        if (!adminPermission) {
+          Messages.NO_PERMISSION.format().send(player);
+          return true;
+        }
+
+        if (strings.length < 3) {
+          Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
+          return true;
+        }
+
+        if (!strings[2].matches("\\d+")) {
+          Messages.INVALID_FORMAT.format().send(player);
+          return true;
+        }
+
+        final Player targetPlayer = Bukkit.getPlayer(strings[1]);
+
+        PlayerData.Data data = playerData.getData(targetPlayer.getUniqueId());
+        data.setLimit(Integer.parseInt(strings[2]));
+        Messages.LIMIT_UPDATED.format("limit", strings[2], "player", targetPlayer.getDisplayName()).send(player);
+
         return true;
       }
 
@@ -102,35 +127,28 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
-        if (strings[1].equalsIgnoreCase("upgrade")) {
-          if (!adminPermission) {
-            Messages.NO_PERMISSION.format().send(player);
-            return true;
-          }
-
-          if (strings.length < 6) {
-            Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
-            return true;
-          }
-
-          if (!strings[3].matches("\\d+") || !strings[4].matches("\\d+")
-              || !strings[5].matches("\\d+")) {
-            Messages.INVALID_FORMAT.format().send(player);
-            return true;
-          }
-
-
-          final Player targetPlayer = Bukkit.getPlayer(strings[2]);
-
-          player.getInventory().addItem(
-              WandsUtil.getUpgradeWand(Integer.parseInt(strings[3]), Double.parseDouble(strings[4]),
-                  Integer.parseInt(strings[5])));
-          Messages.UPGRADE_WAND_GIVEN.format().send(player);
-          Messages.UPGRADE_WAND_RECEIVED.format().send(targetPlayer);
-          return true;
-        }
         return true;
       }
+
+      /*if (strings[0].equalsIgnoreCase("startevent")) {
+        if (strings.length < 2) {
+          Messages.NOT_ENOUGH_ARGUMENTS.format().send(player);
+          return true;
+        }
+
+        if (EventLoop.getActiveEvent().event() != null) {
+          Messages.EVENT_ALREADY_RUNNING.format().send(player);
+          return true;
+        }
+
+        String event = strings[1];
+
+
+      }
+
+      if (strings[0].equalsIgnoreCase("stopevent")) {
+
+      }*/
 
       /*if (strings[0].equalsIgnoreCase("reload")) {
         if (!(adminPermission || player.hasPermission(Permissions.GENERATOR_RELOAD))) {
