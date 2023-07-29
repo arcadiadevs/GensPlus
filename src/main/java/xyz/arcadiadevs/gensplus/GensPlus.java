@@ -168,7 +168,7 @@ public final class GensPlus extends JavaPlugin {
 
     events = loadGensPlusEvents();
 
-    Metrics metrics = new Metrics(this, 19054);
+    Metrics metrics = new Metrics(this, 19293);
 
     if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
       new PlaceHolder(locationsData, playerData, getConfig()).register();
