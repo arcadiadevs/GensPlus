@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.gensplus.utils.permission;
+package xyz.arcadiadevs.gensplus.utils;
 
 /**
  * The Permissions class contains all the permissions used in GensPlus.
@@ -22,7 +22,32 @@ public enum Permissions {
     this.permission = permission;
   }
 
-  public String getPermission() {
-    return permission;
+  public String getPermission(String... args) {
+    String perm = permission;
+
+    // Find how many {} are in the permission
+    int count = countBrackets(permission);
+
+    if (count != args.length) {
+      throw new IllegalArgumentException("Invalid number of arguments");
+    }
+
+    for (String arg : args) {
+      perm = permission.replace("{}", arg);
+    }
+
+    return perm;
+  }
+
+  private int countBrackets(String string) {
+    int count = 0;
+    for (int i = 0; i < string.length(); i++) {
+      if (string.charAt(i) == '{') {
+        count++;
+      } else if (string.charAt(i) == '}') {
+        count--;
+      }
+    }
+    return count;
   }
 }

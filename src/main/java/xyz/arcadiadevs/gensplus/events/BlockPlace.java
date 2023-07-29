@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,12 +10,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 
 /**
@@ -26,46 +25,20 @@ public class BlockPlace implements Listener {
 
   private final LocationsData locationsData;
   private final PlayerData playerData;
+  private final FileConfiguration config;
 
   /**
    * Handles the BlockPlaceEvent triggered when a player places a block.
+   * TODO: IridiumSkyblock.getInstance().getIslandManager().getTeamViaNameOrPlayer("").get().getName();
    *
    * @param event The BlockPlaceEvent object representing the block place event.
    */
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onBlockPlace(BlockPlaceEvent event) {
-    ItemStack item = event.getItemInHand();
-    ItemMeta meta = item.getItemMeta();
+    final Player player = event.getPlayer();
+    final ItemStack item = event.getItemInHand();
 
-    if (meta == null) {
-      return;
-    }
-
-    if (!meta.hasLore()) {
-      return;
-    }
-
-    List<String> lore = meta.getLore();
-
-    if (lore == null || lore.size() < 1) {
-      return;
-    }
-
-    String firstLine = lore.get(0);
-
-    final FileConfiguration config = GensPlus.getInstance().getConfig();
-
-    if (firstLine.contains("Generator drop tier")
-        && !config.getBoolean(ConfigPaths.CAN_DROPS_BE_PLACED.getPath())) {
-      event.setCancelled(true);
-      return;
-    }
-
-    if (!firstLine.contains("Generator tier")) {
-      return;
-    }
-
-    final List<String> disabledWorlds = config.getStringList(ConfigPaths.DISABLED_WORLDS.getPath());
+    final List<String> disabledWorlds = config.getStringList(Config.DISABLED_WORLDS.getPath());
 
     for (String world : disabledWorlds) {
       if (event.getBlockPlaced().getWorld().getName().equals(world)) {
@@ -75,21 +48,26 @@ public class BlockPlace implements Listener {
       }
     }
 
-    //IridiumSkyblock.getInstance().getIslandManager().getTeamViaNameOrPlayer("").get().getName();
+    if (NBTEditor.contains(item, "gensplus", "spawnitem", "tier")
+        && !Config.CAN_DROPS_BE_PLACED.getBoolean()) {
+      event.setCancelled(true);
+      return;
+    }
 
-    final Player player = event.getPlayer();
+    if (!NBTEditor.contains(item, "gensplus", "blocktype", "tier")) {
+      return;
+    }
 
-    int tier = Integer.parseInt(firstLine.split(" ")[2]);
-    int limit = PlayerUtil.getGeneratorLimit(player);
-    final boolean enabled = config.getBoolean(ConfigPaths.LIMIT_SETTINGS_ENABLED.getPath());
-    final boolean useCommands =
-        config.getBoolean(ConfigPaths.LIMIT_SETTINGS_USE_COMMANDS.getPath());
-    final boolean usePermissions = config
-        .getBoolean(ConfigPaths.LIMIT_SETTINGS_USE_PERMISSIONS.getPath());
+    final int tier = NBTEditor.getInt(item, "gensplus", "blocktype", "tier");
+    final boolean enabled = Config.LIMIT_SETTINGS_ENABLED.getBoolean();
+    final boolean useCommands = Config.LIMIT_SETTINGS_USE_COMMANDS.getBoolean();
+    final boolean usePermissions = Config.LIMIT_SETTINGS_USE_PERMISSIONS.getBoolean();
 
     if (!enabled) {
       return;
     }
+
+    int limit = PlayerUtil.getGeneratorLimit(player);
 
     if (useCommands && !usePermissions) {
       limit = playerData.getData(player.getUniqueId()).getLimit();

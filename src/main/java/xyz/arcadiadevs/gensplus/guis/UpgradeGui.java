@@ -17,9 +17,9 @@ import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.GuiUtil;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
+import xyz.arcadiadevs.gensplus.utils.Permissions;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
@@ -49,9 +49,9 @@ public class UpgradeGui {
     final FileConfiguration config = instance.getConfig();
     final Economy economy = instance.getEcon();
 
-    final var rows = config.getInt(ConfigPaths.GUIS_UPGRADE_GUI_ROWS.getPath());
+    final var rows = config.getInt(Config.GUIS_UPGRADE_GUI_ROWS.getPath());
     final var menu = new Gui(
-        ChatUtil.translate(config.getString(ConfigPaths.GUIS_UPGRADE_GUI_TITLE.getPath())),
+        ChatUtil.translate(config.getString(Config.GUIS_UPGRADE_GUI_TITLE.getPath())),
         rows,
         instance
     );
@@ -69,13 +69,13 @@ public class UpgradeGui {
     final ItemMeta itemMetaUpgradeOne = itemStackUpgradeOne.getItemMeta();
 
     itemMetaUpgradeOne.setDisplayName(ChatUtil.translate(config.getString(
-        ConfigPaths.GUIS_UPGRADE_GUI_UPGRADE_ONE_FIRST_LINE.getPath()))
+        Config.GUIS_UPGRADE_GUI_UPGRADE_ONE_FIRST_LINE.getPath()))
     );
 
     double price = instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
     List<String> lore =
-        config.getStringList(ConfigPaths.GUIS_UPGRADE_GUI_UPGRADE_ONE_LORE.getPath());
+        config.getStringList(Config.GUIS_UPGRADE_GUI_UPGRADE_ONE_LORE.getPath());
 
     lore = lore.stream()
         .map(s -> s.replace("%tier%", String.valueOf(current.tier())))
@@ -102,11 +102,11 @@ public class UpgradeGui {
     final ItemMeta itemMetaUpgradeAll = itemStackUpgradeAll.getItemMeta();
 
     itemMetaUpgradeAll.setDisplayName(ChatUtil.translate(config.getString(
-        ConfigPaths.GUIS_UPGRADE_GUI_UPGRADE_ALL_FIRST_LINE.getPath()))
+        Config.GUIS_UPGRADE_GUI_UPGRADE_ALL_FIRST_LINE.getPath()))
     );
 
     List<String> loreAll =
-        config.getStringList(ConfigPaths.GUIS_UPGRADE_GUI_UPGRADE_ALL_LORE.getPath());
+        config.getStringList(Config.GUIS_UPGRADE_GUI_UPGRADE_ALL_LORE.getPath());
 
     double priceForAll = price * generator.getBlockLocations().size();
     loreAll = loreAll.stream()
@@ -268,15 +268,15 @@ public class UpgradeGui {
 
   private static void spawnFirework(Location location) {
     FileConfiguration config = GensPlus.getInstance().getConfig();
-    XSound.matchXSound(config.getString(ConfigPaths.PARTICLES_SOUND.getPath()))
+    XSound.matchXSound(config.getString(Config.PARTICLES_SOUND.getPath()))
         .orElse(XSound.ENTITY_FIREWORK_ROCKET_BLAST)
         .play(location);
 
-    if (!config.getBoolean(ConfigPaths.PARTICLES_ENABLED.getPath())) {
+    if (!config.getBoolean(Config.PARTICLES_ENABLED.getPath())) {
       return;
     }
 
-    String particle = config.getString(ConfigPaths.PARTICLES_TYPE.getPath());
+    String particle = config.getString(Config.PARTICLES_TYPE.getPath());
     location.getWorld()
         .spawnParticle(
             Particle.valueOf(particle),

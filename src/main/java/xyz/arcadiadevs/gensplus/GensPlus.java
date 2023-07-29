@@ -8,6 +8,7 @@ import com.github.unldenis.hologram.placeholder.Placeholders;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -58,7 +59,7 @@ import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.Metrics;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 
 /**
@@ -193,7 +194,7 @@ public final class GensPlus extends JavaPlugin {
     dataSaveTask.saveWandDataToJson();
     dataSaveTask.savePlayerDataToJson();
 
-    if (getConfig().getBoolean(ConfigPaths.DEVELOPER_OPTIONS.getPath())) {
+    if (getConfig().getBoolean(Config.DEVELOPER_OPTIONS.getPath())) {
       // Remove all files
       new File(getDataFolder(), "data/block_data.json").delete();
     }
@@ -213,7 +214,7 @@ public final class GensPlus extends JavaPlugin {
   private void loadBukkitEvents() {
     final HashSet<Listener> events = new HashSet<>();
 
-    events.add(new BlockPlace(locationsData, playerData));
+    events.add(new BlockPlace(locationsData, playerData, getConfig()));
     events.add(new BlockBreak(locationsData, generatorsData));
     events.add(new BlockInteraction(locationsData, generatorsData));
     events.add(new InstantBreak(locationsData, generatorsData));
@@ -239,7 +240,7 @@ public final class GensPlus extends JavaPlugin {
     // Start event loop
     new EventLoop(this, events).runTaskLaterAsynchronously(this,
         TimeUtil.parseTime(
-            getConfig().getString(ConfigPaths.EVENTS_TIME_BETWEEN_EVENTS.getPath()))
+            getConfig().getString(Config.EVENTS_TIME_BETWEEN_EVENTS.getPath()))
     );
   }
 
@@ -271,22 +272,22 @@ public final class GensPlus extends JavaPlugin {
    */
   private ArrayList<Event> loadGensPlusEvents() {
     ArrayList<Event> events = new ArrayList<>();
-    if (getConfig().getBoolean(ConfigPaths.EVENTS_DROP_EVENT_ENABLED.getPath())) {
+    if (getConfig().getBoolean(Config.EVENTS_DROP_EVENT_ENABLED.getPath())) {
       events.add(
-          new DropEvent(getConfig().getLong(ConfigPaths.EVENTS_DROP_EVENT_MULTIPLIER.getPath()),
-              getConfig().getString(ConfigPaths.EVENTS_DROP_EVENT_NAME.getPath())));
+          new DropEvent(getConfig().getLong(Config.EVENTS_DROP_EVENT_MULTIPLIER.getPath()),
+              getConfig().getString(Config.EVENTS_DROP_EVENT_NAME.getPath())));
     }
 
-    if (getConfig().getBoolean(ConfigPaths.EVENTS_SPEED_EVENT_ENABLED.getPath())) {
+    if (getConfig().getBoolean(Config.EVENTS_SPEED_EVENT_ENABLED.getPath())) {
       events.add(
-          new SpeedEvent(getConfig().getLong(ConfigPaths.EVENTS_SPEED_EVENT_MULTIPLIER.getPath()),
-              getConfig().getString(ConfigPaths.EVENTS_SPEED_EVENT_NAME.getPath())));
+          new SpeedEvent(getConfig().getLong(Config.EVENTS_SPEED_EVENT_MULTIPLIER.getPath()),
+              getConfig().getString(Config.EVENTS_SPEED_EVENT_NAME.getPath())));
     }
 
-    if (getConfig().getBoolean(ConfigPaths.EVENTS_SELL_EVENT_ENABLED.getPath())) {
+    if (getConfig().getBoolean(Config.EVENTS_SELL_EVENT_ENABLED.getPath())) {
       events.add(
-          new SellEvent(getConfig().getLong(ConfigPaths.EVENTS_SELL_EVENT_MULTIPLIER.getPath()),
-              getConfig().getString(ConfigPaths.EVENTS_SELL_EVENT_NAME.getPath())));
+          new SellEvent(getConfig().getLong(Config.EVENTS_SELL_EVENT_MULTIPLIER.getPath()),
+              getConfig().getString(Config.EVENTS_SELL_EVENT_NAME.getPath())));
     }
 
     return events;
@@ -301,7 +302,7 @@ public final class GensPlus extends JavaPlugin {
    */
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
-    List<Map<?, ?>> generatorsConfig = getConfig().getMapList(ConfigPaths.GENERATORS.getPath());
+    List<Map<?, ?>> generatorsConfig = getConfig().getMapList(Config.GENERATORS.getPath());
 
     for (Map<?, ?> generator : generatorsConfig) {
       final String name = (String) generator.get("name");
@@ -315,7 +316,7 @@ public final class GensPlus extends JavaPlugin {
       String blockType = (String) generator.get("blockType");
       List<String> lore =
           ((List<String>) generator.get("lore")).isEmpty() ? getConfig().getStringList(
-              ConfigPaths.DEFAULT_LORE.getPath()) : (List<String>) generator.get("lore");
+              Config.DEFAULT_LORE.getPath()) : (List<String>) generator.get("lore");
 
       lore = lore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
           .map(s -> s.replace("%speed%", String.valueOf(speed)))
@@ -343,22 +344,13 @@ public final class GensPlus extends JavaPlugin {
         throw new RuntimeException("Invalid item meta");
       }
 
-      // set lore for generator block
-      List<String> blockTypeLore = new ArrayList<>();
-
-      blockTypeLore.add(ChatUtil.translate("&8Generator tier " + tier));
-      blockTypeLore.addAll(lore);
-
       blockTypeMeta.setDisplayName(ChatUtil.translate(name));
-      blockTypeMeta.setLore(blockTypeLore);
+      blockTypeMeta.setLore(lore);
 
       blockTypeStack.setItemMeta(blockTypeMeta);
 
-      // set lore for spawned item
-      List<String> spawnLore = new ArrayList<>();
-
       List<String> itemSpawnLore = ((List<String>) generator.get("itemSpawnLore")).isEmpty()
-          ? getConfig().getStringList(ConfigPaths.DEFAULT_ITEM_SPAWN_LORE.getPath())
+          ? Config.DEFAULT_ITEM_SPAWN_LORE.getStringList()
           : (List<String>) generator.get("itemSpawnLore");
 
       String formattedSellPrice = econ.format(sellPrice);
@@ -368,13 +360,13 @@ public final class GensPlus extends JavaPlugin {
           .map(ChatUtil::translate)
           .toList();
 
-      spawnLore.add(ChatUtil.translate("&8Generator drop tier " + tier));
-      spawnLore.addAll(itemSpawnLore);
-
       spawnItemMeta.setDisplayName(ChatUtil.translate(dropDisplayName));
-      spawnItemMeta.setLore(spawnLore);
+      spawnItemMeta.setLore(itemSpawnLore);
 
       spawnItemStack.setItemMeta(spawnItemMeta);
+
+      spawnItemStack = NBTEditor.set(spawnItemStack, tier, "gensplus", "spawnitem", "tier");
+      blockTypeStack = NBTEditor.set(blockTypeStack, tier, "gensplus", "blocktype", "tier");
 
       generators.add(
           new GeneratorsData.Generator(name, tier, price, sellPrice, speed, spawnItemStack,
@@ -387,12 +379,12 @@ public final class GensPlus extends JavaPlugin {
   private void loadHolograms() {
     hologramPool = hologramPool == null
         ? new HologramPool(this,
-        getConfig().getInt(ConfigPaths.HOLOGRAMS_VIEW_DISTANCE.getPath(), 2000))
+        getConfig().getInt(Config.HOLOGRAMS_VIEW_DISTANCE.getPath(), 2000))
         : hologramPool;
 
     placeholders = new Placeholders();
 
-    if (!GensPlus.getInstance().getConfig().getBoolean(ConfigPaths.HOLOGRAMS_ENABLED.getPath())) {
+    if (!GensPlus.getInstance().getConfig().getBoolean(Config.HOLOGRAMS_ENABLED.getPath())) {
       return;
     }
 
@@ -417,7 +409,7 @@ public final class GensPlus extends JavaPlugin {
 
       List<String> lines = ((List<String>) matchingGeneratorConfig.get("hologramLines")).isEmpty()
           ? GensPlus.getInstance().getConfig()
-          .getStringList(ConfigPaths.DEFAULT_HOLOGRAM_LINES.getPath())
+          .getStringList(Config.DEFAULT_HOLOGRAM_LINES.getPath())
           : (List<String>) matchingGeneratorConfig.get("hologramLines");
 
       lines = lines

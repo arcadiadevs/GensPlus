@@ -9,7 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
@@ -35,20 +35,20 @@ public class GeneratorsGui {
     final var config = instance.getConfig();
     final Economy economy = instance.getEcon();
 
-    if (!config.getBoolean(ConfigPaths.GUIS_GENERATORS_GUI_ENABLED.getPath())) {
+    if (!config.getBoolean(Config.GUIS_GENERATORS_GUI_ENABLED.getPath())) {
       return;
     }
 
-    final var rows = config.getInt(ConfigPaths.GUIS_GENERATORS_GUI_ROWS.getPath());
+    final var rows = config.getInt(Config.GUIS_GENERATORS_GUI_ROWS.getPath());
 
     final var menu = new Gui(
-        ChatUtil.translate(config.getString(ConfigPaths.GUIS_GENERATORS_GUI_TITLE.getPath())),
+        ChatUtil.translate(config.getString(Config.GUIS_GENERATORS_GUI_TITLE.getPath())),
         rows,
         instance
     );
 
     GeneratorsData generatorsData = instance.getGeneratorsData();
-    List<Map<?, ?>> generatorsConfig = config.getMapList(ConfigPaths.GENERATORS.getPath());
+    List<Map<?, ?>> generatorsConfig = config.getMapList(Config.GENERATORS.getPath());
 
     for (GeneratorsData.Generator generator : generatorsData.getGenerators()) {
       final ItemStack material = new ItemStack(generator.blockType());
@@ -81,9 +81,9 @@ public class GeneratorsGui {
           .lore(lore)
           .build();
 
-      if (config.getBoolean(ConfigPaths.GUIS_GENERATORS_GUI_BORDER_ENABLED.getPath())) {
+      if (config.getBoolean(Config.GUIS_GENERATORS_GUI_BORDER_ENABLED.getPath())) {
         GuiUtil.addBorder(menu,
-            config.getString(ConfigPaths.GUIS_GENERATORS_GUI_BORDER_MATERIAL.getPath())
+            config.getString(Config.GUIS_GENERATORS_GUI_BORDER_MATERIAL.getPath())
         );
       }
 

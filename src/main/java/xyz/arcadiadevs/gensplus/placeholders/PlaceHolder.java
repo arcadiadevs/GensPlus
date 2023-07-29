@@ -11,7 +11,7 @@ import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.Config;
 
 /**
  * The PlaceHolder class is a placeholder expansion for GensPlus. It provides placeholders that
@@ -86,9 +86,9 @@ public class PlaceHolder extends PlaceholderExpansion {
   public String onRequest(OfflinePlayer player, String params) {
     final ActiveEvent activeEvent = EventLoop.getActiveEvent();
     final boolean useCommands =
-        config.getBoolean(ConfigPaths.LIMIT_SETTINGS_USE_COMMANDS.getPath());
+        config.getBoolean(Config.LIMIT_SETTINGS_USE_COMMANDS.getPath());
     final boolean usePermissions = config
-        .getBoolean(ConfigPaths.LIMIT_SETTINGS_USE_PERMISSIONS.getPath());
+        .getBoolean(Config.LIMIT_SETTINGS_USE_PERMISSIONS.getPath());
 
     return switch (params) {
       case "event_timer" -> {
@@ -100,7 +100,7 @@ public class PlaceHolder extends PlaceholderExpansion {
           activeEvent.event() == null ? "No Events" : activeEvent.event().getName();
 
       case "gen_limit" -> {
-        if (!config.getBoolean(ConfigPaths.LIMIT_SETTINGS_ENABLED.getPath())) {
+        if (!config.getBoolean(Config.LIMIT_SETTINGS_ENABLED.getPath())) {
           yield config.getString("limit-settings.unlimited-placeholder");
         }
 
@@ -112,7 +112,7 @@ public class PlaceHolder extends PlaceholderExpansion {
           yield String.valueOf(playerData.getData(player.getUniqueId()).getLimit());
         }
 
-        yield config.getString(ConfigPaths.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath());
+        yield config.getString(Config.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath());
       }
 
       case "gen_placed" -> locationsData.getGeneratorsCountByPlayer(player.getPlayer()).toString();

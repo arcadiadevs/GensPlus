@@ -1,16 +1,17 @@
-package xyz.arcadiadevs.gensplus.utils.config;
+package xyz.arcadiadevs.gensplus.utils;
 
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
+import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 
 /**
  * The ConfigManager class provides functionality for handling the configuration file in GensPlus.
  */
-
-public enum ConfigPaths {
+public enum Config {
   ITEM_DESPAWN_TIME("item-despawn-time", "5m"),
   CAN_DROPS_BE_PLACED("can-items-be-placed", false),
   DISABLED_WORLDS("disabled-worlds", new ArrayList<String>()),
@@ -65,7 +66,6 @@ public enum ConfigPaths {
   DEFAULT_ITEM_SPAWN_LORE("default-item-spawn-lore", new ArrayList<String>()),
   DEFAULT_HOLOGRAM_LINES("default-hologram-lines", new ArrayList<String>()),
   DEVELOPER_OPTIONS("developer-options.enabled", false),
-
   GENERATORS("generators", new ArrayList<Map<?, ?>>());
 
   @Getter
@@ -74,29 +74,73 @@ public enum ConfigPaths {
   @Getter
   private final Object defaultValue;
 
-  ConfigPaths(String path, Object defaultValue) {
+  Config(String path, Object defaultValue) {
     this.path = path;
     this.defaultValue = defaultValue;
   }
 
-  /**
-   * Gets the value at the specified path from the config. If the path is not present or is null,
-   * sets the value to the default value defined in the ConfigPaths enum.
-   *
-   * @param config The FileConfiguration to retrieve the value from.
-   * @param path   The path in the configuration to get the value from.
-   * @return The value from the configuration, or the default value if not present or null.
-   */
-  public static Object getWithDefault(FileConfiguration config, String path) {
-    ConfigPaths configPath = ConfigPaths.valueOf(path);
-    Object defaultValue = configPath.getDefaultValue();
+  public Object get(boolean format) {
+    FileConfiguration config = GensPlus.getInstance().getConfig();
 
-    if (config.contains(path)) {
-      return config.get(path);
-    } else {
+    if (!config.contains(path)) {
       config.set(path, defaultValue);
-      return defaultValue;
     }
+
+    Object value = config.get(this.path);
+
+    if (format && !(value instanceof String)) {
+      throw new IllegalArgumentException("Cannot format non-string value!");
+    }
+
+    return format ? ChatUtil.translate(value.toString()) : value;
+  }
+
+  public boolean getBoolean() {
+    return (boolean) get();
+  }
+
+  public int getInt() {
+    return (int) get();
+  }
+
+  public double getDouble() {
+    return (double) get();
+  }
+
+  public String getString() {
+    return (String) get();
+  }
+
+  public String getStringFormatted() {
+    return (String) getFormatted();
+  }
+
+  public List<String> getStringList() {
+    return (List<String>) get();
+  }
+
+  public List<Map<?, ?>> getMapList() {
+    return (List<Map<?, ?>>) get();
+  }
+
+  public List<Integer> getIntegerList() {
+    return (List<Integer>) get();
+  }
+
+  public List<Double> getDoubleList() {
+    return (List<Double>) get();
+  }
+
+  public List<Boolean> getBooleanList() {
+    return (List<Boolean>) get();
+  }
+
+  public Object get() {
+    return get(false);
+  }
+
+  public Object getFormatted() {
+    return get(true);
   }
 
 }

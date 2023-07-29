@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.Config;
 
 /**
  * Handles the PlayerJoinEvent triggered when a player joins the server.
@@ -29,10 +29,10 @@ public class OnJoin implements Listener {
   public void onJoin(PlayerJoinEvent event) {
     if (playerData.getData(event.getPlayer().getUniqueId()) == null) {
       playerData.create(event.getPlayer().getUniqueId(),
-          config.getInt(ConfigPaths.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath()));
+          config.getInt(Config.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath()));
     }
 
-    if (!config.getBoolean(ConfigPaths.ON_JOIN_ENABLED.getPath())) {
+    if (!config.getBoolean(Config.ON_JOIN_ENABLED.getPath())) {
       return;
     }
 
@@ -41,8 +41,8 @@ public class OnJoin implements Listener {
     }
 
     final Player player = event.getPlayer();
-    final int tier = config.getInt(ConfigPaths.ON_JOIN_GENERATOR_TIER.getPath());
-    final int amount = config.getInt(ConfigPaths.ON_JOIN_GENERATOR_AMOUNT.getPath());
+    final int tier = config.getInt(Config.ON_JOIN_GENERATOR_TIER.getPath());
+    final int amount = config.getInt(Config.ON_JOIN_GENERATOR_AMOUNT.getPath());
     generatorsData.giveItemByTier(player, tier, amount);
   }
 }

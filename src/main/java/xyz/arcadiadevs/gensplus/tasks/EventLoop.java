@@ -8,9 +8,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.models.events.Event;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 
 /**
@@ -37,7 +36,7 @@ public class EventLoop extends BukkitRunnable {
     activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
         System.currentTimeMillis() + TimeUtil.parseTimeMillis(plugin
             .getConfig()
-            .getString(ConfigPaths.EVENTS_TIME_BETWEEN_EVENTS.getPath()))
+            .getString(Config.EVENTS_TIME_BETWEEN_EVENTS.getPath()))
     );
   }
 
@@ -53,40 +52,40 @@ public class EventLoop extends BukkitRunnable {
     activeEvent = new ActiveEvent(events.get(randomNumber), System.currentTimeMillis(),
         System.currentTimeMillis()
             + TimeUtil.parseTimeMillis(
-            plugin.getConfig().getString(ConfigPaths.EVENTS_EVENT_DURATION.getPath()))
+            plugin.getConfig().getString(Config.EVENTS_EVENT_DURATION.getPath()))
     );
 
-    String eventEndTime = plugin.getConfig().getString(ConfigPaths.EVENTS_EVENT_DURATION.getPath());
+    String eventEndTime = plugin.getConfig().getString(Config.EVENTS_EVENT_DURATION.getPath());
 
     Messages.EVENT_STARTED.format(
             "event", activeEvent.event().getName(),
             "time", eventEndTime)
         .send(GensPlus.getInstance().getConfig()
-            .getBoolean(ConfigPaths.EVENTS_BROADCAST_ENABLED.getPath()));
+            .getBoolean(Config.EVENTS_BROADCAST_ENABLED.getPath()));
 
     new BukkitRunnable() {
       public void run() {
 
         String eventStartTime =
-            plugin.getConfig().getString(ConfigPaths.EVENTS_TIME_BETWEEN_EVENTS.getPath());
+            plugin.getConfig().getString(Config.EVENTS_TIME_BETWEEN_EVENTS.getPath());
 
         Messages.EVENT_ENDED.format(
                 "event", activeEvent.event().getName(),
                 "time", eventStartTime)
             .send(GensPlus.getInstance().getConfig()
-                .getBoolean(ConfigPaths.EVENTS_BROADCAST_ENABLED.getPath()));
+                .getBoolean(Config.EVENTS_BROADCAST_ENABLED.getPath()));
 
         activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
             System.currentTimeMillis() + TimeUtil.parseTimeMillis(plugin
                 .getConfig()
-                .getString(ConfigPaths.EVENTS_TIME_BETWEEN_EVENTS.getPath())));
+                .getString(Config.EVENTS_TIME_BETWEEN_EVENTS.getPath())));
 
         new EventLoop(plugin, events)
             .runTaskLaterAsynchronously(
                 plugin,
                 TimeUtil.parseTime(plugin
                     .getConfig()
-                    .getString(ConfigPaths.EVENTS_TIME_BETWEEN_EVENTS.getPath())
+                    .getString(Config.EVENTS_TIME_BETWEEN_EVENTS.getPath())
                 ));
 
         cancel();
@@ -95,7 +94,7 @@ public class EventLoop extends BukkitRunnable {
     }.runTaskLaterAsynchronously(
         plugin,
         TimeUtil.parseTime(
-            plugin.getConfig().getString(ConfigPaths.EVENTS_EVENT_DURATION.getPath()))
+            plugin.getConfig().getString(Config.EVENTS_EVENT_DURATION.getPath()))
     );
   }
 

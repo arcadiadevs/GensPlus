@@ -1,6 +1,5 @@
 package xyz.arcadiadevs.gensplus.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,10 +11,9 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.UpgradeGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
+import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
-import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
+import xyz.arcadiadevs.gensplus.utils.Permissions;
 
 public class BlockInteraction implements Listener {
 
@@ -66,7 +64,7 @@ public class BlockInteraction implements Listener {
     }
 
     if (GensPlus.getInstance().getConfig()
-        .getBoolean(ConfigPaths.GUIS_UPGRADE_GUI_ENABLED.getPath())) {
+        .getBoolean(Config.GUIS_UPGRADE_GUI_ENABLED.getPath())) {
       UpgradeGui.open(player, generatorLocation, block);
     } else {
       if (generatorLocation.getPlacedBy() != player

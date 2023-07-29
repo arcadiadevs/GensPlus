@@ -81,7 +81,6 @@ public class PlayerMessage {
 
   public void sendInActionBar(Player player) {
     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(format.get(0)));
-
   }
 
   public void sendAsJson(Player player) {

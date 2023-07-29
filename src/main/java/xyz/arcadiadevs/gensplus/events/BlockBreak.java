@@ -12,8 +12,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
-import xyz.arcadiadevs.gensplus.utils.permission.Permissions;
+import xyz.arcadiadevs.gensplus.utils.Config;
+import xyz.arcadiadevs.gensplus.utils.Permissions;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 
 /**
@@ -56,7 +56,7 @@ public class BlockBreak implements Listener {
     ArrayList<Block> blocks = generatorLocation.getBlockLocations();
 
     // Generate and drop the generator item for the player
-    if (GensPlus.getInstance().getConfig().getBoolean(ConfigPaths.INSTANT_PICKUP.getPath())) {
+    if (GensPlus.getInstance().getConfig().getBoolean(Config.INSTANT_PICKUP.getPath())) {
       generator.giveItem((Player) player);
     } else {
       generator.dropItem(event.getPlayer(), eventBlock.getLocation());
