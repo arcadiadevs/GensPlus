@@ -117,24 +117,6 @@ wands:
       - "&e⌊ &fMultiplier: &a%multiplier%"
       - ""
 
-  upgrade-wand:
-    enabled: true
-
-    # The material of the upgrade wand
-    material: "STICK"
-
-    # The name of the upgrade wand
-    name: "&e&lUpgrade Wand"
-
-    # The lore of the upgrade wand
-    lore:
-      - ""
-      - "&7Right click on a generator to upgrade it!"
-      - "&e⌈ &fUses: &a%uses%"
-      - "&eⅠ Radius: &a%radius%"
-      - "&e⌊ &fMultiplier: &a%multiplier%"
-      - ""
-
 guis:
   # Gui to view generators by a command
   generators-gui:
