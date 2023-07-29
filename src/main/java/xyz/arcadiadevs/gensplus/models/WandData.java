@@ -33,6 +33,12 @@ public record WandData(List<Wand> wands) {
     return wandData;
   }
 
+  public Wand remove(UUID uuid) {
+    Wand wand = getWand(uuid);
+    wands.remove(wand);
+    return wand;
+  }
+
   @AllArgsConstructor
   @Getter
   @Setter

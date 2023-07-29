@@ -1,6 +1,7 @@
 package xyz.arcadiadevs.gensplus.events;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,26 +12,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.models.PlayerData;
+import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 
 /**
  * The BlockPlace class provides functionality for handling the BlockPlaceEvent in GensPlus.
  * It handles the placement of generator blocks.
  */
+@AllArgsConstructor
 public class BlockPlace implements Listener {
 
   private final LocationsData locationsData;
-
-  /**
-   * Constructs a BlockPlace object with the specified LocationsData.
-   *
-   * @param locationsData The LocationsData object containing information about block locations.
-   */
-  public BlockPlace(LocationsData locationsData) {
-    this.locationsData = locationsData;
-  }
+  private final PlayerData playerData;
 
   /**
    * Handles the BlockPlaceEvent triggered when a player places a block.
@@ -60,8 +55,8 @@ public class BlockPlace implements Listener {
 
     final FileConfiguration config = GensPlus.getInstance().getConfig();
 
-    if (firstLine.contains("Generator drop tier") &&
-        !config.getBoolean(ConfigPaths.CAN_DROPS_BE_PLACED.getPath())) {
+    if (firstLine.contains("Generator drop tier")
+        && !config.getBoolean(ConfigPaths.CAN_DROPS_BE_PLACED.getPath())) {
       event.setCancelled(true);
       return;
     }
@@ -85,11 +80,22 @@ public class BlockPlace implements Listener {
     final Player player = event.getPlayer();
 
     int tier = Integer.parseInt(firstLine.split(" ")[2]);
-    final int limit = PlayerUtil.getGeneratorLimit(player);
+    int limit = PlayerUtil.getGeneratorLimit(player);
     final boolean enabled = config.getBoolean(ConfigPaths.LIMIT_SETTINGS_ENABLED.getPath());
+    final boolean useCommands =
+        config.getBoolean(ConfigPaths.LIMIT_SETTINGS_USE_COMMANDS.getPath());
+    final boolean usePermissions = config
+        .getBoolean(ConfigPaths.LIMIT_SETTINGS_USE_PERMISSIONS.getPath());
 
-    if (locationsData.getGeneratorsCountByPlayer(player) >= limit
-        && enabled) {
+    if (!enabled) {
+      return;
+    }
+
+    if (useCommands && !usePermissions) {
+      limit = playerData.getData(player.getUniqueId()).getLimit();
+    }
+
+    if (locationsData.getGeneratorsCountByPlayer(player) >= limit) {
       Messages.LIMIT_REACHED.format("limit", limit).send(player);
       event.setCancelled(true);
       return;

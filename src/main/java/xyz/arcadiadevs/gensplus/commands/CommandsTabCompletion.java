@@ -44,7 +44,28 @@ public class CommandsTabCompletion implements TabCompleter {
           return null;
         }
 
-        return List.of("help", "give", "giveall", "wand");
+        return List.of("help", "give", "giveall", "wand", "setlimit");
+      }
+
+      if (strings[0].equalsIgnoreCase("setlimit")) {
+        if (!(adminPermission
+            || commandSender.hasPermission(Permissions.SET_LIMIT.getPermission()))) {
+          return null;
+        }
+
+        if (strings.length == 2) {
+          List<String> playerNames = new ArrayList<>();
+          for (Player player : commandSender.getServer().getOnlinePlayers()) {
+            playerNames.add(player.getName());
+          }
+
+          return playerNames;
+        }
+
+        if (strings.length == 3) {
+          return List.of("<limit>");
+        }
+
       }
 
       if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("give"))) {

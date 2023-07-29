@@ -13,7 +13,8 @@ public enum Permissions {
   GENERATOR_DROPS_SELL_HAND("gensplus.drop.sell.hand"),
   SELL_MULTIPLIER("gensplus.sell.multiplier."),
   GENERATOR_LIMIT("gensplus.limit."),
-  CHUNK_RADIUS("gensplus.chunkradius.");
+  CHUNK_RADIUS("gensplus.chunkradius."),
+  SET_LIMIT("gensplus.admin.setlimit");
 
   private final String permission;
 

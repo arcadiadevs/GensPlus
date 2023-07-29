@@ -6,10 +6,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
+import xyz.arcadiadevs.gensplus.utils.config.ConfigPaths;
 
 /**
  * The PlaceHolder class is a placeholder expansion for GensPlus. It provides placeholders that
@@ -19,6 +21,7 @@ import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 public class PlaceHolder extends PlaceholderExpansion {
 
   private final LocationsData locationsData;
+  private final PlayerData playerData;
   private final FileConfiguration config;
 
   /**
@@ -82,16 +85,36 @@ public class PlaceHolder extends PlaceholderExpansion {
   @Override
   public String onRequest(OfflinePlayer player, String params) {
     final ActiveEvent activeEvent = EventLoop.getActiveEvent();
+    final boolean useCommands =
+        config.getBoolean(ConfigPaths.LIMIT_SETTINGS_USE_COMMANDS.getPath());
+    final boolean usePermissions = config
+        .getBoolean(ConfigPaths.LIMIT_SETTINGS_USE_PERMISSIONS.getPath());
 
     return switch (params) {
       case "event_timer" -> {
         final long time = activeEvent.endTime() - System.currentTimeMillis();
         yield TimeUtil.millisToTime(time);
       }
+
       case "event_name" ->
           activeEvent.event() == null ? "No Events" : activeEvent.event().getName();
-      case "gen_limit" -> config.getBoolean("limit-settings.enabled")
-          ? PlayerUtil.getGeneratorLimit(player.getPlayer()).toString() : "Unlimited";
+
+      case "gen_limit" -> {
+        if (!config.getBoolean(ConfigPaths.LIMIT_SETTINGS_ENABLED.getPath())) {
+          yield config.getString("limit-settings.unlimited-placeholder");
+        }
+
+        if (usePermissions) {
+          yield PlayerUtil.getGeneratorLimit(player.getPlayer()).toString();
+        }
+
+        if (useCommands) {
+          yield String.valueOf(playerData.getData(player.getUniqueId()).getLimit());
+        }
+
+        yield config.getString(ConfigPaths.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath());
+      }
+
       case "gen_placed" -> locationsData.getGeneratorsCountByPlayer(player.getPlayer()).toString();
       case "sell_multiplier" -> PlayerUtil.getMultiplier(player.getPlayer()).toString();
       default -> throw new IllegalStateException("Unexpected value: " + params);

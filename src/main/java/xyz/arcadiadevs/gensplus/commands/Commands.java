@@ -76,7 +76,7 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
-      if (strings[1].equalsIgnoreCase("setlimit")) {
+      if (strings[0].equalsIgnoreCase("setlimit")) {
         if (!adminPermission) {
           Messages.NO_PERMISSION.format().send(player);
           return true;
@@ -96,7 +96,10 @@ public class Commands implements CommandExecutor {
 
         PlayerData.Data data = playerData.getData(targetPlayer.getUniqueId());
         data.setLimit(Integer.parseInt(strings[2]));
-        Messages.LIMIT_UPDATED.format("limit", strings[2], "player", targetPlayer.getDisplayName()).send(player);
+        Messages.LIMIT_UPDATED.format(
+            "limit", strings[2],
+            "player", targetPlayer.getName())
+            .send(player);
 
         return true;
       }

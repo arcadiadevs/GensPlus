@@ -92,6 +92,7 @@ public class OnWandUse implements Listener {
 
       if (wand.getUses() <= 0) {
         player.getInventory().remove(itemInMainHand);
+        wandData.remove(wand.getUuid());
         Messages.WAND_BROKE.format().send(player);
         return;
       }

@@ -169,7 +169,7 @@ public final class GensPlus extends JavaPlugin {
     Metrics metrics = new Metrics(this, 19054);
 
     if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
-      new PlaceHolder(locationsData, getConfig()).register();
+      new PlaceHolder(locationsData, playerData, getConfig()).register();
     }
 
     loadHolograms();
@@ -191,6 +191,7 @@ public final class GensPlus extends JavaPlugin {
   public void onDisable() {
     dataSaveTask.saveBlockDataToJson();
     dataSaveTask.saveWandDataToJson();
+    dataSaveTask.savePlayerDataToJson();
 
     if (getConfig().getBoolean(ConfigPaths.DEVELOPER_OPTIONS.getPath())) {
       // Remove all files
@@ -212,11 +213,11 @@ public final class GensPlus extends JavaPlugin {
   private void loadBukkitEvents() {
     final HashSet<Listener> events = new HashSet<>();
 
-    events.add(new BlockPlace(locationsData));
+    events.add(new BlockPlace(locationsData, playerData));
     events.add(new BlockBreak(locationsData, generatorsData));
     events.add(new BlockInteraction(locationsData, generatorsData));
     events.add(new InstantBreak(locationsData, generatorsData));
-    events.add(new OnJoin(generatorsData, getConfig()));
+    events.add(new OnJoin(generatorsData, playerData, getConfig()));
     events.add(new EggTeleport(locationsData));
     events.add(new BeaconInteraction(locationsData));
     events.add(new EntityExplode(locationsData, generatorsData));
