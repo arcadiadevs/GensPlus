@@ -36,5 +36,3 @@ generator-received: "&9GensPlus> &7You received &a%amount% &7generator(s) of tie
 # [wands]
 sell-wand-given: "&9GensPlus> &7You have been given a sell wand!"
 sell-wand-received: "&9GensPlus> &7You have received a sell wand!"
-upgrade-wand-given: "&9GensPlus> &7You have been given a upgrade wand!"
-upgrade-wand-received: "&9GensPlus> &7You have received an upgrade wand!"

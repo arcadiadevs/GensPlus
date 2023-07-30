@@ -28,6 +28,7 @@ public class OnJoin implements Listener {
    */
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
+    ItemUtil.upgradeGens(event.getPlayer().getInventory());
     if (playerData.getData(event.getPlayer().getUniqueId()) == null) {
       playerData.create(event.getPlayer().getUniqueId(),
           config.getInt(Config.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath()));
@@ -45,7 +46,5 @@ public class OnJoin implements Listener {
     final int tier = config.getInt(Config.ON_JOIN_GENERATOR_TIER.getPath());
     final int amount = config.getInt(Config.ON_JOIN_GENERATOR_AMOUNT.getPath());
     generatorsData.giveItemByTier(player, tier, amount);
-
-    ItemUtil.upgradeGens(player.getInventory());
   }
 }
