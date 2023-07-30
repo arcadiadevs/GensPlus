@@ -105,7 +105,7 @@ public class Commands implements CommandExecutor {
 
       if (strings[0].equalsIgnoreCase("wand")) {
         if (strings[1].equalsIgnoreCase("sell")) {
-          if (!adminPermission) {
+          if (!player.hasPermission(Permissions.GIVE_WAND.getPermission())) {
             Messages.NO_PERMISSION.format().send(player);
             return true;
           }
