@@ -52,7 +52,7 @@ public class SpawnerTask extends BukkitRunnable {
   public void run() {
     for (GeneratorsData.Generator generator : generatorsData.generators()) {
       if (genNextSpawn.get(generator) > System.currentTimeMillis()) {
-        return;
+        continue;
       }
 
       List<LocationsData.GeneratorLocation> blocksToSpawn = blockData.stream()

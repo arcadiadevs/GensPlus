@@ -84,6 +84,13 @@ public record GeneratorsData(@Getter List<Generator> generators) {
       player.getWorld().dropItemNaturally(location, blockType);
     }
 
+    @Override
+    public String toString() {
+      return "Generator{" +
+          "name='" + name + '\'' +
+          ", tier=" + tier +
+          '}';
+    }
   }
 
 }
