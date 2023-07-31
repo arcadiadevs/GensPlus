@@ -177,7 +177,7 @@
         <dependency>
             <groupId>io.github.bananapuncher714</groupId>
             <artifactId>nbteditor</artifactId>
-            <version>7.18.5</version>
+            <version>7.18.6</version>
         </dependency>
     </dependencies>
 </project>
