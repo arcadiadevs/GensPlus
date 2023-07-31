@@ -87,12 +87,13 @@ public class ItemUtil {
       String firstLine = lore.get(0);
 
       if (firstLine.contains("Generator drop tier")) {
-        int tier = Integer.parseInt(firstLine.split(" ")[3]);
-        item = NBTEditor.set(item, tier, "gensplus", "spawnitem", "tier");
+        final int tier = Integer.parseInt(firstLine.split(" ")[3]);
 
         lore.remove(0);
         meta.setLore(lore);
         item.setItemMeta(meta);
+
+        item = NBTEditor.set(item, tier, "gensplus", "spawnitem", "tier");
 
         inventory.setItem(i, item);
 
@@ -100,12 +101,13 @@ public class ItemUtil {
       }
 
       if (firstLine.contains("Generator tier")) {
-        int tier = Integer.parseInt(firstLine.split(" ")[2]);
-        item = NBTEditor.set(item, tier, "gensplus", "blocktype", "tier");
+        final int tier = Integer.parseInt(firstLine.split(" ")[2]);
 
         lore.remove(0);
         meta.setLore(lore);
         item.setItemMeta(meta);
+
+        item = NBTEditor.set(item, tier, "gensplus", "blocktype", "tier");
 
         inventory.setItem(i, item);
       }

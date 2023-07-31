@@ -14,7 +14,8 @@ public enum Permissions {
   SELL_MULTIPLIER("gensplus.sell.multiplier."),
   GENERATOR_LIMIT("gensplus.limit."),
   CHUNK_RADIUS("gensplus.chunkradius."),
-  SET_LIMIT("gensplus.admin.setlimit");
+  SET_LIMIT("gensplus.admin.setlimit"),
+  GIVE_WAND("gensplus.admin.givewand");
 
   private final String permission;
 
