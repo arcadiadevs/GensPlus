@@ -129,6 +129,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
   public static class GeneratorLocation {
 
     private final String playerId;
+    private final String islandId;
     private final Integer generator;
     private final ArrayList<SimplifiedLocation> blockLocations;
 
@@ -138,9 +139,11 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     /**
      * Represents a generator location.
      */
-    public GeneratorLocation(String playerId, Integer generator, List<?> blockLocations) {
+    @SuppressWarnings("unchecked")
+    public GeneratorLocation(String playerId, String islandId, Integer generator, List<?> blockLocations) {
       this.playerId = playerId;
       this.generator = generator;
+      this.islandId = islandId;
 
       if (blockLocations.get(0) instanceof Block) {
         // Perform actions specific to Block
@@ -195,8 +198,16 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       this.hologram = HologramsUtil.createHologram(getCenter(), lines, material);
     }
 
+    public GeneratorLocation(String playerId, Integer generator, List<?> blockLocations) {
+      this(playerId, null, generator, blockLocations);
+    }
+
     public void removeBlock(Block block) {
       blockLocations.remove(SimplifiedLocation.fromLocation(block.getLocation()));
+
+      if (blockLocations.isEmpty()) {
+        GensPlus.getInstance().getLocationsData().removeLocation(this);
+      }
     }
 
     public OfflinePlayer getPlacedBy() {
@@ -238,6 +249,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     /**
      * Spawns the items for generators.
      */
+    @SuppressWarnings("SuspiciousMethodCalls")
     public void spawn() {
       Location location = getCenter();
 
