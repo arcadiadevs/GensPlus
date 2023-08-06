@@ -1,5 +1,7 @@
 package xyz.arcadiadevs.gensplus.events;
 
+import lombok.AllArgsConstructor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,21 +17,10 @@ import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.Permissions;
 
+@AllArgsConstructor
 public class BlockInteraction implements Listener {
 
   private final LocationsData locationsData;
-  private final GeneratorsData generatorsData;
-
-  /**
-   * Constructs a ClickEvent object with the specified LocationsData and GeneratorsData.
-   *
-   * @param locationsData  The LocationsData object containing information about block locations.
-   * @param generatorsData The GeneratorsData object containing information about generators.
-   */
-  public BlockInteraction(LocationsData locationsData, GeneratorsData generatorsData) {
-    this.locationsData = locationsData;
-    this.generatorsData = generatorsData;
-  }
 
   /**
    * Handles the PlayerInteractEvent triggered when a player interacts with a block. If the block is
@@ -74,6 +65,49 @@ public class BlockInteraction implements Listener {
         return;
       }
       UpgradeGui.upgradeGenerator(player, generatorLocation, block);
+    }
+  }
+
+  /**
+   * Handles the PlayerInteractEvent with a beacon block.
+   *
+   * @param event The PlayerInteractEvent object representing the player interact event.
+   */
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  public void beaconInteract(PlayerInteractEvent event) {
+    final LocationsData.GeneratorLocation location =
+        locationsData.getGeneratorLocation(event.getClickedBlock());
+
+    if (location == null) {
+      return;
+    }
+
+    if (event.getClickedBlock() != null
+        && event.getClickedBlock().getType() == Material.BEACON
+        && location.getGeneratorObject().blockType().getType() == Material.BEACON
+        && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+      event.setCancelled(true);
+    }
+  }
+
+  /**
+   * Handles the PlayerInteractEvent triggered when a player interacts with a dragon egg.
+   *
+   * @param event The PlayerInteractEvent object representing the player interact event.
+   */
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  public void eggInteract(PlayerInteractEvent event) {
+    final LocationsData.GeneratorLocation location =
+        locationsData.getGeneratorLocation(event.getClickedBlock());
+
+    if (location == null) {
+      return;
+    }
+
+    if (event.getClickedBlock() != null
+        && event.getClickedBlock().getType() == Material.DRAGON_EGG
+        && location.getGeneratorObject().blockType().getType() == Material.DRAGON_EGG) {
+      event.setCancelled(true);
     }
   }
 
