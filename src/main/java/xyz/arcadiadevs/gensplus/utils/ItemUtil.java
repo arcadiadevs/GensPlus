@@ -5,9 +5,15 @@ import dev.lone.itemsadder.api.CustomStack;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import io.th0rgal.oraxen.api.OraxenItems;
 import java.util.List;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.models.WandData;
+import xyz.arcadiadevs.gensplus.utils.formatter.Formatter;
+import xyz.arcadiadevs.guilib.ItemBuilder;
 
 /**
  * The ItemUtils class provides utility methods for handling item-related operations.
@@ -112,6 +118,39 @@ public class ItemUtil {
         inventory.setItem(i, item);
       }
     }
+  }
+
+  public static ItemStack getWand(WandData.Wand.WandType type, int uses, double multiplier) {
+    WandData wandData = GensPlus.getInstance().getWandData();
+    WandData.Wand wand = wandData.create(type, uses, multiplier);
+
+    String configPrefix = "wands.sell-wand";
+
+    FileConfiguration config = GensPlus.getInstance().getConfig();
+
+    List<String> lore = config.getStringList(configPrefix + ".lore");
+
+    List<String> formattedLore = Formatter.format(wand, lore);
+
+    final Material material = XMaterial.matchXMaterial(config.getString(configPrefix + ".material"))
+        .orElseThrow()
+        .parseMaterial();
+
+    ItemBuilder itemBuilder = new ItemBuilder(material)
+        .name(ChatUtil.translate(config.getString(configPrefix + ".name")))
+        .lore(formattedLore);
+
+    ItemStack item = itemBuilder.build();
+
+    String uuid = "sell-wand-uuid";
+
+    item = NBTEditor.set(item, wand.getUuid().toString(), uuid);
+
+    return item;
+  }
+
+  public static ItemStack getSellWand(int uses, double multiplier) {
+    return getWand(WandData.Wand.WandType.SELL_WAND, uses, multiplier);
   }
 
 }

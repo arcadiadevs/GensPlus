@@ -64,11 +64,7 @@ public class PlayerMessage {
       return;
     }
 
-    if (!(sender instanceof Player player)) {
-      return;
-    }
-
-    format.forEach(player::sendMessage);
+    format.forEach(sender::sendMessage);
   }
 
   public void send(boolean broadcast) {

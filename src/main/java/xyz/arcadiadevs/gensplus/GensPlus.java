@@ -33,11 +33,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.gensplus.commands.Commands;
 import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
-import xyz.arcadiadevs.gensplus.events.BeaconInteraction;
 import xyz.arcadiadevs.gensplus.events.BlockBreak;
 import xyz.arcadiadevs.gensplus.events.BlockInteraction;
 import xyz.arcadiadevs.gensplus.events.BlockPlace;
-import xyz.arcadiadevs.gensplus.events.EggTeleport;
 import xyz.arcadiadevs.gensplus.events.EntityExplode;
 import xyz.arcadiadevs.gensplus.events.InstantBreak;
 import xyz.arcadiadevs.gensplus.events.OnInventoryOpen;
@@ -52,15 +50,16 @@ import xyz.arcadiadevs.gensplus.models.events.Event;
 import xyz.arcadiadevs.gensplus.models.events.SellEvent;
 import xyz.arcadiadevs.gensplus.models.events.SpeedEvent;
 import xyz.arcadiadevs.gensplus.placeholders.PlaceHolder;
+import xyz.arcadiadevs.gensplus.tasks.CleanupTask;
 import xyz.arcadiadevs.gensplus.tasks.DataSaveTask;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.tasks.SpawnerTask;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
+import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.Metrics;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
-import xyz.arcadiadevs.gensplus.utils.Config;
 import xyz.arcadiadevs.gensplus.utils.message.Messages;
 
 /**
@@ -168,7 +167,7 @@ public final class GensPlus extends JavaPlugin {
 
     events = loadGensPlusEvents();
 
-    Metrics metrics = new Metrics(this, 19293);
+    new Metrics(this, 19293);
 
     if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
       new PlaceHolder(locationsData, playerData, getConfig()).register();
@@ -217,11 +216,9 @@ public final class GensPlus extends JavaPlugin {
 
     events.add(new BlockPlace(locationsData, playerData, getConfig()));
     events.add(new BlockBreak(locationsData, generatorsData));
-    events.add(new BlockInteraction(locationsData, generatorsData));
+    events.add(new BlockInteraction(locationsData));
     events.add(new InstantBreak(locationsData, generatorsData));
     events.add(new OnJoin(generatorsData, playerData, getConfig()));
-    events.add(new EggTeleport(locationsData));
-    events.add(new BeaconInteraction(locationsData));
     events.add(new EntityExplode(locationsData, generatorsData));
     events.add(new OnWandUse(wandData, getConfig()));
     events.add(new OnInventoryOpen());
@@ -236,14 +233,16 @@ public final class GensPlus extends JavaPlugin {
     dataSaveTask.runTaskTimerAsynchronously(this, 0, 20);
 
     // Run spawner task every second
-    new SpawnerTask(locationsData.locations(), generatorsData).runTaskTimerAsynchronously(this,
-        0, 20);
+    new SpawnerTask(locationsData.locations(), generatorsData)
+        .runTaskTimerAsynchronously(this, 0, 20);
 
     // Start event loop
     new EventLoop(this, events).runTaskLaterAsynchronously(this,
         TimeUtil.parseTime(
             getConfig().getString(Config.EVENTS_TIME_BETWEEN_EVENTS.getPath()))
     );
+
+    new CleanupTask(locationsData).runTaskTimerAsynchronously(this, 0, 20);
   }
 
   /**
@@ -302,6 +301,7 @@ public final class GensPlus extends JavaPlugin {
    * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
    *                          encountered.
    */
+  @SuppressWarnings("unchecked")
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
     List<Map<?, ?>> generatorsConfig = getConfig().getMapList(Config.GENERATORS.getPath());
@@ -378,6 +378,7 @@ public final class GensPlus extends JavaPlugin {
     return new GeneratorsData(generators);
   }
 
+  @SuppressWarnings("unchecked")
   private void loadHolograms() {
     hologramPool = hologramPool == null
         ? new HologramPool(this,
