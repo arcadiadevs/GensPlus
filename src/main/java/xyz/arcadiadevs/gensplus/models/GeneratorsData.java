@@ -30,17 +30,16 @@ public record GeneratorsData(@Getter List<Generator> generators) {
   /**
    * Calculates the upgrade price from the current generator to the specified new tier.
    *
-   * @param generator The current generator.
    * @param newTier   The new tier to upgrade to.
    * @return The upgrade price from the current generator to the new tier.
    * @throws NoSuchElementException if no generator with the new tier is found.
    */
-  public double getUpgradePrice(Generator generator, int newTier) throws NoSuchElementException {
+  public double getUpgradePrice(int newTier) throws NoSuchElementException {
     return generators.stream()
         .filter(g -> g.tier() == newTier)
         .findFirst()
-        .map(nextTierGen -> nextTierGen.price() - generator.price())
-        .orElseThrow();
+        .orElseThrow()
+        .price();
   }
 
   /**
