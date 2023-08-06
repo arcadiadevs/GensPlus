@@ -30,6 +30,8 @@ import xyz.arcadiadevs.guilib.GuiItemType;
  */
 public class UpgradeGui {
   private static final GensPlus instance = GensPlus.getInstance();
+  private static final Economy economy = instance.getEcon();
+  private static final FileConfiguration config = instance.getConfig();
 
   /**
    * Opens the upgrade GUI for the specified player and generator.
@@ -45,9 +47,6 @@ public class UpgradeGui {
       Messages.NOT_YOUR_GENERATOR_UPGRADE.format().send(player);
       return;
     }
-
-    final FileConfiguration config = instance.getConfig();
-    final Economy economy = instance.getEcon();
 
     final var rows = config.getInt(Config.GUIS_UPGRADE_GUI_ROWS.getPath());
     final var menu = new Gui(
@@ -72,7 +71,7 @@ public class UpgradeGui {
         Config.GUIS_UPGRADE_GUI_UPGRADE_ONE_FIRST_LINE.getPath()))
     );
 
-    double price = instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
+    double price = instance.getGeneratorsData().getUpgradePrice(nextGenerator.tier());
 
     List<String> lore =
         config.getStringList(Config.GUIS_UPGRADE_GUI_UPGRADE_ONE_LORE.getPath());
@@ -169,7 +168,7 @@ public class UpgradeGui {
     }
 
     double upgradePrice =
-        instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier())
+        instance.getGeneratorsData().getUpgradePrice(nextGenerator.tier())
             * currentLoc.getBlockLocations().size();
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
@@ -223,7 +222,7 @@ public class UpgradeGui {
     }
 
     double upgradePrice =
-        instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
+        instance.getGeneratorsData().getUpgradePrice(nextGenerator.tier());
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
       Messages.NOT_ENOUGH_MONEY.format(
