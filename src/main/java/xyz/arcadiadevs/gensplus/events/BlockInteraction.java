@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -9,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.UpgradeGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
@@ -31,6 +33,10 @@ public class BlockInteraction implements Listener {
    */
   @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
   public void onBlockClick(PlayerInteractEvent event) {
+    if (event.getHand() != EquipmentSlot.HAND) {
+      return;
+    }
+
     Block block = event.getClickedBlock();
     Player player = event.getPlayer();
 
@@ -38,7 +44,11 @@ public class BlockInteraction implements Listener {
       return;
     }
 
-    if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !player.isSneaking()) {
+    final boolean needsSneak = Config.GENERATOR_UPGRADE_SNEAK.getBoolean();
+    final String actionValue = Config.GENERATOR_UPGRADE_ACTION.getString();
+
+    if ((needsSneak && !player.isSneaking())
+        || event.getAction() != Action.valueOf(actionValue)) {
       return;
     }
 

@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,11 +42,9 @@ public class OnWandUse implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onWandUse(PlayerInteractEvent event) {
 
-    String version = Bukkit.getBukkitVersion();
-    final boolean is1_8 = version.contains("1.8");
     final Player player = event.getPlayer();
 
-    if (!is1_8 && event.getHand() != null && event.getHand().toString().equals("OFF_HAND")) {
+    if (event.getHand() != EquipmentSlot.HAND) {
       return;
     }
 
