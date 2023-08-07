@@ -88,6 +88,11 @@ public class Commands implements CommandExecutor {
 
         final Player targetPlayer = Bukkit.getPlayer(strings[1]);
 
+        if (targetPlayer == null) {
+          Messages.PLAYER_NOT_FOUND.format().send(commandSender);
+          return true;
+        }
+
         PlayerData.Data data = playerData.getData(targetPlayer.getUniqueId());
         data.setLimit(Integer.parseInt(strings[2]));
         Messages.LIMIT_UPDATED.format(

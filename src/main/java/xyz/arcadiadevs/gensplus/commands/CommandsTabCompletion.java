@@ -118,7 +118,8 @@ public class CommandsTabCompletion implements TabCompleter {
       }
 
       if (Arrays.stream(strings).anyMatch(string -> string.equalsIgnoreCase("wand"))) {
-        if (commandSender.hasPermission(Permissions.GIVE_WAND.getPermission())) {
+        if (!(adminPermission
+            || commandSender.hasPermission(Permissions.GIVE_WAND.getPermission()))) {
           return null;
         }
 
