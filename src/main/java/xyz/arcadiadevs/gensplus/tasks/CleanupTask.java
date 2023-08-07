@@ -17,8 +17,6 @@ public class CleanupTask extends BukkitRunnable {
    */
   @Override
   public void run() {
-    updateGens();
-
     for (LocationsData.GeneratorLocation location : locationsData.locations()) {
       GeneratorsData.Generator generator = location.getGeneratorObject();
 
@@ -28,6 +26,8 @@ public class CleanupTask extends BukkitRunnable {
         }
       }
     }
+
+    updateGens();
   }
 
   private void updateGens() {
@@ -36,7 +36,7 @@ public class CleanupTask extends BukkitRunnable {
         continue;
       }
 
-      Block block = location.getBlockLocations().stream().findFirst().orElse(null);
+      Block block = location.getBlockLocations().stream().findAny().orElse(null);
 
       if (block == null) {
         continue;

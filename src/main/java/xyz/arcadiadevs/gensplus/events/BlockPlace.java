@@ -31,7 +31,6 @@ public class BlockPlace implements Listener {
 
   /**
    * Handles the BlockPlaceEvent triggered when a player places a block.
-   * TODO: IridiumSkyblock.getInstance().getIslandManager().getTeamViaNameOrPlayer("").get().getName();
    *
    * @param event The BlockPlaceEvent object representing the block place event.
    */
@@ -66,13 +65,16 @@ public class BlockPlace implements Listener {
     final boolean usePermissions = Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getBoolean();
 
     int limitPerPlayer = PlayerUtil.getGeneratorLimit(player);
-    int limitPerIsland = (int) SkyblockUtil.calculateLimit(player);
 
-    if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean() && locationsData.getGeneratorsCountByIsland(
-        SkyblockUtil.getIslandId(event.getBlock().getLocation())) >= limitPerIsland) {
-      Messages.LIMIT_REACHED.format("limit", limitPerIsland).send(player);
-      event.setCancelled(true);
-      return;
+    if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean()) {
+      int limitPerIsland = (int) SkyblockUtil.calculateLimit(player);
+      String islandId = SkyblockUtil.getIslandId(event.getBlock().getLocation());
+
+      if (locationsData.getGeneratorsCountByIsland(islandId) >= limitPerIsland) {
+        Messages.LIMIT_REACHED.format("limit", limitPerIsland).send(player);
+        event.setCancelled(true);
+        return;
+      }
     }
 
     if (useCommands && !usePermissions) {
