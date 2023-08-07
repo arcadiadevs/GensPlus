@@ -146,6 +146,15 @@ guis:
     # on the generator.
     enabled: true
 
+    # Action that will open the gui if enabled or upgrade the generator if upgrade gui
+    # is disabled. Available actions (case sensitive!):
+    # [LEFT_CLICK_BLOCK, RIGHT_CLICK_BLOCK]
+    action: "RIGHT_CLICK_BLOCK"
+
+    # If sneak-required is set to true, the player will need to sneak in order to
+    # open the gui or upgrade the generator.
+    sneak-required: true
+
     upgradeOne:
       first-line: "&e》 &nClick to upgrade generator!&e 《"
       # If lore is not specified, the default lore will be used.

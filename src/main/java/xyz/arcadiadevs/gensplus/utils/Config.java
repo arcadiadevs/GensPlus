@@ -19,6 +19,8 @@ public enum Config {
   ON_JOIN_ENABLED("on-join.enabled", true),
   ON_JOIN_GENERATOR_TIER("on-join.generator-tier", 1),
   ON_JOIN_GENERATOR_AMOUNT("on-join.generator-amount", 3),
+  GENERATOR_UPGRADE_SNEAK("guis.upgrade-gui.sneak-required", true),
+  GENERATOR_UPGRADE_ACTION("guis.upgrade-gui.action", "RIGHT_CLICK_BLOCK"),
   SELL_COMMAND_ENABLED("sell-command.enabled", true),
   LIMIT_SETTINGS_ENABLED("limit-settings.enabled", true),
   LIMIT_SETTINGS_USE_PERMISSIONS("limit-settings.use-permissions", false),
