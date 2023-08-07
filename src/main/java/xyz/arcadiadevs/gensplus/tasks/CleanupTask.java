@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.utils.skyblock.SkyblockUtil;
 
 @AllArgsConstructor
 public class CleanupTask extends BukkitRunnable {
@@ -16,6 +17,8 @@ public class CleanupTask extends BukkitRunnable {
    */
   @Override
   public void run() {
+    updateGens();
+
     for (LocationsData.GeneratorLocation location : locationsData.locations()) {
       GeneratorsData.Generator generator = location.getGeneratorObject();
 
@@ -24,6 +27,28 @@ public class CleanupTask extends BukkitRunnable {
           location.removeBlock(block);
         }
       }
+    }
+  }
+
+  private void updateGens() {
+    for (LocationsData.GeneratorLocation location : locationsData.locations()) {
+      if (location.getBlockLocations().size() == 0) {
+        continue;
+      }
+
+      Block block = location.getBlockLocations().stream().findFirst().orElse(null);
+
+      if (block == null) {
+        continue;
+      }
+
+      String id = SkyblockUtil.getIslandId(block.getLocation());
+
+      if (id == null) {
+        continue;
+      }
+
+      location.setIslandId(id);
     }
   }
 }

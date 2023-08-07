@@ -138,8 +138,12 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
   public static class GeneratorLocation {
 
     private final String playerId;
-    private final String islandId;
+
+    @Setter
+    private String islandId;
+
     private final Integer generator;
+
     private final ArrayList<SimplifiedLocation> blockLocations;
 
     @Setter
