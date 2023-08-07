@@ -71,7 +71,7 @@ public class UpgradeGui {
         Config.GUIS_UPGRADE_GUI_UPGRADE_ONE_FIRST_LINE.getPath()))
     );
 
-    double price = instance.getGeneratorsData().getUpgradePrice(nextGenerator.tier());
+    double price = instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
     List<String> lore =
         config.getStringList(Config.GUIS_UPGRADE_GUI_UPGRADE_ONE_LORE.getPath());
@@ -168,7 +168,7 @@ public class UpgradeGui {
     }
 
     double upgradePrice =
-        instance.getGeneratorsData().getUpgradePrice(nextGenerator.tier())
+        instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier())
             * currentLoc.getBlockLocations().size();
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
@@ -222,7 +222,7 @@ public class UpgradeGui {
     }
 
     double upgradePrice =
-        instance.getGeneratorsData().getUpgradePrice(nextGenerator.tier());
+        instance.getGeneratorsData().getUpgradePrice(current, nextGenerator.tier());
 
     if (upgradePrice > instance.getEcon().getBalance(player)) {
       Messages.NOT_ENOUGH_MONEY.format(
