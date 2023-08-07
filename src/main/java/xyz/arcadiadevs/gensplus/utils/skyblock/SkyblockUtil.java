@@ -128,6 +128,7 @@ public class SkyblockUtil {
    */
   @Nullable
   public static Long getIslandLevel(Location location, Player player) {
+    System.out.println(Bukkit.getPluginManager().isPluginEnabled("IridiumSkyblock"));
     if (Bukkit.getPluginManager().isPluginEnabled("BentoBox")) {
       return getLevelBentobox(location, player);
     } else if (Bukkit.getPluginManager().isPluginEnabled("SuperiorSkyblock2")) {

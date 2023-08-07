@@ -65,19 +65,27 @@ public class BlockPlace implements Listener {
     final boolean useCommands = Config.LIMIT_PER_PLAYER_USE_COMMANDS.getBoolean();
     final boolean usePermissions = Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getBoolean();
 
-    int limit = PlayerUtil.getGeneratorLimit(player);
+    int limitPerPlayer = PlayerUtil.getGeneratorLimit(player);
+    int limitPerIsland = (int) SkyblockUtil.calculateLimit(player);
 
-
-
-    if (useCommands && !usePermissions) {
-      limit = playerData.getData(player.getUniqueId()).getLimit();
+    if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean() && locationsData.getGeneratorsCountByIsland(
+        SkyblockUtil.getIslandId(event.getBlock().getLocation())) >= limitPerIsland) {
+      Messages.LIMIT_REACHED.format("limit", limitPerIsland).send(player);
+      event.setCancelled(true);
     }
 
-    System.out.println("LEVEL: " + SkyblockUtil.getIslandLevel(event.getBlock().getLocation(), player));
-    System.out.println("LIMIT: " + SkyblockUtil.calculateLimit(player));
+    if (useCommands && !usePermissions) {
+      limitPerPlayer = playerData.getData(player.getUniqueId()).getLimit();
+    }
 
-    if (enabled && locationsData.getGeneratorsCountByPlayer(player) >= limit) {
-      Messages.LIMIT_REACHED.format("limit", limit).send(player);
+    if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean()) {
+      System.out.println(
+          "LEVEL: " + SkyblockUtil.getIslandLevel(event.getBlock().getLocation(), player));
+      limitPerPlayer = (int) SkyblockUtil.calculateLimit(player);
+    }
+
+    if (enabled && locationsData.getGeneratorsCountByPlayer(player) >= limitPerPlayer) {
+      Messages.LIMIT_REACHED.format("limit", limitPerPlayer).send(player);
       event.setCancelled(true);
       return;
     }

@@ -39,12 +39,17 @@ import xyz.arcadiadevs.gensplus.utils.TimeUtil;
  */
 public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
 
-  /**
-   * Represents a generator location.
-   */
   public Integer getGeneratorsCountByPlayer(Player player) {
     return (int) locations.stream()
         .filter(l -> l.getPlacedBy().equals(player))
+        .mapToLong(l -> l.getBlockLocations().size())
+        .sum();
+  }
+
+  public Integer getGeneratorsCountByIsland(String id) {
+    System.out.println(id);
+    return (int) locations.stream()
+        .filter(l -> l.islandId.equals(id))
         .mapToLong(l -> l.getBlockLocations().size())
         .sum();
   }
