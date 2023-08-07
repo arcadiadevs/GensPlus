@@ -48,6 +48,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * bStats collects some data for plugin authors.
+ *
+ * <p>Check out <a href="https://bStats.org/">...</a> to learn more about bStats!
+ */
 public class Metrics {
 
   private final Plugin plugin;

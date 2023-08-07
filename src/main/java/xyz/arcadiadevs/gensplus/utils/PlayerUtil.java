@@ -64,6 +64,12 @@ public class PlayerUtil {
         Config.LIMIT_PER_PLAYER_DEFAULT_LIMIT.getPath()).intValue();
   }
 
+  /**
+   * Retrieves the chunk radius for a player.
+   *
+   * @param player The player for which to retrieve the chunk radius.
+   * @return The chunk radius value.
+   */
   public static Integer getChunkRadius(Player player) {
     return getLimit(player, Permissions.CHUNK_RADIUS.getPermission(), "chunk-radius",
         Config.CHUNK_RADIUS_DEFAULT_RADIUS.getPath()).intValue();
