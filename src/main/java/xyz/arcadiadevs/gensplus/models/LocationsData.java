@@ -224,6 +224,14 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       }
     }
 
+    public void removeSimpleBlock(SimplifiedLocation location) {
+      blockLocations.remove(location);
+
+      if (blockLocations.isEmpty()) {
+        GensPlus.getInstance().getLocationsData().removeLocation(this);
+      }
+    }
+
     public OfflinePlayer getPlacedBy() {
       return Bukkit.getOfflinePlayer(UUID.fromString(playerId));
     }
@@ -248,6 +256,10 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
             return location.getBlock();
           })
           .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<SimplifiedLocation> getSimplifiedBlockLocations() {
+      return blockLocations;
     }
 
     /**
