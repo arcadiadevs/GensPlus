@@ -13,9 +13,9 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.UpgradeGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.utils.Config;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.Permissions;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 
 @AllArgsConstructor
 public class BlockInteraction implements Listener {

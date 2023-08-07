@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.gensplus.utils.message;
+package xyz.arcadiadevs.gensplus.utils.config.message;
 
 import java.io.File;
 import java.io.IOException;

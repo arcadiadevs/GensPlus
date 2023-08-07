@@ -13,8 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
-import xyz.arcadiadevs.gensplus.utils.Config;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.skyblock.SkyblockUtil;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**
  * The BlockPlace class provides functionality for handling the BlockPlaceEvent in GensPlus.
@@ -59,21 +60,22 @@ public class BlockPlace implements Listener {
     }
 
     final int tier = NBTEditor.getInt(item, "gensplus", "blocktype", "tier");
-    final boolean enabled = Config.LIMIT_SETTINGS_ENABLED.getBoolean();
-    final boolean useCommands = Config.LIMIT_SETTINGS_USE_COMMANDS.getBoolean();
-    final boolean usePermissions = Config.LIMIT_SETTINGS_USE_PERMISSIONS.getBoolean();
-
-    if (!enabled) {
-      return;
-    }
+    final boolean enabled = Config.LIMIT_PER_PLAYER_ENABLED.getBoolean();
+    final boolean useCommands = Config.LIMIT_PER_PLAYER_USE_COMMANDS.getBoolean();
+    final boolean usePermissions = Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getBoolean();
 
     int limit = PlayerUtil.getGeneratorLimit(player);
+
+
 
     if (useCommands && !usePermissions) {
       limit = playerData.getData(player.getUniqueId()).getLimit();
     }
 
-    if (locationsData.getGeneratorsCountByPlayer(player) >= limit) {
+    System.out.println("LEVEL: " + SkyblockUtil.getIslandLevel(event.getBlock().getLocation(), player));
+    System.out.println("LIMIT: " + SkyblockUtil.calculateLimit(player));
+
+    if (enabled && locationsData.getGeneratorsCountByPlayer(player) >= limit) {
       Messages.LIMIT_REACHED.format("limit", limit).send(player);
       event.setCancelled(true);
       return;

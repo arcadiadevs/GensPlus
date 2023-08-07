@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.utils.Config;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**
  * Handles the PlayerInteractEvent triggered when a player interacts with a block. If the block is

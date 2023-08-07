@@ -13,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
-import xyz.arcadiadevs.gensplus.utils.Config;
-import xyz.arcadiadevs.gensplus.utils.Permissions;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 
 /**
  * The CommandsTabCompletion class implements the TabCompleter interface to provide tab completion

@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.gensplus.utils;
+package xyz.arcadiadevs.gensplus.utils.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,13 @@ public enum Config {
   ON_JOIN_GENERATOR_TIER("on-join.generator-tier", 1),
   ON_JOIN_GENERATOR_AMOUNT("on-join.generator-amount", 3),
   SELL_COMMAND_ENABLED("sell-command.enabled", true),
-  LIMIT_SETTINGS_ENABLED("limit-settings.enabled", true),
-  LIMIT_SETTINGS_USE_PERMISSIONS("limit-settings.use-permissions", false),
-  LIMIT_SETTINGS_USE_COMMANDS("limit-settings.use-commands", true),
-  LIMIT_SETTINGS_DEFAULT_LIMIT("limit-settings.default-limit", 20),
-  LIMIT_SETTINGS_UNLIMITED_PLACEHOLDER("limit-settings.unlimited-placeholder", "unlimited"),
+  LIMIT_PER_ISLAND_ENABLED("limits.per-island.enabled", false),
+  LIMIT_PER_ISLAND_GENS_PER_LEVEL("limits.per-island.gens-per-level", new ArrayList<>()),
+  LIMIT_PER_PLAYER_ENABLED("limits.per-player.enabled", false),
+  LIMIT_PER_PLAYER_USE_PERMISSIONS("limits.per-player.use-permissions", false),
+  LIMIT_PER_PLAYER_USE_COMMANDS("limits.per-player.use-commands", true),
+  LIMIT_PER_PLAYER_DEFAULT_LIMIT("limits.per-player.default-limit", 20),
+  LIMIT_PER_PLAYER_UNLIMITED_PLACEHOLDER("limits.per-player.unlimited-placeholder", "unlimited"),
   CHUNK_RADIUS_ENABLED("chunk-radius.enabled", true),
   CHUNK_RADIUS_USE_PERMISSIONS("chunk-radius.use-permissions", true),
   CHUNK_RADIUS_DEFAULT_RADIUS("chunk-radius.default-radius", 1),
@@ -116,24 +118,24 @@ public enum Config {
     return (String) getFormatted();
   }
 
-  public List<String> getStringList() {
-    return (List<String>) get();
+  public ArrayList<String> getStringList() {
+    return (ArrayList<String>) get();
   }
 
-  public List<Map<?, ?>> getMapList() {
-    return (List<Map<?, ?>>) get();
+  public ArrayList<Map<?, ?>> getMapList() {
+    return (ArrayList<Map<?, ?>>) get();
   }
 
-  public List<Integer> getIntegerList() {
-    return (List<Integer>) get();
+  public ArrayList<Integer> getIntegerList() {
+    return (ArrayList<Integer>) get();
   }
 
-  public List<Double> getDoubleList() {
-    return (List<Double>) get();
+  public ArrayList<Double> getDoubleList() {
+    return (ArrayList<Double>) get();
   }
 
-  public List<Boolean> getBooleanList() {
-    return (List<Boolean>) get();
+  public ArrayList<Boolean> getBooleanList() {
+    return (ArrayList<Boolean>) get();
   }
 
   public Object get() {

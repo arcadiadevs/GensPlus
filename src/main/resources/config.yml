@@ -35,29 +35,44 @@ sell-command:
   # If enabled is set to false, the command will not be registered.
   enabled: true
 
-limit-settings:
-  # If enabled is set to false, the limit will not be checked.
-  enabled: true
+limits:
+  # Per-player generator limits
+  per-player:
+    # If enabled is set to false, the limit will not be checked.
+    enabled: false
 
-  # Should we use permissions for generator limit?
-  # If set to true, you will be able to set specific
-  # limits for each player. [gensplus.limit.<amount>]
-  # (ex: gensplus.limit.20)
-  use-permissions: false
+    # Should we use permissions for generator limit?
+    # If set to true, you will be able to set specific
+    # limits for each player. [gensplus.limit.<amount>]
+    # (ex: gensplus.limit.20)
+    use-permissions: false
 
-  # [OVERRIDES USE-PERMISSIONS]
-  # Should we use commands for generator limit?
-  # If set to true, you can set specific limits for each player
-  # by using the command /gensplus setlimit <player> <limit>
-  # (ex: /gensplus setlimit Notch 20).
-  use-commands: true
+    # [OVERRIDES USE-PERMISSIONS]
+    # Should we use commands for generator limit?
+    # If set to true, you can set specific limits for each player
+    # by using the command /gensplus setlimit <player> <limit>
+    # (ex: /gensplus setlimit Notch 20).
+    use-commands: true
 
-  # The default generator limit for all players
-  default-limit: 20
+    # The default generator limit for all players
+    default-limit: 20
 
-  # The placeholder that will be used in the limit placeholder
-  # if the limit-settings.enabled is set to false.
-  unlimited-placeholder: "unlimited"
+    # The placeholder that will be used in the limit placeholder
+    # if the limit-settings.enabled is set to false.
+    unlimited-placeholder: "unlimited"
+
+  # Per island generator limits. Supports IridiumSkyblock, SuperiorSkyblock,
+  # and Bentobox (only with Bentobox Levels addon)
+  per-island:
+    enabled: false
+
+    # How many generators should an island get per level.
+    # Format: "<startLevel>:<endLevel>:<amount>"
+    # Example: "1:5:1" means that between levels 1 and 5, the island will get 1 generator.
+    # Example: "6:10:2" means that between levels 6 and 10, the island will get 2 generators.
+    gens-per-level:
+      - "1:5:1"
+      - "6:10:2"
 
 # Chunk radius defines in how many chunks around the generator the player
 # needs to be in order for the generator to be active.

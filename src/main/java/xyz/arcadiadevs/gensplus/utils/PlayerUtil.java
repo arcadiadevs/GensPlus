@@ -4,6 +4,8 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 
 /**
  * Utility class for handling player-related operations and configurations.
@@ -59,7 +61,7 @@ public class PlayerUtil {
    */
   public static Integer getGeneratorLimit(Player player) {
     return getLimit(player, Permissions.GENERATOR_LIMIT.getPermission(), "limit-settings",
-        Config.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath()).intValue();
+        Config.LIMIT_PER_PLAYER_DEFAULT_LIMIT.getPath()).intValue();
   }
 
   public static Integer getChunkRadius(Player player) {

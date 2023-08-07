@@ -14,6 +14,11 @@ softdepend:
   - Oraxen
   - Essentials
   - ItemsAdder
+  - IridiumSkyblock
+  - SuperiorSkyblock2
+  - ASkyBlock
+  - AcidIsland
+  - BentoBox
 
 commands:
   gensplus:

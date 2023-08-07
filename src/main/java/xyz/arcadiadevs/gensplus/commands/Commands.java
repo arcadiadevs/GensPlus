@@ -14,9 +14,9 @@ import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
-import xyz.arcadiadevs.gensplus.utils.Config;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.Permissions;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 
 /**
  * The Commands class implements the CommandExecutor interface to handle custom commands in

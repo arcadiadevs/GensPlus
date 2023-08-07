@@ -9,13 +9,13 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
-import xyz.arcadiadevs.gensplus.utils.Config;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
 import xyz.arcadiadevs.guilib.ItemBuilder;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.GuiUtil;
 

@@ -28,10 +28,11 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.DropEvent;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
+import xyz.arcadiadevs.gensplus.utils.skyblock.SkyblockUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
-import xyz.arcadiadevs.gensplus.utils.Config;
 
 /**
  * Represents the data of all the generator locations in the server.
@@ -51,18 +52,19 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
   /**
    * Creates a new generator location for generator.
    *
-   * @param player    The player who placed the generator.
-   * @param generator The generator tier.
-   * @param location  The location of the generator.
+   * @param player        The player who placed the generator.
+   * @param generator     The generator tier.
+   * @param blockLocation The location of the generator.
    */
-  public GeneratorLocation createLocation(OfflinePlayer player, int generator, Block location) {
+  public GeneratorLocation createLocation(OfflinePlayer player, int generator,
+                                          Block blockLocation) {
     GeneratorLocation[] surroundingBlocks = {
-        getGeneratorLocation(location.getRelative(0, 1, 0)),
-        getGeneratorLocation(location.getRelative(0, -1, 0)),
-        getGeneratorLocation(location.getRelative(-1, 0, 0)),
-        getGeneratorLocation(location.getRelative(1, 0, 0)),
-        getGeneratorLocation(location.getRelative(0, 0, -1)),
-        getGeneratorLocation(location.getRelative(0, 0, 1))
+        getGeneratorLocation(blockLocation.getRelative(0, 1, 0)),
+        getGeneratorLocation(blockLocation.getRelative(0, -1, 0)),
+        getGeneratorLocation(blockLocation.getRelative(-1, 0, 0)),
+        getGeneratorLocation(blockLocation.getRelative(1, 0, 0)),
+        getGeneratorLocation(blockLocation.getRelative(0, 0, -1)),
+        getGeneratorLocation(blockLocation.getRelative(0, 0, 1))
     };
 
     List<GeneratorLocation> surroundingLocations = Stream.of(surroundingBlocks)
@@ -78,11 +80,14 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
         .flatMap(l -> l.getBlockLocations().stream())
         .collect(Collectors.toCollection(HashSet::new));
 
-    generatorBlocks.add(location);
+    generatorBlocks.add(blockLocation);
 
-    GeneratorLocation newLocation =
-        new GeneratorLocation(player.getUniqueId().toString(), generator,
-            new ArrayList<>(generatorBlocks));
+    GeneratorLocation newLocation = new GeneratorLocation(
+        player.getUniqueId().toString(),
+        SkyblockUtil.getIslandId(blockLocation.getLocation()),
+        generator,
+        new ArrayList<>(generatorBlocks)
+    );
 
     locations.add(newLocation);
 
@@ -140,7 +145,8 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
      * Represents a generator location.
      */
     @SuppressWarnings("unchecked")
-    public GeneratorLocation(String playerId, String islandId, Integer generator, List<?> blockLocations) {
+    public GeneratorLocation(String playerId, String islandId, Integer generator,
+                             List<?> blockLocations) {
       this.playerId = playerId;
       this.generator = generator;
       this.islandId = islandId;
@@ -226,7 +232,13 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     public ArrayList<Block> getBlockLocations() {
       return blockLocations.stream()
           .map(SimplifiedLocation::getLocation)
-          .map(Location::getBlock)
+          .map(location -> {
+            if (location == null) {
+              return null;
+            }
+
+            return location.getBlock();
+          })
           .collect(Collectors.toCollection(ArrayList::new));
     }
 

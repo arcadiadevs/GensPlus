@@ -181,6 +181,7 @@
             <groupId>com.iridium</groupId>
             <artifactId>IridiumSkyblock</artifactId>
             <version>LATEST</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.github.bananapuncher714</groupId>
@@ -191,6 +192,12 @@
             <groupId>world.bentobox</groupId>
             <artifactId>bentobox</artifactId>
             <version>1.24.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>world.bentobox</groupId>
+            <artifactId>level</artifactId>
+            <version>2.11.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

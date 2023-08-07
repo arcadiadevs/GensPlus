@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.gensplus.utils;
+package xyz.arcadiadevs.gensplus.utils.config;
 
 /**
  * The Permissions class contains all the permissions used in GensPlus.

@@ -21,7 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.models.WandData;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
 import xyz.arcadiadevs.gensplus.utils.formatter.Formatter;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**
  * The OnWandUse class implements the Listener interface to handle events related to the use of

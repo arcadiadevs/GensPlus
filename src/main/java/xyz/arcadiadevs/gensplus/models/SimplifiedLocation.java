@@ -3,11 +3,18 @@ package xyz.arcadiadevs.gensplus.models;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public record SimplifiedLocation(UUID world, double x, double y, double z) {
 
   public Location getLocation() {
-    return new Location(Bukkit.getWorld(world), x, y, z);
+    World w = Bukkit.getWorld(world);
+
+    if (w == null) {
+      return null;
+    }
+
+    return new Location(w, x, y, z);
   }
 
   public static SimplifiedLocation fromLocation(Location location) {

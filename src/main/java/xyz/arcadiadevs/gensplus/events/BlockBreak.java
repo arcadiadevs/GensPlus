@@ -12,9 +12,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.utils.Config;
-import xyz.arcadiadevs.gensplus.utils.Permissions;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.config.Permissions;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**
  * Handles the BlockBreakEvent triggered when a player breaks a block.

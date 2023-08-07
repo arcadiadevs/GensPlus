@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
-import xyz.arcadiadevs.gensplus.utils.Config;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 
 /**
@@ -31,7 +31,7 @@ public class OnJoin implements Listener {
     ItemUtil.upgradeGens(event.getPlayer().getInventory());
     if (playerData.getData(event.getPlayer().getUniqueId()) == null) {
       playerData.create(event.getPlayer().getUniqueId(),
-          config.getInt(Config.LIMIT_SETTINGS_DEFAULT_LIMIT.getPath()));
+          config.getInt(Config.LIMIT_PER_PLAYER_DEFAULT_LIMIT.getPath()));
     }
 
     if (!config.getBoolean(Config.ON_JOIN_ENABLED.getPath())) {

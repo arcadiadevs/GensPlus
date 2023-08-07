@@ -55,12 +55,12 @@ import xyz.arcadiadevs.gensplus.tasks.DataSaveTask;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.tasks.SpawnerTask;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
-import xyz.arcadiadevs.gensplus.utils.Config;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.Metrics;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**
  * The main plugin class for GensPlus.

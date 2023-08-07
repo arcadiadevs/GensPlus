@@ -8,8 +8,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.models.events.Event;
-import xyz.arcadiadevs.gensplus.utils.Config;
-import xyz.arcadiadevs.gensplus.utils.message.Messages;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 
 /**

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
