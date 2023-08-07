@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
@@ -37,10 +38,11 @@ public class InstantBreak implements Listener {
    */
   @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
   public void onPlayerInteract(PlayerInteractEvent event) {
+    if (event.getHand() != EquipmentSlot.HAND) {
+      return;
+    }
 
-    String version = Bukkit.getBukkitVersion();
     final Player player = event.getPlayer();
-
     Block block = event.getClickedBlock();
 
     if (block == null) {

@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.UpgradeGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
@@ -31,6 +32,10 @@ public class BlockInteraction implements Listener {
    */
   @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
   public void onBlockClick(PlayerInteractEvent event) {
+    if (event.getHand() != EquipmentSlot.HAND) {
+      return;
+    }
+
     Block block = event.getClickedBlock();
     Player player = event.getPlayer();
 
