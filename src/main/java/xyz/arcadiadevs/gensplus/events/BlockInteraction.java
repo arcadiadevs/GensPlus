@@ -57,7 +57,6 @@ public class BlockInteraction implements Listener {
 
     if ((needsSneak && !player.isSneaking())
         || event.getAction() != Action.valueOf(actionValue)) {
-      event.setCancelled(true);
       return;
     }
 
@@ -66,6 +65,8 @@ public class BlockInteraction implements Listener {
     if (generator == null) {
       return;
     }
+
+    event.setCancelled(true);
 
     if (Config.GUIS_UPGRADE_GUI_ENABLED.getBoolean()) {
       UpgradeGui.open(player, generatorLocation, block);
