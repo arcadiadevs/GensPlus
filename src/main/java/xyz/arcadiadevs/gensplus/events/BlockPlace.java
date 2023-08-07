@@ -72,6 +72,7 @@ public class BlockPlace implements Listener {
         SkyblockUtil.getIslandId(event.getBlock().getLocation())) >= limitPerIsland) {
       Messages.LIMIT_REACHED.format("limit", limitPerIsland).send(player);
       event.setCancelled(true);
+      return;
     }
 
     if (useCommands && !usePermissions) {
@@ -79,8 +80,6 @@ public class BlockPlace implements Listener {
     }
 
     if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean()) {
-      System.out.println(
-          "LEVEL: " + SkyblockUtil.getIslandLevel(event.getBlock().getLocation(), player));
       limitPerPlayer = (int) SkyblockUtil.calculateLimit(player);
     }
 

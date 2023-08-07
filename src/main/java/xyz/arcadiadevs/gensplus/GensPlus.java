@@ -216,7 +216,7 @@ public final class GensPlus extends JavaPlugin {
 
     events.add(new BlockPlace(locationsData, playerData, getConfig()));
     events.add(new BlockBreak(locationsData, generatorsData));
-    events.add(new BlockInteraction(locationsData));
+    events.add(new BlockInteraction(locationsData, getConfig()));
     events.add(new InstantBreak(locationsData, generatorsData));
     events.add(new OnJoin(generatorsData, playerData, getConfig()));
     events.add(new EntityExplode(locationsData, generatorsData));

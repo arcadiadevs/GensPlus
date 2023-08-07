@@ -109,6 +109,11 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
+        if (strings.length < 2) {
+          Messages.NOT_ENOUGH_ARGUMENTS.format().send(commandSender);
+          return true;
+        }
+
         if (strings[1].equalsIgnoreCase("sell")) {
           if (!commandSender.hasPermission(Permissions.GIVE_WAND.getPermission())) {
             Messages.NO_PERMISSION.format().send(commandSender);

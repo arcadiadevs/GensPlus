@@ -4,6 +4,7 @@ import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,6 +24,7 @@ import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 public class BlockInteraction implements Listener {
 
   private final LocationsData locationsData;
+  private final FileConfiguration config;
 
   /**
    * Handles the PlayerInteractEvent triggered when a player interacts with a block. If the block is
@@ -44,17 +46,18 @@ public class BlockInteraction implements Listener {
       return;
     }
 
+    LocationsData.GeneratorLocation generatorLocation = locationsData.getGeneratorLocation(block);
+
+    if (generatorLocation == null) {
+      return;
+    }
+
     final boolean needsSneak = Config.GENERATOR_UPGRADE_SNEAK.getBoolean();
     final String actionValue = Config.GENERATOR_UPGRADE_ACTION.getString();
 
     if ((needsSneak && !player.isSneaking())
         || event.getAction() != Action.valueOf(actionValue)) {
-      return;
-    }
-
-    LocationsData.GeneratorLocation generatorLocation = locationsData.getGeneratorLocation(block);
-
-    if (generatorLocation == null) {
+      event.setCancelled(true);
       return;
     }
 
@@ -64,8 +67,7 @@ public class BlockInteraction implements Listener {
       return;
     }
 
-    if (GensPlus.getInstance().getConfig()
-        .getBoolean(Config.GUIS_UPGRADE_GUI_ENABLED.getPath())) {
+    if (Config.GUIS_UPGRADE_GUI_ENABLED.getBoolean()) {
       UpgradeGui.open(player, generatorLocation, block);
     } else {
       if (generatorLocation.getPlacedBy() != player

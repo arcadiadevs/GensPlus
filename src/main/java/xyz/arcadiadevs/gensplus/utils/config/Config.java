@@ -21,6 +21,8 @@ public enum Config {
   ON_JOIN_GENERATOR_AMOUNT("on-join.generator-amount", 3),
   GENERATOR_UPGRADE_SNEAK("guis.upgrade-gui.sneak-required", true),
   GENERATOR_UPGRADE_ACTION("guis.upgrade-gui.action", "RIGHT_CLICK_BLOCK"),
+  SELL_WAND_ACTION_SNEAK("wands.sell-wand.sneak-required", true),
+  SELL_WAND_ACTION("wands.sell-wand.action", "RIGHT_CLICK_BLOCK"),
   SELL_COMMAND_ENABLED("sell-command.enabled", true),
   LIMIT_PER_ISLAND_ENABLED("limits.per-island.enabled", false),
   LIMIT_PER_ISLAND_GENS_PER_LEVEL("limits.per-island.gens-per-level", new ArrayList<>()),
@@ -89,6 +91,7 @@ public enum Config {
 
     if (!config.contains(path)) {
       config.set(path, defaultValue);
+      GensPlus.getInstance().saveConfig();
     }
 
     Object value = config.get(this.path);

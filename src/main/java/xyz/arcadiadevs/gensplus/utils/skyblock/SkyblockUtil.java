@@ -33,7 +33,12 @@ public class SkyblockUtil {
         Config.LIMIT_PER_ISLAND_GENS_PER_LEVEL.getStringList()
     );
 
-    for (int i = 1; i <= level; i++) {
+    int min = gensPerLevel.stream()
+        .mapToInt(GensPerLevel::from)
+        .min()
+        .orElse(0);
+
+    for (int i = min; i <= level; i++) {
       final int finalLevel = i;
 
       GensPerLevel gpl = gensPerLevel.stream()
@@ -41,7 +46,9 @@ public class SkyblockUtil {
           .findFirst()
           .orElse(null);
 
-      limit += gpl.gain();
+      if (gpl != null) {
+        limit += gpl.gain();
+      }
     }
 
     return limit;
@@ -128,7 +135,6 @@ public class SkyblockUtil {
    */
   @Nullable
   public static Long getIslandLevel(Location location, Player player) {
-    System.out.println(Bukkit.getPluginManager().isPluginEnabled("IridiumSkyblock"));
     if (Bukkit.getPluginManager().isPluginEnabled("BentoBox")) {
       return getLevelBentobox(location, player);
     } else if (Bukkit.getPluginManager().isPluginEnabled("SuperiorSkyblock2")) {

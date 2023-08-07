@@ -25,4 +25,12 @@ public record GensPerLevel(int from, int to, int gain) {
     return gensPerLevelList;
   }
 
+  @Override
+  public String toString() {
+    return "GensPerLevel{"
+        + "from=" + from
+        + ", to=" + to
+        + ", gain=" + gain
+        + '}';
+  }
 }

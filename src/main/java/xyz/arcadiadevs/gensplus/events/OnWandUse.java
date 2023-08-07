@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -21,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.models.WandData;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.formatter.Formatter;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
@@ -56,6 +58,14 @@ public class OnWandUse implements Listener {
     }
 
     if (NBTEditor.contains(itemInMainHand, "sell-wand-uuid")) {
+      final boolean needsSneak = Config.SELL_WAND_ACTION_SNEAK.getBoolean();
+      final String actionValue = Config.SELL_WAND_ACTION.getString();
+
+      if ((needsSneak && !player.isSneaking())
+          || event.getAction() != Action.valueOf(actionValue)) {
+        return;
+      }
+
       onSellWandUse(player, itemInMainHand, clickedBlock);
     }
   }
@@ -64,7 +74,7 @@ public class OnWandUse implements Listener {
     WandData.Wand wand =
         wandData.getWand(UUID.fromString(NBTEditor.getString(itemInMainHand, "sell-wand-uuid")));
 
-    if (player.isSneaking() && (clickedBlock.getType() == Material.CHEST
+    if ((clickedBlock.getType() == Material.CHEST
         || clickedBlock.getType() == Material.HOPPER)) {
 
       // Look into the chest or hopper and sell all items

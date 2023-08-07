@@ -47,9 +47,8 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
   }
 
   public Integer getGeneratorsCountByIsland(String id) {
-    System.out.println(id);
     return (int) locations.stream()
-        .filter(l -> l.islandId.equals(id))
+        .filter(l -> l.islandId != null && l.islandId.equals(id))
         .mapToLong(l -> l.getBlockLocations().size())
         .sum();
   }
