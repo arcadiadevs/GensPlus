@@ -81,7 +81,7 @@ public class OnWandUse implements Listener {
       Inventory inventory = null;
       if (clickedBlock.getType() == Material.CHEST) {
         Chest chest = (Chest) clickedBlock.getState();
-        inventory = chest.getBlockInventory();
+        inventory = chest.getInventory();
       } else if (clickedBlock.getType() == Material.HOPPER) {
         Hopper hopper = (Hopper) clickedBlock.getState();
         inventory = hopper.getInventory();
