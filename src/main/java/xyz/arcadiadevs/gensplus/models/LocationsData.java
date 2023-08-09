@@ -31,7 +31,7 @@ import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
-import xyz.arcadiadevs.gensplus.utils.skyblock.SkyblockUtil;
+import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 
 /**
@@ -312,25 +312,25 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
           items.add(item);
         }
       } else {
-        blockLocations.forEach(loc -> {
-          Item item = loc.getLocation().getWorld().dropItem(
-              loc.getLocation().clone().add(0.5, 1, 0.5),
-              getGeneratorObject().spawnItem()
-          );
-          item.setVelocity(new Vector(0, 0, 0));
-          items.add(item);
-        });
+        for (SimplifiedLocation blockLocation : blockLocations) {
+          for (int i = 0; i < itemsToDrop; i++) {
+            Item item = blockLocation.getLocation().getWorld().dropItemNaturally(
+                blockLocation.getLocation().clone().add(0, 1, 0),
+                getGeneratorObject().spawnItem()
+            );
+            item.setVelocity(new Vector(0, 0, 0));
+            items.add(item);
+          }
+        }
       }
 
       final long ticks = TimeUtil.parseTime(
           GensPlus.getInstance().getConfig().getString(Config.ITEM_DESPAWN_TIME.getPath()));
 
-      Bukkit.getScheduler().runTaskLater(GensPlus.getInstance(), () -> {
-        getWorld().getEntities().stream()
-            .filter(entity -> entity instanceof Item)
-            .filter(items::contains)
-            .forEach(Entity::remove);
-      }, ticks);
+      Bukkit.getScheduler().runTaskLater(GensPlus.getInstance(), () -> getWorld().getEntities().stream()
+          .filter(entity -> entity instanceof Item)
+          .filter(items::contains)
+          .forEach(Entity::remove), ticks);
 
     }
 
