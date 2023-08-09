@@ -31,7 +31,7 @@ import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
-import xyz.arcadiadevs.gensplus.utils.skyblock.SkyblockUtil;
+import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 
 /**

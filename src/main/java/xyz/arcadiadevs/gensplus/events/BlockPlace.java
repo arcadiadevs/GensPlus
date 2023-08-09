@@ -9,13 +9,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
-import xyz.arcadiadevs.gensplus.utils.skyblock.SkyblockUtil;
+import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**

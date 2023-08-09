@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.SimplifiedLocation;
-import xyz.arcadiadevs.gensplus.utils.skyblock.SkyblockUtil;
+import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 
 @AllArgsConstructor
 public class CleanupTask extends BukkitRunnable {

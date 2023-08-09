@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.gensplus.utils.skyblock;
+package xyz.arcadiadevs.gensplus.utils;
 
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.island.Island;
@@ -181,12 +181,10 @@ public class SkyblockUtil {
       return null;
     }
 
-    return Long.valueOf(
-        SuperiorSkyblockAPI.getGrid()
-            .getIslandByUUID(UUID.fromString(islandId))
-            .getIslandLevel()
-            .toString()
-    );
+    return SuperiorSkyblockAPI.getGrid()
+        .getIslandByUUID(UUID.fromString(islandId))
+        .getIslandLevel()
+        .longValue();
   }
 
   /**
