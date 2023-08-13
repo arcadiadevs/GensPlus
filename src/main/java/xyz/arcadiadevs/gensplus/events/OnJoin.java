@@ -29,6 +29,7 @@ public class OnJoin implements Listener {
   @EventHandler
   public void onJoin(PlayerJoinEvent event) {
     ItemUtil.upgradeGens(event.getPlayer().getInventory());
+
     if (playerData.getData(event.getPlayer().getUniqueId()) == null) {
       playerData.create(event.getPlayer().getUniqueId(),
           config.getInt(Config.LIMIT_PER_PLAYER_DEFAULT_LIMIT.getPath()));
