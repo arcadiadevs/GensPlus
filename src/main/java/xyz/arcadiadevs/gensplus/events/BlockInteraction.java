@@ -1,6 +1,5 @@
 package xyz.arcadiadevs.gensplus.events;
 
-import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,15 +9,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.UpgradeGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
-import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 @AllArgsConstructor
 public class BlockInteraction implements Listener {
@@ -124,4 +123,25 @@ public class BlockInteraction implements Listener {
     }
   }
 
+  /**
+   * Handles the BlockFormEvent triggered when a player interacts with a concrete powder block.
+   *
+   * @param event The PlayerInteractEvent object representing the player interact event.
+   */
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  public void onConcreteForm(BlockFormEvent event) {
+    if (event.getNewState().getType().name().contains("CONCRETE")) {
+
+      System.out.println("Concrete powder event");
+
+      final LocationsData.GeneratorLocation location =
+          locationsData.getGeneratorLocation(event.getBlock());
+
+      if (location == null) {
+        return;
+      }
+
+      event.setCancelled(true);
+    }
+  }
 }

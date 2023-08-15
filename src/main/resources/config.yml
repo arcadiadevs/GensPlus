@@ -107,8 +107,8 @@ chunk-radius:
 multiplier:
   # Should we use permissions for multiplier?
   # If set to true, you will be able to set specific
-  # multipliers for each player. [gensplus.multiplier.<amount>]
-  # (ex: gensplus.multiplier.2)
+  # multipliers for each player. [gensplus.sell.multiplier.<amount>]
+  # (ex: gensplus.sell.multiplier.2)
   use-permissions: true
 
   # The default multiplier for all players

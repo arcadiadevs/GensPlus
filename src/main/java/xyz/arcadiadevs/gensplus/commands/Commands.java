@@ -103,6 +103,38 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
+      if (strings[0].equalsIgnoreCase("addlimit")) {
+        if (!adminPermission) {
+          Messages.NO_PERMISSION.format().send(commandSender);
+          return true;
+        }
+
+        if (strings.length < 3) {
+          Messages.NOT_ENOUGH_ARGUMENTS.format().send(commandSender);
+          return true;
+        }
+
+        if (!strings[2].matches("\\d+")) {
+          Messages.INVALID_FORMAT.format().send(commandSender);
+          return true;
+        }
+
+        final Player targetPlayer = Bukkit.getPlayer(strings[1]);
+
+        if (targetPlayer == null) {
+          Messages.PLAYER_NOT_FOUND.format().send(commandSender);
+          return true;
+        }
+
+        PlayerData.Data data = playerData.getData(targetPlayer.getUniqueId());
+        PlayerData.Data.addToLimit(data, Integer.parseInt(strings[2]));
+        Messages.LIMIT_UPDATED.format(
+                "limit", data.getLimit(),
+                "player", targetPlayer.getName())
+            .send(commandSender);
+
+      }
+
       if (strings[0].equalsIgnoreCase("wand")) {
         if (!(commandSender instanceof Player player)) {
           Messages.ONLY_PLAYER_CAN_EXECUTE_COMMAND.format().send(commandSender);
@@ -125,7 +157,7 @@ public class Commands implements CommandExecutor {
             return true;
           }
 
-          if (!strings[3].matches("\\d+") || !strings[4].matches("\\d+\\.?\\d*")) {
+          if (!strings[3].matches("-?\\d+") || !strings[4].matches("\\d+\\.?\\d*")) {
             Messages.INVALID_FORMAT.format().send(commandSender);
             return true;
           }
