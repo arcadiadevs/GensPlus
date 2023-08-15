@@ -45,6 +45,10 @@ public record PlayerData(List<Data> data) {
 
     @Setter
     public int limit;
+
+    public static void addToLimit(Data data, int amount) {
+      data.limit += amount;
+    }
   }
 
 }

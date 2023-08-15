@@ -58,7 +58,7 @@ public record WandData(List<Wand> wands) {
     @Override
     public HashMap<String, String> getPlaceHolders() {
       return new HashMap<>() {{
-        put("%uses%", String.valueOf(uses));
+        put("%uses%", uses == -1 ? "∞" : String.valueOf(uses));
         put("%multiplier%", String.valueOf(multiplier));
       }};
     }

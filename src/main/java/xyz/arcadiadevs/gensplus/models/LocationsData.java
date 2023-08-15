@@ -28,11 +28,11 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.DropEvent;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
-import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 
 /**
  * Represents the data of all the generator locations in the server.
@@ -301,36 +301,37 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       List<Item> items = new ArrayList<>();
 
       long itemsToDrop = (EventLoop.getActiveEvent().event() instanceof DropEvent event
-          ? event.getMultiplier() : 1) * getBlockLocations().size();
+          ? event.getMultiplier() : 1);
 
       if (GensPlus.getInstance().getConfig().getBoolean("holograms.enabled")) {
         for (int i = 0; i < itemsToDrop; i++) {
           Item item = location.getWorld().dropItemNaturally(
-              location.clone().add(0, 1, 0),
+              location.clone().add(0.5, 1, 0.5),
               getGeneratorObject().spawnItem()
           );
           items.add(item);
         }
       } else {
-        for (SimplifiedLocation blockLocation : blockLocations) {
+        blockLocations.forEach(loc -> {
           for (int i = 0; i < itemsToDrop; i++) {
-            Item item = blockLocation.getLocation().getWorld().dropItemNaturally(
-                blockLocation.getLocation().clone().add(0, 1, 0),
+            Item item = loc.getLocation().getWorld().dropItem(
+                loc.getLocation().clone().add(0.5, 1, 0.5),
                 getGeneratorObject().spawnItem()
             );
             item.setVelocity(new Vector(0, 0, 0));
             items.add(item);
           }
-        }
+        });
       }
 
       final long ticks = TimeUtil.parseTime(
           GensPlus.getInstance().getConfig().getString(Config.ITEM_DESPAWN_TIME.getPath()));
 
-      Bukkit.getScheduler().runTaskLater(GensPlus.getInstance(), () -> getWorld().getEntities().stream()
-          .filter(entity -> entity instanceof Item)
-          .filter(items::contains)
-          .forEach(Entity::remove), ticks);
+      Bukkit.getScheduler()
+          .runTaskLater(GensPlus.getInstance(), () -> getWorld().getEntities().stream()
+              .filter(entity -> entity instanceof Item)
+              .filter(items::contains)
+              .forEach(Entity::remove), ticks);
 
     }
 

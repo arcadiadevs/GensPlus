@@ -44,12 +44,33 @@ public class CommandsTabCompletion implements TabCompleter {
           return null;
         }
 
-        return List.of("help", "give", "giveall", "wand", "setlimit");
+        return List.of("help", "give", "giveall", "wand", "setlimit", "addlimit");
       }
 
       if (strings[0].equalsIgnoreCase("setlimit")) {
         if (!(adminPermission
             || commandSender.hasPermission(Permissions.SET_LIMIT.getPermission()))) {
+          return null;
+        }
+
+        if (strings.length == 2) {
+          List<String> playerNames = new ArrayList<>();
+          for (Player player : commandSender.getServer().getOnlinePlayers()) {
+            playerNames.add(player.getName());
+          }
+
+          return playerNames;
+        }
+
+        if (strings.length == 3) {
+          return List.of("<limit>");
+        }
+
+      }
+
+      if (strings[0].equalsIgnoreCase("addlimit")) {
+        if (!(adminPermission
+            || commandSender.hasPermission(Permissions.ADD_LIMIT.getPermission()))) {
           return null;
         }
 
@@ -137,7 +158,7 @@ public class CommandsTabCompletion implements TabCompleter {
         }
 
         if (strings.length == 4) {
-          return List.of("<uses>");
+          return List.of("<uses>", "-1");
         }
 
         if (strings.length == 5) {

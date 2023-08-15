@@ -137,7 +137,8 @@ public class ItemUtil {
         .parseMaterial();
 
     ItemBuilder itemBuilder = new ItemBuilder(material)
-        .name(ChatUtil.translate(config.getString(configPrefix + ".name")))
+        .name(ChatUtil.translate(config.getString(configPrefix + ".name")
+            .replace("%multiplier%", String.valueOf(multiplier))))
         .lore(formattedLore);
 
     ItemStack item = itemBuilder.build();

@@ -15,6 +15,7 @@ public enum Permissions {
   GENERATOR_LIMIT("gensplus.limit."),
   CHUNK_RADIUS("gensplus.chunkradius."),
   SET_LIMIT("gensplus.admin.setlimit"),
+  ADD_LIMIT("gensplus.admin.addlimit"),
   GIVE_WAND("gensplus.admin.givewand");
 
   private final String permission;
