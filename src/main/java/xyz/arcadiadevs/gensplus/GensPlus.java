@@ -237,10 +237,7 @@ public final class GensPlus extends JavaPlugin {
         .runTaskTimerAsynchronously(this, 0, 20);
 
     // Start event loop
-    new EventLoop(this, events).runTaskLaterAsynchronously(this,
-        TimeUtil.parseTime(
-            getConfig().getString(Config.EVENTS_TIME_BETWEEN_EVENTS.getPath()))
-    );
+    new EventLoop(events).runTaskTimerAsynchronously(this, 0, 20);
 
     new CleanupTask(locationsData).runTaskTimerAsynchronously(this, 0, 20);
   }
