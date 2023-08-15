@@ -237,7 +237,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     }
 
     public World getWorld() {
-      return blockLocations.get(0).getLocation().getWorld();
+      return blockLocations.stream().findFirst().orElseThrow().getLocation().getWorld();
     }
 
     /**
