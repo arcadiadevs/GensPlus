@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.DropEvent;
+import xyz.arcadiadevs.gensplus.models.location.SimplifiedLocation;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;

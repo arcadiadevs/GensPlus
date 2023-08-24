@@ -47,16 +47,6 @@ public class ChatUtil {
   }
 
   /**
-   * Translates color codes in a string by replacing '&' with the section symbol (§).
-   *
-   * @param s The string to translate.
-   * @return The translated string with color codes.
-   */
-  public static String translateOld(String s) {
-    return ChatColor.translateAlternateColorCodes('&', s);
-  }
-
-  /**
    * Sends a translated message to a command sender.
    *
    * @param sender  The command sender to send the message to.

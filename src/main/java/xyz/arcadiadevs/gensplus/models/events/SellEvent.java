@@ -16,4 +16,3 @@ public class SellEvent extends Event {
     super(multiplier, name);
   }
 }
-

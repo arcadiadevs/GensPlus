@@ -1,4 +1,4 @@
-package xyz.arcadiadevs.gensplus.models;
+package xyz.arcadiadevs.gensplus.models.location;
 
 import java.util.UUID;
 import org.bukkit.Bukkit;

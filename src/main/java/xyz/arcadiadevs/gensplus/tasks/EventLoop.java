@@ -43,7 +43,7 @@ public class EventLoop extends BukkitRunnable {
     setRandomNextEvent();
   }
 
-  public void setRandomNextEvent() {
+  private void setRandomNextEvent() {
     Random random = new Random();
     int randomNumber = random.nextInt(events.size());
     nextEvent = new ActiveEvent(
@@ -59,21 +59,21 @@ public class EventLoop extends BukkitRunnable {
    */
   @Override
   public void run() {
-    if (nextEvent != null && nextEvent.startTime() > System.currentTimeMillis()) {
+    if (nextEvent != null && nextEvent.startTime() < System.currentTimeMillis()) {
       activeEvent = nextEvent;
       Messages.EVENT_STARTED.format(
               "event", activeEvent.event().getName(),
-              "time", activeEvent.endTime())
+              "time", TimeUtil.millisToTime(eventDuration))
           .send(GensPlus.getInstance().getConfig()
               .getBoolean(Config.EVENTS_BROADCAST_ENABLED.getPath()));
       nextEvent = null;
       return;
     }
 
-    if (activeEvent.endTime() > System.currentTimeMillis()) {
+    if (activeEvent.endTime() < System.currentTimeMillis()) {
       Messages.EVENT_ENDED.format(
               "event", activeEvent.event().getName(),
-              "time", timeBetweenEvents)
+              "time", TimeUtil.millisToTime(timeBetweenEvents))
           .send(GensPlus.getInstance().getConfig()
               .getBoolean(Config.EVENTS_BROADCAST_ENABLED.getPath()));
 

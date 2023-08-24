@@ -41,10 +41,10 @@ public record PlayerData(List<Data> data) {
   @Getter
   public static class Data {
 
-    public UUID uuid;
+    private UUID uuid;
 
     @Setter
-    public int limit;
+    private int limit;
 
     public static void addToLimit(Data data, int amount) {
       data.limit += amount;
