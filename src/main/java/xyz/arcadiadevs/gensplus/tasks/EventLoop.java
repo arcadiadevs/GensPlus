@@ -23,8 +23,8 @@ public class EventLoop extends BukkitRunnable {
   private static ActiveEvent activeEvent = null;
   private static ActiveEvent nextEvent = null;
   private final List<Event> events;
-  private final long timeBetweenEvents;
-  private final long eventDuration;
+  private static long timeBetweenEvents;
+  private static long eventDuration;
 
   /**
    * Constructs a new EventLoop with the given plugin and list of events.
@@ -33,9 +33,9 @@ public class EventLoop extends BukkitRunnable {
    */
   public EventLoop(List<Event> events) {
     this.events = events;
-    this.timeBetweenEvents = TimeUtil.parseTimeMillis(Config.EVENTS_TIME_BETWEEN_EVENTS
+    timeBetweenEvents = TimeUtil.parseTimeMillis(Config.EVENTS_TIME_BETWEEN_EVENTS
         .getString());
-    this.eventDuration = TimeUtil.parseTimeMillis(Config.EVENTS_EVENT_DURATION.getString());
+    eventDuration = TimeUtil.parseTimeMillis(Config.EVENTS_EVENT_DURATION.getString());
 
     activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
         System.currentTimeMillis() + timeBetweenEvents);
@@ -82,6 +82,27 @@ public class EventLoop extends BukkitRunnable {
 
       setRandomNextEvent();
     }
+  }
+
+  public static void setNextEvent(Event event) {
+    activeEvent = new ActiveEvent(
+        event,
+        System.currentTimeMillis(),
+        System.currentTimeMillis() + eventDuration
+    );
+
+    nextEvent = new ActiveEvent(
+        null,
+        activeEvent.endTime(),
+        activeEvent.endTime() + timeBetweenEvents
+    );
+
+    activeEvent = nextEvent;
+    nextEvent = null;
+  }
+
+  public static void stopEvent() {
+
   }
 
 }

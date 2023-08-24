@@ -29,6 +29,7 @@ public enum Messages {
   EVENT_STARTED("event-started", "&9GensPlus> &7%event% has started and will end in &e&n%time%!"),
   EVENT_ENDED("event-ended",
       "&9GensPlus> &7%event% has ended and a new event will be started in &e&n%time%!"),
+  EVENT_ALREADY_RUNNING("event-already-running", "&cError> &7An event is already running!"),
   SUCCESSFULLY_UPGRADED("successfully-upgraded",
       "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"),
   SUCCESSFULLY_SOLD("successfully-sold", "&9GensPlus> &7Successfully sold drops for &a%price%"),

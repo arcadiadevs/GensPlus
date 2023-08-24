@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.commands;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -11,6 +12,8 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
+import xyz.arcadiadevs.gensplus.models.events.Event;
+import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
@@ -28,6 +31,7 @@ public class Commands implements CommandExecutor {
 
   private final GeneratorsData generatorsData;
   private final PlayerData playerData;
+  private final List<Event> events;
 
   /**
    * Executes a command issued by a CommandSender.
@@ -174,7 +178,7 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
-      /*if (strings[0].equalsIgnoreCase("startevent")) {
+      if (strings[0].equalsIgnoreCase("startevent")) {
         if (strings.length < 2) {
           Messages.NOT_ENOUGH_ARGUMENTS.format().send(commandSender);
           return true;
@@ -187,12 +191,27 @@ public class Commands implements CommandExecutor {
 
         String event = strings[1];
 
+        System.out.println(events);
+
+        Event eventObj = events.stream()
+            .filter(e -> e.getName().equalsIgnoreCase(event))
+            .findFirst()
+            .orElse(null);
+
+        System.out.println(eventObj);
+        System.out.println(eventObj.getName());
+
+        Messages.EVENT_STARTED.format("event", eventObj.getName(),
+            "time", eventObj.getMultiplier())
+            .send(commandSender);
+
+        EventLoop.setNextEvent(eventObj);
 
       }
 
       if (strings[0].equalsIgnoreCase("stopevent")) {
 
-      }*/
+      }
 
       /*if (strings[0].equalsIgnoreCase("reload")) {
         if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_RELOAD))) {

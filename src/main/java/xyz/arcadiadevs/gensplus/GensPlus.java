@@ -201,9 +201,9 @@ public final class GensPlus extends JavaPlugin {
   }
 
   private void registerCommands() {
-    getCommand("gensplus").setExecutor(new Commands(generatorsData, playerData));
-    getCommand("generators").setExecutor(new Commands(generatorsData, playerData));
-    getCommand("selldrops").setExecutor(new Commands(generatorsData, playerData));
+    getCommand("gensplus").setExecutor(new Commands(generatorsData, playerData, events));
+    getCommand("generators").setExecutor(new Commands(generatorsData, playerData, events));
+    getCommand("selldrops").setExecutor(new Commands(generatorsData, playerData, events));
   }
 
   private void registerTabCompletion() {
