@@ -189,9 +189,14 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
-        String event = strings[1];
+        // event name can be multiple words
+        String event = String.join(" ", strings).substring(11);
 
         System.out.println(events);
+
+        for (Event event1 : events) {
+          System.out.println(event1.getName());
+        }
 
         Event eventObj = events.stream()
             .filter(e -> e.getName().equalsIgnoreCase(event))
@@ -201,16 +206,12 @@ public class Commands implements CommandExecutor {
         System.out.println(eventObj);
         System.out.println(eventObj.getName());
 
-        Messages.EVENT_STARTED.format("event", eventObj.getName(),
-            "time", eventObj.getMultiplier())
-            .send(commandSender);
-
         EventLoop.setNextEvent(eventObj);
 
       }
 
       if (strings[0].equalsIgnoreCase("stopevent")) {
-
+          EventLoop.stopEvent();
       }
 
       /*if (strings[0].equalsIgnoreCase("reload")) {

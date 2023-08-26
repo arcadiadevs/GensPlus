@@ -44,7 +44,7 @@ public class CommandsTabCompletion implements TabCompleter {
           return null;
         }
 
-        return List.of("help", "give", "giveall", "wand", "setlimit", "addlimit", "startevent");
+        return List.of("help", "give", "giveall", "wand", "setlimit", "addlimit", "startevent", "stopevent");
       }
 
       if (strings[0].equalsIgnoreCase("setlimit")) {
@@ -101,6 +101,13 @@ public class CommandsTabCompletion implements TabCompleter {
               Config.EVENTS_SELL_EVENT_NAME.getString(),
               Config.EVENTS_DROP_EVENT_NAME.getString()
           );
+        }
+      }
+
+      if (strings[0].equalsIgnoreCase("stopevent")) {
+        if (!(adminPermission
+            || commandSender.hasPermission(Permissions.STOP_EVENT.getPermission()))) {
+          return null;
         }
       }
 

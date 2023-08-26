@@ -10,6 +10,7 @@ public enum Permissions {
   GENERATOR_GIVE_ALL("gensplus.admin.give.all"),
   GENERATOR_RELOAD("gensplus.admin.reload"),
   START_EVENT("gensplus.admin.startevent"),
+  STOP_EVENT("gensplus.admin.stopevent"),
   GENERATOR_DROPS_SELL_ALL("gensplus.drop.sell.all"),
   GENERATOR_DROPS_SELL_HAND("gensplus.drop.sell.hand"),
   SELL_MULTIPLIER("gensplus.sell.multiplier."),

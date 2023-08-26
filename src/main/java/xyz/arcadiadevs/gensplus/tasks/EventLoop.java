@@ -22,7 +22,7 @@ public class EventLoop extends BukkitRunnable {
   @Getter
   private static ActiveEvent activeEvent = null;
   private static ActiveEvent nextEvent = null;
-  private final List<Event> events;
+  private static List<Event> events;
   private static long timeBetweenEvents;
   private static long eventDuration;
 
@@ -32,7 +32,7 @@ public class EventLoop extends BukkitRunnable {
    * @param events The list of events to cycle through.
    */
   public EventLoop(List<Event> events) {
-    this.events = events;
+    EventLoop.events = events;
     timeBetweenEvents = TimeUtil.parseTimeMillis(Config.EVENTS_TIME_BETWEEN_EVENTS
         .getString());
     eventDuration = TimeUtil.parseTimeMillis(Config.EVENTS_EVENT_DURATION.getString());
@@ -43,7 +43,7 @@ public class EventLoop extends BukkitRunnable {
     setRandomNextEvent();
   }
 
-  private void setRandomNextEvent() {
+  private static void setRandomNextEvent() {
     Random random = new Random();
     int randomNumber = random.nextInt(events.size());
     nextEvent = new ActiveEvent(
@@ -84,6 +84,7 @@ public class EventLoop extends BukkitRunnable {
     }
   }
 
+
   public static void setNextEvent(Event event) {
     activeEvent = new ActiveEvent(
         event,
@@ -91,18 +92,21 @@ public class EventLoop extends BukkitRunnable {
         System.currentTimeMillis() + eventDuration
     );
 
-    nextEvent = new ActiveEvent(
-        null,
-        activeEvent.endTime(),
-        activeEvent.endTime() + timeBetweenEvents
-    );
+    nextEvent = activeEvent;
 
-    activeEvent = nextEvent;
-    nextEvent = null;
   }
 
   public static void stopEvent() {
+    activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
+        System.currentTimeMillis() + timeBetweenEvents);
 
+    Messages.EVENT_FORCE_ENDED.format("time", TimeUtil.millisToTime(timeBetweenEvents))
+        .send(GensPlus.getInstance().getConfig()
+            .getBoolean(Config.EVENTS_BROADCAST_ENABLED.getPath()));
+
+    nextEvent = null;
+
+    setRandomNextEvent();
   }
 
 }
