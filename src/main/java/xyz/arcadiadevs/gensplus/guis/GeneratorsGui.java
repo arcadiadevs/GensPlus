@@ -103,10 +103,12 @@ public class GeneratorsGui {
       menu.setItem(((rows - 1) * 9) + 4, new GuiItem(GuiItemType.CLOSE, closeButton, null));
       menu.setItem(((rows - 1) * 9) + 5, new GuiItem(GuiItemType.NEXT, nextPage, null));
 
+      String playerBalance = economy.format(economy.getBalance(player));
+
       menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
         if (generator.price() > economy.getBalance(player)) {
           Messages.NOT_ENOUGH_MONEY.format(
-              "currentBalance", economy.getBalance(player),
+              "currentBalance", playerBalance,
               "price", economy.currencyNameSingular() + generator.price())
               .send(player);
 

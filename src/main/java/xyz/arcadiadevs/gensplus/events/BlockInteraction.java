@@ -131,9 +131,6 @@ public class BlockInteraction implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onConcreteForm(BlockFormEvent event) {
     if (event.getNewState().getType().name().contains("CONCRETE")) {
-
-      System.out.println("Concrete powder event");
-
       final LocationsData.GeneratorLocation location =
           locationsData.getGeneratorLocation(event.getBlock());
 

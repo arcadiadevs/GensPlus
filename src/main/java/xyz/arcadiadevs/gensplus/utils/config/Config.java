@@ -24,6 +24,7 @@ public enum Config {
   SELL_WAND_ACTION_SNEAK("wands.sell-wand.sneak-required", true),
   SELL_WAND_ACTION("wands.sell-wand.action", "RIGHT_CLICK_BLOCK"),
   SELL_COMMAND_ENABLED("sell-command.enabled", true),
+  SELL_COMMAND_ALLIASES("sell-command.aliases", new ArrayList<String>()),
   LIMIT_PER_ISLAND_ENABLED("limits.per-island.enabled", false),
   LIMIT_PER_ISLAND_GENS_PER_LEVEL("limits.per-island.gens-per-level", new ArrayList<>()),
   LIMIT_PER_PLAYER_ENABLED("limits.per-player.enabled", false),

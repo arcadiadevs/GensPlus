@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
@@ -140,11 +141,6 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("wand")) {
-        if (!(commandSender instanceof Player player)) {
-          Messages.ONLY_PLAYER_CAN_EXECUTE_COMMAND.format().send(commandSender);
-          return true;
-        }
-
         if (strings.length < 2) {
           Messages.NOT_ENOUGH_ARGUMENTS.format().send(commandSender);
           return true;
@@ -168,7 +164,7 @@ public class Commands implements CommandExecutor {
 
           final Player targetPlayer = Bukkit.getPlayer(strings[2]);
 
-          player.getInventory().addItem(ItemUtil.getSellWand(Integer.parseInt(strings[3]),
+          targetPlayer.getInventory().addItem(ItemUtil.getSellWand(Integer.parseInt(strings[3]),
               Double.parseDouble(strings[4])));
           Messages.SELL_WAND_GIVEN.format().send(commandSender);
           Messages.SELL_WAND_RECEIVED.format().send(targetPlayer);
@@ -192,19 +188,10 @@ public class Commands implements CommandExecutor {
         // event name can be multiple words
         String event = String.join(" ", strings).substring(11);
 
-        System.out.println(events);
-
-        for (Event event1 : events) {
-          System.out.println(event1.getName());
-        }
-
         Event eventObj = events.stream()
             .filter(e -> e.getName().equalsIgnoreCase(event))
             .findFirst()
             .orElse(null);
-
-        System.out.println(eventObj);
-        System.out.println(eventObj.getName());
 
         EventLoop.setNextEvent(eventObj);
 
