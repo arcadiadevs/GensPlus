@@ -45,6 +45,10 @@ public class EventLoop extends BukkitRunnable {
 
   private static void setRandomNextEvent() {
     Random random = new Random();
+    if (events.isEmpty()) {
+      nextEvent = null;
+      return;
+    }
     int randomNumber = random.nextInt(events.size());
     nextEvent = new ActiveEvent(
         events.get(randomNumber),
@@ -86,6 +90,10 @@ public class EventLoop extends BukkitRunnable {
 
 
   public static void setNextEvent(Event event) {
+    if (event == null) {
+      stopEvent();
+      return;
+    }
     activeEvent = new ActiveEvent(
         event,
         System.currentTimeMillis(),
