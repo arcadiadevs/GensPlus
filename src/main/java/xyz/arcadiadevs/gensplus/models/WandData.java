@@ -1,6 +1,5 @@
 package xyz.arcadiadevs.gensplus.models;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -57,10 +56,11 @@ public record WandData(List<Wand> wands) {
 
     @Override
     public HashMap<String, String> getPlaceHolders() {
-      return new HashMap<>() {{
-        put("%uses%", uses == -1 ? "∞" : String.valueOf(uses));
-        put("%multiplier%", String.valueOf(multiplier));
-      }};
+      HashMap<String, String> output = new HashMap<>();
+      output.put("%uses%", uses == -1 ? "∞" : String.valueOf(uses));
+      output.put("%multiplier%", String.valueOf(multiplier));
+
+      return output;
     }
   }
 }

@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -294,8 +293,8 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
 
       final GensPlus instance = GensPlus.getInstance();
 
-      if (!hasPlayer()
-          && instance.getConfig().getBoolean(Config.CHUNK_RADIUS_ENABLED.getPath())) {
+      if (instance.getConfig().getBoolean(Config.CHUNK_RADIUS_ENABLED.getPath())
+          && !hasPlayer()) {
         return;
       }
 
@@ -371,34 +370,13 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     }
 
     private boolean hasPlayer() {
-      HashSet<Chunk> chunks = new HashSet<>();
-      for (SimplifiedLocation location : blockLocations) {
-        Location loc = location.getLocation();
-        Chunk centerChunk = loc.getChunk();
-        World world = loc.getWorld();
-        int radius = PlayerUtil.getChunkRadius(getPlacedBy().getPlayer());
+      int r = PlayerUtil.getRadius(getPlacedBy().getPlayer());
 
-        int cx = centerChunk.getX();
-        int cz = centerChunk.getZ();
+      for (SimplifiedLocation simplifiedLocation : blockLocations) {
+        Location location = simplifiedLocation.getLocation();
 
-        chunks.add(loc.getChunk());
-
-        // Add surrounding chunks
-        chunks.add(world.getChunkAt(cx + radius, cz));
-        chunks.add(world.getChunkAt(cx - radius, cz));
-        chunks.add(world.getChunkAt(cx, cz + radius));
-        chunks.add(world.getChunkAt(cx, cz - radius));
-
-        // Add diagonal chunks
-        chunks.add(world.getChunkAt(cx + radius, cz + radius));
-        chunks.add(world.getChunkAt(cx + radius, cz - radius));
-        chunks.add(world.getChunkAt(cx - radius, cz + radius));
-        chunks.add(world.getChunkAt(cx - radius, cz - radius));
-
-      }
-
-      for (Chunk chunk : chunks) {
-        for (Entity entity : chunk.getEntities()) {
+        // Check if there are any players in 10 block radius from the location
+        for (Entity entity : location.getWorld().getNearbyEntities(location, r, r, r)) {
           if (entity instanceof Player) {
             return true;
           }
