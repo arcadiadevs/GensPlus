@@ -14,6 +14,8 @@ cannot-place-in-world: "&cError> &7You cannot place generators in this world!"
 # [events]
 event-started: "&9GensPlus> &7%event% has started and will end in &e&n%time%!"
 event-ended: "&9GensPlus> &7%event% has ended and new event will be started in &e&n%time%!"
+event-already-running: "&cError> &7An event is already running!"
+event-force-ended: "&9GensPlus> &7Event has been force ended! New event will be started in &e&n%time%!"
 
 # [generators]
 successfully-upgraded: "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"

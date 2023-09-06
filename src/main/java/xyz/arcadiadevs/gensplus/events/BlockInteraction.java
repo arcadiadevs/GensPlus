@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -131,9 +132,25 @@ public class BlockInteraction implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onConcreteForm(BlockFormEvent event) {
     if (event.getNewState().getType().name().contains("CONCRETE")) {
+      final LocationsData.GeneratorLocation location =
+          locationsData.getGeneratorLocation(event.getBlock());
 
-      System.out.println("Concrete powder event");
+      if (location == null) {
+        return;
+      }
 
+      event.setCancelled(true);
+    }
+  }
+
+  /**
+   * Handles the BlockFadeEvent triggered when a player interacts with a coral block.
+   *
+   * @param event The PlayerInteractEvent object representing the player interact event.
+   */
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  public void onCoralForm(BlockFadeEvent event) {
+    if (event.getNewState().getType().name().contains("CORAL")) {
       final LocationsData.GeneratorLocation location =
           locationsData.getGeneratorLocation(event.getBlock());
 

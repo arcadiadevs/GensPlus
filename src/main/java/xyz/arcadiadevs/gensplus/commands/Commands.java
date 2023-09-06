@@ -1,16 +1,20 @@
 package xyz.arcadiadevs.gensplus.commands;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
+import xyz.arcadiadevs.gensplus.models.events.Event;
+import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
@@ -28,6 +32,7 @@ public class Commands implements CommandExecutor {
 
   private final GeneratorsData generatorsData;
   private final PlayerData playerData;
+  private final List<Event> events;
 
   /**
    * Executes a command issued by a CommandSender.
@@ -136,11 +141,6 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("wand")) {
-        if (!(commandSender instanceof Player player)) {
-          Messages.ONLY_PLAYER_CAN_EXECUTE_COMMAND.format().send(commandSender);
-          return true;
-        }
-
         if (strings.length < 2) {
           Messages.NOT_ENOUGH_ARGUMENTS.format().send(commandSender);
           return true;
@@ -164,7 +164,7 @@ public class Commands implements CommandExecutor {
 
           final Player targetPlayer = Bukkit.getPlayer(strings[2]);
 
-          player.getInventory().addItem(ItemUtil.getSellWand(Integer.parseInt(strings[3]),
+          targetPlayer.getInventory().addItem(ItemUtil.getSellWand(Integer.parseInt(strings[3]),
               Double.parseDouble(strings[4])));
           Messages.SELL_WAND_GIVEN.format().send(commandSender);
           Messages.SELL_WAND_RECEIVED.format().send(targetPlayer);
@@ -174,7 +174,7 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
-      /*if (strings[0].equalsIgnoreCase("startevent")) {
+      if (strings[0].equalsIgnoreCase("startevent")) {
         if (strings.length < 2) {
           Messages.NOT_ENOUGH_ARGUMENTS.format().send(commandSender);
           return true;
@@ -185,14 +185,21 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
-        String event = strings[1];
+        // event name can be multiple words
+        String event = String.join(" ", strings).substring(11);
 
+        Event eventObj = events.stream()
+            .filter(e -> e.getName().equalsIgnoreCase(event))
+            .findFirst()
+            .orElse(null);
+
+        EventLoop.setNextEvent(eventObj);
 
       }
 
       if (strings[0].equalsIgnoreCase("stopevent")) {
-
-      }*/
+          EventLoop.stopEvent();
+      }
 
       /*if (strings[0].equalsIgnoreCase("reload")) {
         if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_RELOAD))) {

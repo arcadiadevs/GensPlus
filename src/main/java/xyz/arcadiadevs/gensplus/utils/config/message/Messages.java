@@ -29,6 +29,9 @@ public enum Messages {
   EVENT_STARTED("event-started", "&9GensPlus> &7%event% has started and will end in &e&n%time%!"),
   EVENT_ENDED("event-ended",
       "&9GensPlus> &7%event% has ended and a new event will be started in &e&n%time%!"),
+  EVENT_FORCE_ENDED("event-force-ended",
+      "&9GensPlus> &7Event has been force ended! New event will be started in &e&n%time%!"),
+  EVENT_ALREADY_RUNNING("event-already-running", "&cError> &7An event is already running!"),
   SUCCESSFULLY_UPGRADED("successfully-upgraded",
       "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"),
   SUCCESSFULLY_SOLD("successfully-sold", "&9GensPlus> &7Successfully sold drops for &a%price%"),
@@ -73,7 +76,8 @@ public enum Messages {
       "&9GensPlus> &7You have received an upgrade wand!"
   ),
   WAND_BROKE("wand-broke", "&cError> &7Your wand broke!"),
-  LIMIT_UPDATED("limit-updated", "&9GensPlus> &7You have changed %player%'s gens limit to &a%limit%&7!");
+  LIMIT_UPDATED("limit-updated",
+      "&9GensPlus> &7You have changed %player%'s gens limit to &a%limit%&7!");
 
   private final String key;
   private String defaultMessage;

@@ -35,6 +35,10 @@ sell-command:
   # If enabled is set to false, the command will not be registered.
   enabled: true
 
+  # The command that will be used to sell all drops in inventory.
+  aliases:
+    - "sellall"
+
 limits:
   # Per-player generator limits
   per-player:

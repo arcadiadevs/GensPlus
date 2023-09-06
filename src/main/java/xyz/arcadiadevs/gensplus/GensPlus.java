@@ -58,7 +58,6 @@ import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.Metrics;
-import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
@@ -201,9 +200,12 @@ public final class GensPlus extends JavaPlugin {
   }
 
   private void registerCommands() {
-    getCommand("gensplus").setExecutor(new Commands(generatorsData, playerData));
-    getCommand("generators").setExecutor(new Commands(generatorsData, playerData));
-    getCommand("selldrops").setExecutor(new Commands(generatorsData, playerData));
+    getCommand("gensplus").setExecutor(
+        new Commands(generatorsData, playerData, events));
+    getCommand("generators").setExecutor(
+        new Commands(generatorsData, playerData, events));
+    getCommand("selldrops").setExecutor(
+        new Commands(generatorsData, playerData, events));
   }
 
   private void registerTabCompletion() {
@@ -298,7 +300,6 @@ public final class GensPlus extends JavaPlugin {
    * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
    *                          encountered.
    */
-  @SuppressWarnings("unchecked")
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
     List<Map<?, ?>> generatorsConfig = getConfig().getMapList(Config.GENERATORS.getPath());

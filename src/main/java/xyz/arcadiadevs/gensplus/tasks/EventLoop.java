@@ -22,9 +22,9 @@ public class EventLoop extends BukkitRunnable {
   @Getter
   private static ActiveEvent activeEvent = null;
   private static ActiveEvent nextEvent = null;
-  private final List<Event> events;
-  private final long timeBetweenEvents;
-  private final long eventDuration;
+  private static List<Event> events;
+  private static long timeBetweenEvents;
+  private static long eventDuration;
 
   /**
    * Constructs a new EventLoop with the given plugin and list of events.
@@ -32,10 +32,10 @@ public class EventLoop extends BukkitRunnable {
    * @param events The list of events to cycle through.
    */
   public EventLoop(List<Event> events) {
-    this.events = events;
-    this.timeBetweenEvents = TimeUtil.parseTimeMillis(Config.EVENTS_TIME_BETWEEN_EVENTS
+    EventLoop.events = events;
+    timeBetweenEvents = TimeUtil.parseTimeMillis(Config.EVENTS_TIME_BETWEEN_EVENTS
         .getString());
-    this.eventDuration = TimeUtil.parseTimeMillis(Config.EVENTS_EVENT_DURATION.getString());
+    eventDuration = TimeUtil.parseTimeMillis(Config.EVENTS_EVENT_DURATION.getString());
 
     activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
         System.currentTimeMillis() + timeBetweenEvents);
@@ -43,8 +43,12 @@ public class EventLoop extends BukkitRunnable {
     setRandomNextEvent();
   }
 
-  private void setRandomNextEvent() {
+  private static void setRandomNextEvent() {
     Random random = new Random();
+    if (events.isEmpty()) {
+      nextEvent = null;
+      return;
+    }
     int randomNumber = random.nextInt(events.size());
     nextEvent = new ActiveEvent(
         events.get(randomNumber),
@@ -82,6 +86,35 @@ public class EventLoop extends BukkitRunnable {
 
       setRandomNextEvent();
     }
+  }
+
+
+  public static void setNextEvent(Event event) {
+    if (event == null) {
+      stopEvent();
+      return;
+    }
+    activeEvent = new ActiveEvent(
+        event,
+        System.currentTimeMillis(),
+        System.currentTimeMillis() + eventDuration
+    );
+
+    nextEvent = activeEvent;
+
+  }
+
+  public static void stopEvent() {
+    activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
+        System.currentTimeMillis() + timeBetweenEvents);
+
+    Messages.EVENT_FORCE_ENDED.format("time", TimeUtil.millisToTime(timeBetweenEvents))
+        .send(GensPlus.getInstance().getConfig()
+            .getBoolean(Config.EVENTS_BROADCAST_ENABLED.getPath()));
+
+    nextEvent = null;
+
+    setRandomNextEvent();
   }
 
 }

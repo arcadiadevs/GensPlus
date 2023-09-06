@@ -23,7 +23,8 @@ public class CleanupTask extends BukkitRunnable {
 
       for (SimplifiedLocation simplifiedLocation : location.getSimplifiedBlockLocations()) {
         if (simplifiedLocation.getLocation() == null
-            || simplifiedLocation.getLocation().getBlock().getType() != generator.blockType().getType()) {
+            || simplifiedLocation.getLocation().getBlock().getType()
+            != generator.blockType().getType()) {
           location.removeSimpleBlock(simplifiedLocation);
         }
       }
@@ -34,7 +35,7 @@ public class CleanupTask extends BukkitRunnable {
 
   private void updateGens() {
     for (LocationsData.GeneratorLocation location : locationsData.locations()) {
-      if (location.getBlockLocations().size() == 0) {
+      if (location.getBlockLocations().isEmpty()) {
         continue;
       }
 
