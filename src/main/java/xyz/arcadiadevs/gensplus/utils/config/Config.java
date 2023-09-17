@@ -23,6 +23,7 @@ public enum Config {
   GENERATOR_UPGRADE_ACTION("guis.upgrade-gui.action", "RIGHT_CLICK_BLOCK"),
   SELL_WAND_ACTION_SNEAK("wands.sell-wand.sneak-required", true),
   SELL_WAND_ACTION("wands.sell-wand.action", "RIGHT_CLICK_BLOCK"),
+  SELL_WAND_UNLIMITED_USES_PREFIX("wands.sell-wand.unlimited-uses-prefix", "∞"),
   SELL_COMMAND_ENABLED("sell-command.enabled", true),
   SELL_COMMAND_ALLIASES("sell-command.aliases", new ArrayList<String>()),
   LIMIT_PER_ISLAND_ENABLED("limits.per-island.enabled", false),

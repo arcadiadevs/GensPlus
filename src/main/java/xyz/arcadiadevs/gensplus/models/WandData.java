@@ -6,6 +6,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.formatter.Formattable;
 
 /**
@@ -57,7 +58,7 @@ public record WandData(List<Wand> wands) {
     @Override
     public HashMap<String, String> getPlaceHolders() {
       HashMap<String, String> output = new HashMap<>();
-      output.put("%uses%", uses == -1 ? "∞" : String.valueOf(uses));
+      output.put("%uses%", uses == -1 ? Config.SELL_WAND_UNLIMITED_USES_PREFIX.getString() : String.valueOf(uses));
       output.put("%multiplier%", String.valueOf(multiplier));
 
       return output;

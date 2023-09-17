@@ -124,6 +124,8 @@ wands:
     # The name of the sell wand
     name: "&e&lSell Wand"
 
+    unlimited-uses-prefix: "∞"
+
     # The lore of the sell wand
     lore:
       - ""
