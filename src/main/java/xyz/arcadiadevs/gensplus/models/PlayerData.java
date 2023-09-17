@@ -26,12 +26,10 @@ public record PlayerData(List<Data> data) {
    *
    * @param uuid  The UUID of the player.
    * @param limit The limit of the player.
-   * @return The PlayerData object representing the player.
    */
-  public Data create(UUID uuid, int limit) {
+  public void create(UUID uuid, int limit) {
     Data data = new Data(uuid, limit);
     this.data.add(data);
-    return data;
   }
 
   /**
