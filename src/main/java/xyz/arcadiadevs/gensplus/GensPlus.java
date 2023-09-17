@@ -26,6 +26,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -185,6 +186,9 @@ public final class GensPlus extends JavaPlugin {
 
     // Register tab completion
     registerTabCompletion();
+
+    // Load player data in case the plugin gets enabled manually after server start
+    loadPlayers();
   }
 
   @Override
@@ -435,6 +439,17 @@ public final class GensPlus extends JavaPlugin {
       Hologram hologram = HologramsUtil.createHologram(center, lines, material);
       location.setHologram(hologram);
       hologramPool.takeCareOf(hologram);
+    }
+  }
+
+  /**
+   * Load player data in case the plugin gets enabled manually after server start.
+   */
+  private void loadPlayers() {
+    for (Player player : Bukkit.getOnlinePlayers()) {
+      if (playerData.getData(player.getUniqueId()) == null) {
+        playerData.create(player.getUniqueId(), Config.LIMIT_PER_PLAYER_DEFAULT_LIMIT.getInt());
+      }
     }
   }
 
