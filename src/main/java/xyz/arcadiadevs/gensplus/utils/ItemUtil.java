@@ -1,6 +1,5 @@
 package xyz.arcadiadevs.gensplus.utils;
 
-import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.awaitquality.api.spigot.chat.formatter.Formatter;
 import com.cryptomorin.xseries.XMaterial;
 import dev.lone.itemsadder.api.CustomStack;
@@ -137,9 +136,10 @@ public class ItemUtil {
         .orElseThrow()
         .parseMaterial();
 
+    final String formattedName = Formatter.format(wand, config.getString(configPrefix + ".name"));
+
     ItemBuilder itemBuilder = new ItemBuilder(material)
-        .name(ChatUtil.translate(config.getString(configPrefix + ".name")
-            .replace("%multiplier%", String.valueOf(multiplier))))
+        .name(formattedName)
         .lore(formattedLore);
 
     ItemStack item = itemBuilder.build();

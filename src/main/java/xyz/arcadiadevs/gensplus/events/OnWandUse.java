@@ -105,14 +105,12 @@ public class OnWandUse implements Listener {
         return;
       }
 
-      if (wand.getUses() <= -1) {
-        return;
-      }
-
       List<String> lore = Formatter.format(wand, config.getStringList("wands.sell-wand.lore"));
+      String name = Formatter.format(wand, config.getString("wands.sell-wand.name"));
 
       ItemMeta meta = itemInMainHand.getItemMeta();
       meta.setLore(lore);
+      meta.setDisplayName(name);
       itemInMainHand.setItemMeta(meta);
     }
   }

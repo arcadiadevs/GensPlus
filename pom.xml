@@ -6,7 +6,7 @@
 
     <groupId>xyz.arcadiadevs</groupId>
     <artifactId>GensPlus</artifactId>
-    <version>1.3.1-beta4</version>
+    <version>1.3.1</version>
     <packaging>jar</packaging>
 
     <name>GensPlus</name>
@@ -205,7 +205,6 @@
             <groupId>com.awaitquality</groupId>
             <artifactId>Api</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.awaitquality.hologram</groupId>

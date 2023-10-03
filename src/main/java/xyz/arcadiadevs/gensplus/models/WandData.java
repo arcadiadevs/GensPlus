@@ -7,6 +7,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 
 /**
@@ -28,7 +29,7 @@ public record WandData(List<Wand> wands) {
    * @return The Wand object representing the wand.
    */
   public Wand create(Wand.WandType type, int uses, double multiplier) {
-    Wand wandData = new Wand(UUID.randomUUID(), type, uses, multiplier);
+    Wand wandData = new Wand(UUID.randomUUID(), type, uses, multiplier, 0, 0);
     wands.add(wandData);
     return wandData;
   }
@@ -47,6 +48,8 @@ public record WandData(List<Wand> wands) {
     private WandType type;
     private int uses;
     private double multiplier;
+    private long totalEarned;
+    private long totalItemsSold;
 
     /**
      * The WandType enum represents the type of wand in GensPlus.
@@ -60,7 +63,8 @@ public record WandData(List<Wand> wands) {
       HashMap<String, String> output = new HashMap<>();
       output.put("%uses%", uses == -1 ? Config.SELL_WAND_UNLIMITED_USES_PREFIX.getString() : String.valueOf(uses));
       output.put("%multiplier%", String.valueOf(multiplier));
-
+      output.put("%total_earned%", GensPlus.getInstance().getEcon().format(totalEarned));
+      output.put("%total_items_sold%", String.valueOf(totalItemsSold));
       return output;
     }
   }

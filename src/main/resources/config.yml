@@ -124,6 +124,7 @@ wands:
     # The name of the sell wand
     name: "&e&lSell Wand"
 
+    # Unlimited uses prefix (if "uses" in game is set to -1, it will be replaced with this prefix)
     unlimited-uses-prefix: "∞"
 
     # The lore of the sell wand

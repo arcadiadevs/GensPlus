@@ -90,6 +90,8 @@ public class SellUtil {
         ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
         : 1.0 * PlayerUtil.getMultiplier(player)) * wandMultiplier;
 
+    long totalItems = 0;
+
     for (int i = 0; i < inventory.getSize(); i++) {
       ItemStack item = inventory.getItem(i);
 
@@ -105,17 +107,21 @@ public class SellUtil {
       final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
       final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
 
-      final double itemAmount = item.getAmount();
+      long itemAmount = item.getAmount();
+      totalItems += itemAmount;
       final double sellPrice = generator.sellPrice();
       double sellAmount = (sellPrice * itemAmount * multiplier);
-      totalSellAmount += sellAmount;
+      totalSellAmount += (int) sellAmount;
       inventory.removeItem(item);
       sellAmounts.put(player, sellAmounts.getOrDefault(player, 0.0) + sellAmount);
     }
 
     if (totalSellAmount > 0) {
       final Economy economy = GensPlus.getInstance().getEcon();
-      wand.setUses(wand.getUses() - 1);
+      wand.setUses(wand.getUses() <= -1 ? -1 : wand.getUses() - 1);
+
+      wand.setTotalEarned(wand.getTotalEarned() + totalSellAmount);
+      wand.setTotalItemsSold(wand.getTotalItemsSold() + totalItems);
 
       economy.depositPlayer(player, totalSellAmount);
 
