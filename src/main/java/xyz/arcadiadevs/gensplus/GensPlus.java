@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XMaterial;
 import com.github.unldenis.hologram.Hologram;
 import com.github.unldenis.hologram.HologramPool;
@@ -55,7 +56,6 @@ import xyz.arcadiadevs.gensplus.tasks.CleanupTask;
 import xyz.arcadiadevs.gensplus.tasks.DataSaveTask;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.tasks.SpawnerTask;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.Metrics;

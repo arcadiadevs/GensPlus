@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.arcadiadevs.gensplus.GensPlus;
@@ -80,6 +81,8 @@ public enum Messages {
       "&9GensPlus> &7You have changed %player%'s gens limit to &a%limit%&7!");
 
   private final String key;
+
+  @Getter
   private String defaultMessage;
 
   /**
@@ -131,15 +134,6 @@ public enum Messages {
    */
   public PlayerMessage format(Object... placeholders) {
     return new PlayerMessage(this).format(placeholders);
-  }
-
-  /**
-   * Returns the default message for this enum constant.
-   *
-   * @return The default message.
-   */
-  public String getDefaultMessage() {
-    return defaultMessage;
   }
 
   /**

@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.guis;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XSound;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.GuiUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;

@@ -1,12 +1,12 @@
 package xyz.arcadiadevs.gensplus.commands;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
@@ -15,7 +15,6 @@ import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.models.events.Event;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;

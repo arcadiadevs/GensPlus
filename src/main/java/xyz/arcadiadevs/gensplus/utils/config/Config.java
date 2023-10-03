@@ -1,12 +1,11 @@
 package xyz.arcadiadevs.gensplus.utils.config;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.arcadiadevs.gensplus.GensPlus;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 
 /**
  * The ConfigManager class provides functionality for handling the configuration file in GensPlus.
@@ -105,6 +104,10 @@ public enum Config {
     return format ? ChatUtil.translate(value.toString()) : value;
   }
 
+  public Object get() {
+    return get(false);
+  }
+
   public boolean getBoolean() {
     return (boolean) get();
   }
@@ -143,10 +146,6 @@ public enum Config {
 
   public ArrayList<Boolean> getBooleanList() {
     return (ArrayList<Boolean>) get();
-  }
-
-  public Object get() {
-    return get(false);
   }
 
   public Object getFormatted() {

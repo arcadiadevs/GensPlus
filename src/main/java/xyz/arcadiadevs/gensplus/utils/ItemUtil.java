@@ -1,5 +1,7 @@
 package xyz.arcadiadevs.gensplus.utils;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
+import com.awaitquality.api.spigot.chat.formatter.Formatter;
 import com.cryptomorin.xseries.XMaterial;
 import dev.lone.itemsadder.api.CustomStack;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
@@ -12,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.WandData;
-import xyz.arcadiadevs.gensplus.utils.formatter.Formatter;
 import xyz.arcadiadevs.guilib.ItemBuilder;
 
 /**

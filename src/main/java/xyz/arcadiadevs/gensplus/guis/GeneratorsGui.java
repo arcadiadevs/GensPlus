@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.guis;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import xyz.arcadiadevs.guilib.GuiItemType;
 import xyz.arcadiadevs.guilib.ItemBuilder;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.GuiUtil;
 
 /**

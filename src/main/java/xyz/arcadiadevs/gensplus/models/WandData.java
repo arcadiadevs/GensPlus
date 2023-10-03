@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.models;
 
+import com.awaitquality.api.spigot.chat.formatter.Formattable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -7,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
-import xyz.arcadiadevs.gensplus.utils.formatter.Formattable;
 
 /**
  * The WandData class represents the data associated with a wand in GensPlus.

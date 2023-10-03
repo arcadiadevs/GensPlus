@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
+import com.awaitquality.api.spigot.chat.formatter.Formatter;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +24,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.models.WandData;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
-import xyz.arcadiadevs.gensplus.utils.formatter.Formatter;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**

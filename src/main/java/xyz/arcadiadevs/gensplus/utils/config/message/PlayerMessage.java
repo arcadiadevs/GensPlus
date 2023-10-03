@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.utils.config.message;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -10,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.gensplus.GensPlus;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 
 /**
  * PlayerMessage.java handles the formatting and sending of messages to players.

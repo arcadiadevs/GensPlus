@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.models;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XMaterial;
 import com.github.unldenis.hologram.Hologram;
 import java.util.ArrayList;
@@ -27,7 +28,6 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.DropEvent;
 import xyz.arcadiadevs.gensplus.models.location.SimplifiedLocation;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
-import xyz.arcadiadevs.gensplus.utils.ChatUtil;
 import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
