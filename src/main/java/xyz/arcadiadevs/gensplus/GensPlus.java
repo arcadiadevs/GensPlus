@@ -44,6 +44,7 @@ import xyz.arcadiadevs.gensplus.events.InstantBreak;
 import xyz.arcadiadevs.gensplus.events.OnInventoryOpen;
 import xyz.arcadiadevs.gensplus.events.OnJoin;
 import xyz.arcadiadevs.gensplus.events.OnWandUse;
+import xyz.arcadiadevs.gensplus.events.SmeltItem;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
@@ -230,6 +231,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new OnWandUse(wandData, getConfig()));
     events.add(new OnInventoryOpen());
     events.add(new CraftItem());
+    events.add(new SmeltItem());
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }

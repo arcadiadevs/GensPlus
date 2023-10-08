@@ -3,6 +3,7 @@ package xyz.arcadiadevs.gensplus.utils;
 import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
@@ -74,4 +75,27 @@ public class PlayerUtil {
     return getLimit(player, Permissions.CHUNK_RADIUS.getPermission(), "radius",
         Config.CHUNK_RADIUS_DEFAULT_RADIUS.getPath()).intValue();
   }
+
+  /**
+   * Gets the item currently held in the player's main hand.
+   *
+   * @param player The player for whom to retrieve the held item.
+   * @return The item held in the player's main hand.
+   */
+  public static ItemStack getHeldItem(Player player) {
+    return ServerVersion.isServerVersionAbove(ServerVersion.V1_8)
+        ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInHand();
+  }
+
+  /**
+   * Gets the item currently held in the player's off hand.
+   *
+   * @param player The player for whom to retrieve the held off-hand item.
+   * @return The item held in the player's off hand.
+   */
+  public static ItemStack getOffHeldItem(Player player) {
+    return ServerVersion.isServerVersionAbove(ServerVersion.V1_8)
+        ? player.getInventory().getItemInOffHand() : player.getInventory().getItemInHand();
+  }
+
 }
