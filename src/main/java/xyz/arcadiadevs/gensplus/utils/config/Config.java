@@ -13,6 +13,7 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 public enum Config {
   ITEM_DESPAWN_TIME("item-despawn-time", "5m"),
   CAN_DROPS_BE_PLACED("can-items-be-placed", false),
+  CAN_DROPS_BE_USED_IN_CRAFTING("can-items-be-used-in-crafting", false),
   DISABLED_WORLDS("disabled-worlds", new ArrayList<String>()),
   INSTANT_PICKUP("instant-pickup", false),
   ON_JOIN_ENABLED("on-join.enabled", true),

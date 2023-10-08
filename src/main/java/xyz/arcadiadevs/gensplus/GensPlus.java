@@ -38,6 +38,7 @@ import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
 import xyz.arcadiadevs.gensplus.events.BlockBreak;
 import xyz.arcadiadevs.gensplus.events.BlockInteraction;
 import xyz.arcadiadevs.gensplus.events.BlockPlace;
+import xyz.arcadiadevs.gensplus.events.CraftItem;
 import xyz.arcadiadevs.gensplus.events.EntityExplode;
 import xyz.arcadiadevs.gensplus.events.InstantBreak;
 import xyz.arcadiadevs.gensplus.events.OnInventoryOpen;
@@ -228,6 +229,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new EntityExplode(locationsData, generatorsData));
     events.add(new OnWandUse(wandData, getConfig()));
     events.add(new OnInventoryOpen());
+    events.add(new CraftItem());
 
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
