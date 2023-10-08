@@ -55,19 +55,14 @@ public class SmeltItem implements Listener {
       inventoryTypes = new InventoryType[] {InventoryType.FURNACE};
     }
 
-    if ((event.getClickedInventory().equals(event.getView().getBottomInventory())
-        && event.isShiftClick())
-        || event.getClickedInventory().equals(event.getView().getTopInventory())) {
-      if (!Arrays.asList(inventoryTypes).contains(event.getView().getTopInventory().getType())) {
-        return;
-      }
-
-      event.setCancelled(true);
+    if ((
+        !event.getClickedInventory().equals(event.getView().getBottomInventory())
+            || !event.isShiftClick())
+        && !event.getClickedInventory().equals(event.getView().getTopInventory())) {
       return;
     }
 
-    if (!Arrays.asList(inventoryTypes).contains(event.getClickedInventory().getType())
-        || !Arrays.asList(inventoryTypes).contains(event.getInventory().getType())) {
+    if (!Arrays.asList(inventoryTypes).contains(event.getView().getTopInventory().getType())) {
       return;
     }
 
