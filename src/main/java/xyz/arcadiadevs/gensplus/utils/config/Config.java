@@ -15,6 +15,7 @@ public enum Config {
   CAN_DROPS_BE_PLACED("can-items-be-placed", false),
   CAN_DROPS_BE_USED_IN_CRAFTING("can-items-be-used-in-crafting", false),
   CAN_DROPS_BE_USED_IN_SMELTING("can-items-be-used-in-smelting", false),
+  DISABLE_GENERATORS_WHEN_OFFLINE("disable-generators-when-offline", true),
   DISABLED_WORLDS("disabled-worlds", new ArrayList<String>()),
   INSTANT_PICKUP("instant-pickup", false),
   ON_JOIN_ENABLED("on-join.enabled", true),

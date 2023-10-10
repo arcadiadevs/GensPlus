@@ -287,14 +287,11 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
 
       OfflinePlayer player = getPlacedBy();
 
-      if (!player.isOnline()) {
+      if (Config.DISABLE_GENERATORS_WHEN_OFFLINE.getBoolean() && !player.isOnline()) {
         return;
       }
 
-      final GensPlus instance = GensPlus.getInstance();
-
-      if (instance.getConfig().getBoolean(Config.CHUNK_RADIUS_ENABLED.getPath())
-          && !hasPlayer()) {
+      if (Config.CHUNK_RADIUS_ENABLED.getBoolean() && !hasPlayer()) {
         return;
       }
 

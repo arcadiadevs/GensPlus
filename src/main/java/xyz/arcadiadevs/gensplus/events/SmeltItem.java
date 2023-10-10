@@ -31,7 +31,7 @@ public class SmeltItem implements Listener {
    */
   @EventHandler
   public void onInventoryClick(InventoryClickEvent event) {
-    if (Config.CAN_DROPS_BE_USED_IN_CRAFTING.getBoolean()) {
+    if (Config.CAN_DROPS_BE_USED_IN_SMELTING.getBoolean()) {
       return;
     }
 
@@ -76,7 +76,7 @@ public class SmeltItem implements Listener {
    */
   @EventHandler
   public void onHopperTransfer(InventoryMoveItemEvent event) {
-    if (Config.CAN_DROPS_BE_USED_IN_CRAFTING.getBoolean()) {
+    if (Config.CAN_DROPS_BE_USED_IN_SMELTING.getBoolean()) {
       return;
     }
 
@@ -138,7 +138,7 @@ public class SmeltItem implements Listener {
    */
   @EventHandler
   public void onInventoryDrag(InventoryDragEvent event) {
-    if (Config.CAN_DROPS_BE_USED_IN_CRAFTING.getBoolean()) {
+    if (Config.CAN_DROPS_BE_USED_IN_SMELTING.getBoolean()) {
       return;
     }
 
@@ -177,7 +177,7 @@ public class SmeltItem implements Listener {
    */
   @EventHandler
   public void onCampfireClick(PlayerInteractEvent event) {
-    if (Config.CAN_DROPS_BE_USED_IN_CRAFTING.getBoolean()) {
+    if (Config.CAN_DROPS_BE_USED_IN_SMELTING.getBoolean()) {
       return;
     }
 
