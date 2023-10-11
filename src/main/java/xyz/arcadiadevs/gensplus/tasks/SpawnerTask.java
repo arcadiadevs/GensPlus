@@ -2,7 +2,6 @@ package xyz.arcadiadevs.gensplus.tasks;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.GensPlus;
@@ -18,7 +17,7 @@ import xyz.arcadiadevs.gensplus.models.events.SpeedEvent;
  */
 public class SpawnerTask extends BukkitRunnable {
 
-  private final ConcurrentLinkedQueue<LocationsData.GeneratorLocation> blockData;
+  private final List<LocationsData.GeneratorLocation> blockData;
   private final GeneratorsData generatorsData;
   private HashMap<GeneratorsData.Generator, Long> genNextSpawn;
 
@@ -28,8 +27,8 @@ public class SpawnerTask extends BukkitRunnable {
    * @param blockData      The list of generator locations.
    * @param generatorsData The generator data.
    */
-  public SpawnerTask(ConcurrentLinkedQueue<LocationsData.GeneratorLocation> blockData,
-                     GeneratorsData generatorsData) {
+  public SpawnerTask(List<LocationsData.GeneratorLocation> blockData,
+      GeneratorsData generatorsData) {
     this.blockData = blockData;
     this.generatorsData = generatorsData;
     initialize();

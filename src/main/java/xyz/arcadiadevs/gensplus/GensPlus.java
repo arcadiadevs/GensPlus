@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
@@ -400,7 +399,7 @@ public final class GensPlus extends JavaPlugin {
         getConfig().getInt(Config.HOLOGRAMS_VIEW_DISTANCE.getPath(), 2000))
         : hologramPool;
 
-    placeholders = new Placeholders(1);
+    placeholders = new Placeholders();
 
     if (!GensPlus.getInstance().getConfig().getBoolean(Config.HOLOGRAMS_ENABLED.getPath())) {
       return;
@@ -458,7 +457,7 @@ public final class GensPlus extends JavaPlugin {
     }
   }
 
-  private ConcurrentLinkedQueue<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
+  private CopyOnWriteArrayList<LocationsData.GeneratorLocation> loadBlockDataFromJson() {
     try (FileReader reader = new FileReader(getDataFolder() + "/data/block_data.json")) {
       return gson.fromJson(reader,
           new TypeToken<CopyOnWriteArrayList<LocationsData.GeneratorLocation>>() {
