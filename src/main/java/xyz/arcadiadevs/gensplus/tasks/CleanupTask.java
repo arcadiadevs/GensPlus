@@ -8,13 +8,18 @@ import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.location.SimplifiedLocation;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 
+/**
+ * This class represents a Bukkit task responsible for cleaning up generator locations.
+ * It extends BukkitRunnable to allow for asynchronous execution.
+ */
 @AllArgsConstructor
 public class CleanupTask extends BukkitRunnable {
 
   private final LocationsData locationsData;
 
   /**
-   * Runs this operation.
+   * Runs the cleanup operation, removing invalid block locations for each generator.
+   * Also updates the generator's island ID based on the remaining block locations.
    */
   @Override
   public void run() {

@@ -1,6 +1,7 @@
 package xyz.arcadiadevs.gensplus.events;
 
 import com.awaitquality.api.spigot.chat.formatter.Formatter;
+import com.cryptomorin.xseries.XMaterial;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.List;
 import java.util.UUID;
@@ -57,6 +58,12 @@ public class OnWandUse implements Listener {
     ItemStack itemInMainHand = PlayerUtil.getHeldItem(player);
 
     if (clickedBlock == null) {
+      return;
+    }
+
+    if (itemInMainHand == null
+        || XMaterial.AIR.isSimilar(itemInMainHand)
+        || itemInMainHand.getType() == Material.AIR) {
       return;
     }
 
