@@ -17,6 +17,7 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.utils.GuiUtil;
+import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
@@ -276,12 +277,16 @@ public class UpgradeGui {
     }
 
     String particle = config.getString(Config.PARTICLES_TYPE.getPath());
-    location.getWorld()
-        .spawnParticle(
-            Particle.valueOf(particle),
-            location.add(0, -1, 0),
-            70
-        );
+
+    // TODO: Fix 1.8 support
+    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+      location.getWorld()
+          .spawnParticle(
+              Particle.valueOf(particle),
+              location.add(0, -1, 0),
+              70
+          );
+    }
   }
 }
 

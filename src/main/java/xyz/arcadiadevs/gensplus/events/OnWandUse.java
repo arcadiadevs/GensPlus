@@ -22,7 +22,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.arcadiadevs.gensplus.models.WandData;
+import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
+import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
@@ -46,12 +48,13 @@ public class OnWandUse implements Listener {
 
     final Player player = event.getPlayer();
 
-    if (event.getHand() != EquipmentSlot.HAND) {
+    if (ServerVersion.isServerVersionAbove(ServerVersion.V1_8)
+        && event.getHand() != EquipmentSlot.HAND) {
       return;
     }
 
     Block clickedBlock = event.getClickedBlock();
-    ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+    ItemStack itemInMainHand = PlayerUtil.getHeldItem(player);
 
     if (clickedBlock == null) {
       return;

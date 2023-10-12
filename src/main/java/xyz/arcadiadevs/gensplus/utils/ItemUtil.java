@@ -57,7 +57,12 @@ public class ItemUtil {
 
       ItemStack item = XMaterial.matchXMaterial(name).orElseThrow().parseItem();
       ItemMeta meta = item.getItemMeta();
-      meta.setCustomModelData(Integer.parseInt(id));
+
+      // TODO fix 1.8
+      if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_16)) {
+        meta.setCustomModelData(Integer.parseInt(id));
+      }
+
       item.setItemMeta(meta);
 
       return item;

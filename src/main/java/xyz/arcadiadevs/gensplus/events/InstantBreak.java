@@ -15,6 +15,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
@@ -38,7 +39,8 @@ public class InstantBreak implements Listener {
    */
   @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
   public void onPlayerInteract(PlayerInteractEvent event) {
-    if (event.getHand() != EquipmentSlot.HAND) {
+    if (ServerVersion.isServerVersionAbove(ServerVersion.V1_8)
+        && event.getHand() != EquipmentSlot.HAND) {
       return;
     }
 

@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 
 /**
  * PlayerMessage.java handles the formatting and sending of messages to players.
@@ -75,13 +76,25 @@ public class PlayerMessage {
   }
 
   public void sendInActionBar(Player player) {
+    // TODO: Fix 1.8 support
+    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+      send(player);
+      return;
+    }
+
     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(format.get(0)));
   }
 
   public void sendAsJson(Player player) {
     for (String message : format) {
       try {
-        player.spigot().sendMessage(ChatMessageType.CHAT, ComponentSerializer.parse(message));
+        // TODO: Fix 1.8 support
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+          player.spigot().sendMessage(ChatMessageType.CHAT, ComponentSerializer.parse(message));
+          continue;
+        }
+
+        send(player);
       } catch (RuntimeException exception) {
         GensPlus.getInstance().getLogger().log(Level.WARNING,
             "Could not parse raw message sent to player. Make sure it has the right syntax");

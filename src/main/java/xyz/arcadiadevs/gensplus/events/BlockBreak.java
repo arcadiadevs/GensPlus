@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import org.bukkit.OfflinePlayer;
@@ -12,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
+import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
@@ -76,7 +78,12 @@ public class BlockBreak implements Listener {
       locationsData.createLocation(player, tier, block);
     });
 
-    event.setDropItems(false);
+    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_12)) {
+      event.setDropItems(false);
+    } else {
+      event.setCancelled(true);
+      event.getBlock().setType(XMaterial.AIR.parseMaterial());
+    }
 
     // Send a notification to the player
     Messages.SUCCESSFULLY_DESTROYED.format().send(event.getPlayer());
