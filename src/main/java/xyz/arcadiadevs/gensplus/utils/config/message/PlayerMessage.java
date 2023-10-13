@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.ActionBarUtil;
 import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 
 /**
@@ -76,13 +77,11 @@ public class PlayerMessage {
   }
 
   public void sendInActionBar(Player player) {
-    // TODO: Fix 1.8 support
-    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
-      send(player);
-      return;
+    if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_8)) {
+      player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(format.get(0)));
+    } else {
+      ActionBarUtil.sendActionBar(player, format.get(0));
     }
-
-    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(format.get(0)));
   }
 
   public void sendAsJson(Player player) {

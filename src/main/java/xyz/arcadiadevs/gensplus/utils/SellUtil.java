@@ -128,6 +128,8 @@ public class SellUtil {
       Messages.SUCCESSFULLY_SOLD.format(
               "price", economy.format(totalSellAmount))
           .send(player);
+      Messages.SUCCESSFULLY_SOLD.format(
+              "price", economy.format(totalSellAmount)).sendInActionBar(player);
 
     } else {
       Messages.NOTHING_TO_SELL.format().send(player);
