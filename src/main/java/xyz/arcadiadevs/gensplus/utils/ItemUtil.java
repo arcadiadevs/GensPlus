@@ -68,7 +68,13 @@ public class ItemUtil {
       return item;
     }
 
-    return XMaterial.matchXMaterial(itemName).orElseThrow().parseItem();
+    XMaterial material = XMaterial.matchXMaterial(itemName).orElse(null);
+
+    if (material == null) {
+      return null;
+    }
+
+    return material.parseItem();
   }
 
   public static void upgradeGens(Inventory inventory) {

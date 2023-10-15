@@ -195,9 +195,11 @@ public final class GensPlus extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    dataSaveTask.saveBlockDataToJson();
-    dataSaveTask.saveWandDataToJson();
-    dataSaveTask.savePlayerDataToJson();
+    if (this.dataSaveTask != null) {
+      dataSaveTask.saveBlockDataToJson();
+      dataSaveTask.saveWandDataToJson();
+      dataSaveTask.savePlayerDataToJson();
+    }
 
     if (getConfig().getBoolean(Config.DEVELOPER_OPTIONS.getPath())) {
       // Remove all files
@@ -341,8 +343,26 @@ public final class GensPlus extends JavaPlugin {
       ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem, true);
       ItemStack blockTypeStack = ItemUtil.getUniversalItem(blockType, false);
 
-      if (spawnItemStack == null || blockTypeStack == null) {
-        throw new RuntimeException("Invalid item name");
+      if (spawnItemStack == null) {
+        getLogger().severe("=============================================");
+        getLogger().severe("This is not a bug or crash. Please read below");
+        getLogger().severe("And fix the invalid item name in the config");
+        getLogger().severe("=============================================");
+        throw new RuntimeException(String.format(
+            "Invalid blockType: %s for generator %s (tier %d). The plugin will now disable.",
+            blockType, name, tier
+        ));
+      }
+
+      if (blockTypeStack == null) {
+        getLogger().severe("=============================================");
+        getLogger().severe("This is not a bug or crash. Please read below");
+        getLogger().severe("And fix the invalid item name in the config");
+        getLogger().severe("=============================================");
+        throw new RuntimeException(String.format(
+            "Invalid blockType: %s for generator %s (tier %d). The plugin will now disable.",
+            blockType, name, tier
+        ));
       }
 
       ItemMeta blockTypeMeta = blockTypeStack.getItemMeta();
