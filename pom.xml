@@ -113,7 +113,7 @@
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>9.1.0</version>
+            <version>9.6.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
