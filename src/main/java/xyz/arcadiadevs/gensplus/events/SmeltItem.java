@@ -210,7 +210,7 @@ public class SmeltItem implements Listener {
    * @return True if the item is a gens item, otherwise false.
    */
   private boolean isGensItem(ItemStack item) {
-    if (item == null && item.getType() == XMaterial.AIR.parseMaterial()) {
+    if (item == null || item.getType() == XMaterial.AIR.parseMaterial()) {
       return false;
     }
 

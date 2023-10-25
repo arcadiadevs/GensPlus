@@ -18,8 +18,8 @@ import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.SellUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
-import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**
  * The Commands class implements the CommandExecutor interface to handle custom commands in
