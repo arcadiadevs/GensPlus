@@ -94,7 +94,6 @@ public class EventLoop extends BukkitRunnable {
    */
   public static void setNextEvent(Event event) {
     if (event == null) {
-      stopEvent();
       return;
     }
 
@@ -116,8 +115,7 @@ public class EventLoop extends BukkitRunnable {
         System.currentTimeMillis() + timeBetweenEvents);
 
     Messages.EVENT_FORCE_ENDED.format("time", TimeUtil.millisToTime(timeBetweenEvents))
-        .send(GensPlus.getInstance().getConfig()
-            .getBoolean(Config.EVENTS_BROADCAST_ENABLED.getPath()));
+        .send(Config.EVENTS_BROADCAST_ENABLED.getBoolean());
 
     nextEvent = null;
 

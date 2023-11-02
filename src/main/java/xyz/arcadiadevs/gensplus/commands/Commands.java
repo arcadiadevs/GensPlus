@@ -192,6 +192,11 @@ public class Commands implements CommandExecutor {
             .findFirst()
             .orElse(null);
 
+        if (eventObj == null) {
+          Messages.EVENT_NOT_FOUND.format().send(commandSender);
+          return true;
+        }
+
         EventLoop.setNextEvent(eventObj);
 
       }

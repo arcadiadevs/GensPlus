@@ -3,7 +3,6 @@ package xyz.arcadiadevs.gensplus.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -96,11 +95,19 @@ public class CommandsTabCompletion implements TabCompleter {
         }
 
         if (strings.length == 2) {
-          return List.of(
-              Config.EVENTS_SPEED_EVENT_NAME.getString(),
-              Config.EVENTS_SELL_EVENT_NAME.getString(),
-              Config.EVENTS_DROP_EVENT_NAME.getString()
-          );
+          List<String> listEvents = new ArrayList<>();
+
+          if (Config.EVENTS_SPEED_EVENT_ENABLED.getBoolean()) {
+            listEvents.add(Config.EVENTS_SPEED_EVENT_NAME.getString());
+          }
+          if (Config.EVENTS_SELL_EVENT_ENABLED.getBoolean()) {
+            listEvents.add(Config.EVENTS_SELL_EVENT_NAME.getString());
+          }
+          if (Config.EVENTS_DROP_EVENT_ENABLED.getBoolean()) {
+            listEvents.add(Config.EVENTS_DROP_EVENT_NAME.getString());
+          }
+
+          return listEvents;
         }
       }
 
