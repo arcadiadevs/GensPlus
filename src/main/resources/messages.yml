@@ -16,6 +16,7 @@ event-started: "&9GensPlus> &7%event% has started and will end in &e&n%time%!"
 event-ended: "&9GensPlus> &7%event% has ended and new event will be started in &e&n%time%!"
 event-already-running: "&cError> &7An event is already running!"
 event-force-ended: "&9GensPlus> &7Event has been force ended! New event will be started in &e&n%time%!"
+event-not-found: "&cError> &7Event not found!"
 
 # [generators]
 successfully-upgraded: "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"

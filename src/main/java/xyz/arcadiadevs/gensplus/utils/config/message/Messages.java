@@ -33,6 +33,7 @@ public enum Messages {
   EVENT_FORCE_ENDED("event-force-ended",
       "&9GensPlus> &7Event has been force ended! New event will be started in &e&n%time%!"),
   EVENT_ALREADY_RUNNING("event-already-running", "&cError> &7An event is already running!"),
+  EVENT_NOT_FOUND("event-not-found", "&cError> &7Event not found!"),
   SUCCESSFULLY_UPGRADED("successfully-upgraded",
       "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"),
   SUCCESSFULLY_SOLD("successfully-sold", "&9GensPlus> &7Successfully sold drops for &a%price%"),

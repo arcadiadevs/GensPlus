@@ -3,7 +3,6 @@ package xyz.arcadiadevs.gensplus.tasks;
 import java.util.List;
 import java.util.Random;
 import lombok.Getter;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
@@ -88,12 +87,16 @@ public class EventLoop extends BukkitRunnable {
     }
   }
 
-
+  /**
+   * Sets the next event to the given event.
+   *
+   * @param event The event to set as the next event.
+   */
   public static void setNextEvent(Event event) {
     if (event == null) {
-      stopEvent();
       return;
     }
+
     activeEvent = new ActiveEvent(
         event,
         System.currentTimeMillis(),
@@ -104,13 +107,15 @@ public class EventLoop extends BukkitRunnable {
 
   }
 
+  /**
+   * Stops the current event.
+   */
   public static void stopEvent() {
     activeEvent = new ActiveEvent(null, System.currentTimeMillis(),
         System.currentTimeMillis() + timeBetweenEvents);
 
     Messages.EVENT_FORCE_ENDED.format("time", TimeUtil.millisToTime(timeBetweenEvents))
-        .send(GensPlus.getInstance().getConfig()
-            .getBoolean(Config.EVENTS_BROADCAST_ENABLED.getPath()));
+        .send(Config.EVENTS_BROADCAST_ENABLED.getBoolean());
 
     nextEvent = null;
 

@@ -7,7 +7,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
-import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
@@ -84,7 +83,6 @@ public class PlaceHolder extends PlaceholderExpansion {
    */
   @Override
   public String onRequest(OfflinePlayer player, String params) {
-    final ActiveEvent activeEvent = EventLoop.getActiveEvent();
     final boolean useCommands =
         config.getBoolean(Config.LIMIT_PER_PLAYER_USE_COMMANDS.getPath());
     final boolean usePermissions = config
@@ -92,12 +90,12 @@ public class PlaceHolder extends PlaceholderExpansion {
 
     return switch (params) {
       case "event_timer" -> {
-        final long time = activeEvent.endTime() - System.currentTimeMillis();
+        final long time = EventLoop.getActiveEvent().endTime() - System.currentTimeMillis();
         yield TimeUtil.millisToTime(time);
       }
 
       case "event_name" ->
-          activeEvent.event() == null ? "No Events" : activeEvent.event().getName();
+          EventLoop.getActiveEvent().event() == null ? "No Events" : EventLoop.getActiveEvent().event().getName();
 
       case "gen_limit" -> {
         if (!Config.LIMIT_PER_PLAYER_ENABLED.getBoolean()) {
