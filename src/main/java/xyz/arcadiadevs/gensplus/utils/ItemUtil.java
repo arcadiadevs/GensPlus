@@ -77,6 +77,12 @@ public class ItemUtil {
     return material.parseItem();
   }
 
+  /**
+   * Upgrades all generators in the inventory to the new
+   * item format that uses NBT tags.
+   *
+   * @param inventory The inventory to upgrade.
+   */
   public static void upgradeGens(Inventory inventory) {
     for (int i = 0; i < inventory.getSize(); i++) {
       ItemStack item = inventory.getItem(i);
@@ -131,6 +137,13 @@ public class ItemUtil {
     }
   }
 
+  /**
+   * Returns a sell wand with the specified uses and multiplier.
+   *
+   * @param uses       The uses of the wand.
+   * @param multiplier The multiplier of the wand.
+   * @return The sell wand.
+   */
   public static ItemStack getWand(WandData.Wand.WandType type, int uses, double multiplier) {
     WandData wandData = GensPlus.getInstance().getWandData();
     WandData.Wand wand = wandData.create(type, uses, multiplier);
@@ -162,6 +175,13 @@ public class ItemUtil {
     return item;
   }
 
+  /**
+   * Returns a sell wand with the specified uses and multiplier.
+   *
+   * @param uses       The uses of the wand.
+   * @param multiplier The multiplier of the wand.
+   * @return The sell wand.
+   */
   public static ItemStack getSellWand(int uses, double multiplier) {
     return getWand(WandData.Wand.WandType.SELL_WAND, uses, multiplier);
   }

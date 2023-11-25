@@ -25,6 +25,7 @@ public class GuiUtil {
     ItemBuilder itemBuilder = new ItemBuilder(XMaterial.matchXMaterial(material)
         .orElse(XMaterial.WHITE_STAINED_GLASS_PANE)
         .parseItem());
+
     if (!material.equals("AIR")) {
       itemBuilder.name(GensPlus.getInstance().getConfig()
           .getString(Config.GUIS_GENERATORS_GUI_BORDER_NAME.getPath()));
