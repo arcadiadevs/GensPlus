@@ -6,6 +6,9 @@ authors:
   - Cuftica
   - OpenSource
 
+loadbefore:
+  - Essentials
+
 depend:
   - Vault
   - ProtocolLib
@@ -30,4 +33,4 @@ commands:
     usage: /generators
   selldrops:
     description: Sell all drops in inventory
-    usage: /selldrops
+    usage: /sell

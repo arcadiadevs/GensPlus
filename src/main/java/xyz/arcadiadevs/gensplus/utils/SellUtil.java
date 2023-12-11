@@ -2,8 +2,12 @@ package xyz.arcadiadevs.gensplus.utils;
 
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,12 +31,14 @@ public class SellUtil {
    * @param player The player who wants to sell their generator drops.
    */
   public static void sellAll(Player player) {
-    int totalSellAmount = 0;
+    double totalSellAmount = 0;
     final ActiveEvent event = EventLoop.getActiveEvent();
 
     final double multiplier = (event.event() instanceof SellEvent
         ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
         : 1.0 * PlayerUtil.getMultiplier(player));
+
+    FileConfiguration config = GensPlus.getInstance().getConfig();
 
     // Iterate through the player's inventory to find generator drops
     for (int i = 0; i < player.getInventory().getSize(); i++) {
@@ -52,6 +58,18 @@ public class SellUtil {
         double sellAmount = (sellPrice * itemAmount * multiplier);
         totalSellAmount += sellAmount;
         player.getInventory().setItem(i, null);
+      } else {
+        for (String key : config.getConfigurationSection("special-sell-items").getKeys(true)) {
+          if (!item.getType().name().equals(key)) {
+            continue;
+          }
+
+          ConfigurationSection section = config.getConfigurationSection("special-sell-items." + key);
+
+          double price = section.getDouble("price");
+
+          totalSellAmount += price;
+        }
       }
     }
 
@@ -134,46 +152,5 @@ public class SellUtil {
             "amount", String.valueOf(totalItems)
         )
         .sendInActionBar(player);
-  }
-
-  /**
-   * Sells the generator drop the player is holding.
-   *
-   * @param player The player who wants to sell their generator drop.
-   */
-  public static void sellHand(Player player) {
-
-    final ActiveEvent event = EventLoop.getActiveEvent();
-
-    final double multiplier = (event.event() instanceof SellEvent
-        ? event.event().getMultiplier() * PlayerUtil.getMultiplier(player)
-        : 1.0 * PlayerUtil.getMultiplier(player));
-
-    ItemStack item = player.getInventory().getItemInMainHand();
-    final boolean isAir = item.getType() == Material.AIR;
-
-    if (!NBTEditor.contains(item, "gensplus", "spawnitem", "tier") || isAir) {
-      Messages.NOTHING_TO_SELL.format().send(player);
-      return;
-    }
-
-    int tier = NBTEditor.getInt(item, "gensplus", "spawnitem", "tier");
-    final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
-    final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
-
-    final double itemAmount = item.getAmount();
-    final double sellPrice = generator.sellPrice();
-    double sellAmount = (sellPrice * itemAmount * multiplier);
-
-    player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
-
-    final Economy economy = GensPlus.getInstance().getEcon();
-
-    economy.depositPlayer(player, sellAmount);
-
-    Messages.SUCCESSFULLY_SOLD.format(
-            "price", economy.format(sellAmount))
-        .send(player);
-
   }
 }

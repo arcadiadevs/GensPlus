@@ -100,8 +100,8 @@ public class Commands implements CommandExecutor {
         PlayerData.Data data = playerData.getData(targetPlayer.getUniqueId());
         data.setLimit(Integer.parseInt(strings[2]));
         Messages.LIMIT_UPDATED.format(
-            "limit", strings[2],
-            "player", targetPlayer.getName())
+                "limit", strings[2],
+                "player", targetPlayer.getName())
             .send(commandSender);
 
         return true;
@@ -202,7 +202,7 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("stopevent")) {
-          EventLoop.stopEvent();
+        EventLoop.stopEvent();
       }
 
       /*if (strings[0].equalsIgnoreCase("reload")) {
@@ -337,7 +337,8 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
-      if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATORS_GUI.getPermission()))) {
+      if (!(adminPermission ||
+          commandSender.hasPermission(Permissions.GENERATORS_GUI.getPermission()))) {
         Messages.NO_PERMISSION.format().send(commandSender);
         return true;
       }
@@ -346,7 +347,7 @@ public class Commands implements CommandExecutor {
       return true;
     }
 
-    if (command.getName().equalsIgnoreCase("selldrops")) {
+    if (command.getName().equalsIgnoreCase("sell")) {
       if (!(commandSender instanceof Player player)) {
         Messages.ONLY_PLAYER_CAN_EXECUTE_COMMAND.format().send(commandSender);
         return true;
@@ -362,25 +363,13 @@ public class Commands implements CommandExecutor {
         return true;
       }
 
-      if (strings[0].equalsIgnoreCase("all")) {
-        if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL.getPermission())) {
-          Messages.NO_PERMISSION.format().send(commandSender);
-          return true;
-        }
-
-        SellUtil.sellAll(player);
+      if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL.getPermission())) {
+        Messages.NO_PERMISSION.format().send(commandSender);
         return true;
       }
 
-      if (strings[0].equalsIgnoreCase("hand")) {
-        if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND.getPermission())) {
-          Messages.NO_PERMISSION.format().send(commandSender);
-          return true;
-        }
-
-        SellUtil.sellHand(player);
-        return true;
-      }
+      SellUtil.sellAll(player);
+      return true;
     }
 
     return true;

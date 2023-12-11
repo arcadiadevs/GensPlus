@@ -22,7 +22,7 @@ public record GeneratorsData(@Getter List<Generator> generators) {
    */
   public Generator getGenerator(int tier) {
     return generators.stream()
-        .filter(generator -> generator.tier() == tier)
+        .filter(generator -> generator.tier() == tier && !generator.onlyGive())
         .findFirst()
         .orElse(null);
   }
@@ -62,7 +62,7 @@ public record GeneratorsData(@Getter List<Generator> generators) {
    */
   public record Generator(String name, int tier, double price, double sellPrice, int speed,
                           ItemStack spawnItem, ItemStack blockType, List<String> lore,
-                          boolean instantBreak) {
+                          boolean instantBreak, boolean onlyGive) {
 
     /**
      * Gives the generator's block item to the specified player.

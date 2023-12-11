@@ -370,6 +370,10 @@ default-hologram-lines:
   - "&7Spawns each &a%speed% &7seconds &a%spawnItem%"
   - "&7Sells for &a%sellPrice%"
 
+special-sell-items:
+  DIAMOND:
+    price: 1000.0
+
 # generators represent the generators that will be added in the gui,
 # name is the name of the generator
 # tier is the tier of the generator (each generator must have a unique tier)

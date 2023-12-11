@@ -51,6 +51,10 @@ public class GeneratorsGui {
     List<Map<?, ?>> generatorsConfig = config.getMapList(Config.GENERATORS.getPath());
 
     for (GeneratorsData.Generator generator : generatorsData.getGenerators()) {
+      if (generator.onlyGive()) {
+        continue;
+      }
+
       final ItemStack material = new ItemStack(generator.blockType());
 
       Map<?, ?> matchingGeneratorConfig = generatorsConfig.stream()
