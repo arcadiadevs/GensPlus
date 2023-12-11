@@ -83,10 +83,8 @@ public class PlaceHolder extends PlaceholderExpansion {
    */
   @Override
   public String onRequest(OfflinePlayer player, String params) {
-    final boolean useCommands =
-        config.getBoolean(Config.LIMIT_PER_PLAYER_USE_COMMANDS.getPath());
-    final boolean usePermissions = config
-        .getBoolean(Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getPath());
+    final boolean useCommands = Config.LIMIT_PER_PLAYER_USE_COMMANDS.getBoolean();
+    final boolean usePermissions = Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getBoolean();
 
     return switch (params) {
       case "event_timer" -> {
@@ -103,9 +101,8 @@ public class PlaceHolder extends PlaceholderExpansion {
         }
 
         if (usePermissions) {
-          yield PlayerUtil.getGeneratorLimit(player.getPlayer()).toString();
+          yield PlayerUtil.getGeneratorLimitPerPlayer(player.getPlayer()).toString();
         }
-
         if (useCommands) {
           yield String.valueOf(playerData.getData(player.getUniqueId()).getLimit());
         }

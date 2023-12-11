@@ -3,22 +3,9 @@ package xyz.arcadiadevs.gensplus.models;
 import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XMaterial;
 import com.github.unldenis.hologram.Hologram;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -33,6 +20,11 @@ import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
+
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents the data of all the generator locations in the server.
@@ -333,7 +325,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     }
 
     /**
-     * Sells the items for generators.
+     * Gets the center of the generator.
      */
     public Location getCenter() {
       double minX = Integer.MAX_VALUE;

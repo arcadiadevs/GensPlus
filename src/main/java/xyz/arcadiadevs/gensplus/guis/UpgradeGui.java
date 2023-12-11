@@ -2,8 +2,6 @@ package xyz.arcadiadevs.gensplus.guis;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XSound;
-import java.util.ArrayList;
-import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Location;
@@ -19,11 +17,14 @@ import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.utils.GuiUtil;
 import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
-import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The UpgradeGui class provides functionality for opening the upgrade GUI for generators in
@@ -185,7 +186,9 @@ public class UpgradeGui {
     EconomyResponse response = instance.getEcon().withdrawPlayer(player, upgradePrice);
 
     if (!response.transactionSuccess()) {
-      player.sendMessage(ChatUtil.translate("An error occurred"));
+      player.sendMessage(ChatUtil.translate(
+              "Sorry, we were unable to process your transaction. Reason: "
+              + response.errorMessage));
       return;
     }
 
@@ -238,7 +241,9 @@ public class UpgradeGui {
     EconomyResponse response = instance.getEcon().withdrawPlayer(player, upgradePrice);
 
     if (!response.transactionSuccess()) {
-      player.sendMessage(ChatUtil.translate("An error occurred"));
+      player.sendMessage(ChatUtil.translate(
+              "Sorry, we were unable to process your transaction. Reason: "
+                      + response.errorMessage));
       return;
     }
 
