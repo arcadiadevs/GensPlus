@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
@@ -17,8 +18,9 @@ import xyz.arcadiadevs.gensplus.utils.config.Config;
  * can be used in other plugins or systems to retrieve dynamic information.
  */
 @AllArgsConstructor
-public class PlaceHolder extends PlaceholderExpansion {
+public class PapiHandler extends PlaceholderExpansion {
 
+  private final Plugin plugin;
   private final LocationsData locationsData;
   private final PlayerData playerData;
   private final FileConfiguration config;
@@ -50,7 +52,7 @@ public class PlaceHolder extends PlaceholderExpansion {
    */
   @Override
   public @NotNull String getName() {
-    return "placeholders";
+    return "GensPlus";
   }
 
   /**
@@ -60,7 +62,7 @@ public class PlaceHolder extends PlaceholderExpansion {
    */
   @Override
   public @NotNull String getAuthor() {
-    return "OpenSource/Cuftica";
+    return plugin.getDescription().getAuthors().toString();
   }
 
   /**
@@ -70,7 +72,7 @@ public class PlaceHolder extends PlaceholderExpansion {
    */
   @Override
   public @NotNull String getVersion() {
-    return "1.0.0";
+    return plugin.getDescription().getVersion();
   }
 
   /**

@@ -10,6 +10,17 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
@@ -24,7 +35,18 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.gensplus.commands.Commands;
 import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
-import xyz.arcadiadevs.gensplus.events.*;
+import xyz.arcadiadevs.gensplus.events.BlockBreak;
+import xyz.arcadiadevs.gensplus.events.BlockInteraction;
+import xyz.arcadiadevs.gensplus.events.BlockPlace;
+import xyz.arcadiadevs.gensplus.events.CraftItem;
+import xyz.arcadiadevs.gensplus.events.EntityExplode;
+import xyz.arcadiadevs.gensplus.events.InstantBreak;
+import xyz.arcadiadevs.gensplus.events.OnInventoryOpen;
+import xyz.arcadiadevs.gensplus.events.OnJoin;
+import xyz.arcadiadevs.gensplus.events.OnWandUse;
+import xyz.arcadiadevs.gensplus.events.SmeltItem;
+import xyz.arcadiadevs.gensplus.events.skyblock.Bentobox;
+import xyz.arcadiadevs.gensplus.events.skyblock.IridiumSkyblock;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
@@ -33,7 +55,7 @@ import xyz.arcadiadevs.gensplus.models.events.DropEvent;
 import xyz.arcadiadevs.gensplus.models.events.Event;
 import xyz.arcadiadevs.gensplus.models.events.SellEvent;
 import xyz.arcadiadevs.gensplus.models.events.SpeedEvent;
-import xyz.arcadiadevs.gensplus.placeholders.PlaceHolder;
+import xyz.arcadiadevs.gensplus.placeholders.PapiHandler;
 import xyz.arcadiadevs.gensplus.tasks.CleanupTask;
 import xyz.arcadiadevs.gensplus.tasks.DataSaveTask;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
@@ -44,21 +66,10 @@ import xyz.arcadiadevs.gensplus.utils.Metrics;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 /**
  * The main plugin class for GensPlus.
  */
+@SuppressWarnings("UnstableApiUsage")
 public final class GensPlus extends JavaPlugin {
 
   /**
@@ -130,6 +141,11 @@ public final class GensPlus extends JavaPlugin {
    */
   private DataSaveTask dataSaveTask;
 
+  /**
+   * Gets the PAPI handler.
+   */
+  private PapiHandler papiHandler;
+
   @Override
   public void onEnable() {
     instance = this;
@@ -164,8 +180,11 @@ public final class GensPlus extends JavaPlugin {
     new Metrics(this, 19293);
 
     if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
-      new PlaceHolder(locationsData, playerData, getConfig()).register();
+      this.papiHandler = new PapiHandler(this, locationsData, playerData, getConfig());
+      this.papiHandler.register();
     }
+
+    loadHolograms();
 
     // Register events
     loadBukkitEvents();
@@ -181,9 +200,6 @@ public final class GensPlus extends JavaPlugin {
 
     // Load player data in case the plugin gets enabled manually after server start
     loadPlayers();
-
-    // Load holograms
-    loadHolograms();
   }
 
   @Override
@@ -194,12 +210,18 @@ public final class GensPlus extends JavaPlugin {
       dataSaveTask.savePlayerDataToJson();
     }
 
+    this.papiHandler.unregister();
+
     if (getConfig().getBoolean(Config.DEVELOPER_OPTIONS.getPath())) {
       // Remove all files
+      // noinspection ResultOfMethodCallIgnored
       new File(getDataFolder(), "data/block_data.json").delete();
     }
   }
 
+  /**
+   * Registers the plugin commands.
+   */
   private void registerCommands() {
     getCommand("gensplus").setExecutor(
         new Commands(generatorsData, playerData, events));
@@ -209,11 +231,17 @@ public final class GensPlus extends JavaPlugin {
         new Commands(generatorsData, playerData, events));
   }
 
+  /**
+   * Registers the plugin tab completion.
+   */
   private void registerTabCompletion() {
     getCommand("gensplus").setTabCompleter(new CommandsTabCompletion(generatorsData));
     getCommand("selldrops").setTabCompleter(new CommandsTabCompletion(generatorsData));
   }
 
+  /**
+   * Loads the bukkit events.
+   */
   private void loadBukkitEvents() {
     final HashSet<Listener> events = new HashSet<>();
 
@@ -228,9 +256,20 @@ public final class GensPlus extends JavaPlugin {
     events.add(new CraftItem());
     events.add(new SmeltItem());
 
+    if (Bukkit.getPluginManager().getPlugin("BentoBox") != null) {
+      events.add(new Bentobox(locationsData));
+    }
+
+    if (Bukkit.getPluginManager().getPlugin("IridiumSkyblock") != null) {
+      events.add(new IridiumSkyblock(locationsData));
+    }
+
     events.forEach(event -> Bukkit.getPluginManager().registerEvents(event, this));
   }
 
+  /**
+   * Registers the plugin tasks.
+   */
   private void registerTasks() {
     // Run block data save task every 5 minutes
     dataSaveTask = new DataSaveTask(this);
@@ -241,12 +280,14 @@ public final class GensPlus extends JavaPlugin {
     new SpawnerTask(locationsData.locations(), generatorsData)
         .runTaskTimerAsynchronously(this, 0, 20);
 
-    // Start event loop
-    new EventLoop(events).runTaskTimerAsynchronously(this, 0, 20);
+    EventLoop eventLoop = new EventLoop(events);
 
-    CleanupTask cleanupTask =  new CleanupTask(locationsData);
-    cleanupTask.run();
-    cleanupTask.runTaskTimerAsynchronously(this, 0, 20);
+    // Start event loop only if there is at least one event enabled
+    if (!events.isEmpty()) {
+      eventLoop.runTaskTimerAsynchronously(this, 0, 20);
+    }
+
+    new CleanupTask(locationsData).runTaskTimerAsynchronously(this, 0, 20);
   }
 
   /**
@@ -305,6 +346,7 @@ public final class GensPlus extends JavaPlugin {
    * @throws RuntimeException if duplicate tier is found or an invalid item name or item meta is
    *                          encountered.
    */
+  @SuppressWarnings("unchecked")
   private GeneratorsData loadGeneratorsData() {
     List<GeneratorsData.Generator> generators = new ArrayList<>();
     List<Map<?, ?>> generatorsConfig = getConfig().getMapList(Config.GENERATORS.getPath());
@@ -502,7 +544,9 @@ public final class GensPlus extends JavaPlugin {
     }
   }
 
-  // Create a function that will move block_data.json to /data/ if the block_data.json exists
+  /**
+   * Moves the "block_data.json" file to the "/data/" directory if it exists in the plugin's data
+   */
   public void moveBlockData() {
     // Check if "block_data.json" exists in the plugin's data folder
     File blockDataFile = new File(getDataFolder(), "/block_data.json");
@@ -510,6 +554,7 @@ public final class GensPlus extends JavaPlugin {
       // Create the "/data/" directory if it doesn't exist
       File targetDirectory = new File(getDataFolder(), "data");
       if (!targetDirectory.exists()) {
+        //noinspection ResultOfMethodCallIgnored
         targetDirectory.mkdirs();
       }
 

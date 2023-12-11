@@ -12,8 +12,8 @@ import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.WandData;
 import xyz.arcadiadevs.gensplus.models.events.ActiveEvent;
 import xyz.arcadiadevs.gensplus.models.events.SellEvent;
-import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
 /**
  * The SellUtil class provides utility methods for selling generator drops in GensPlus.
@@ -28,7 +28,6 @@ public class SellUtil {
    */
   public static void sellAll(Player player) {
     int totalSellAmount = 0;
-    final HashMap<Player, Double> sellAmounts = new HashMap<>();
     final ActiveEvent event = EventLoop.getActiveEvent();
 
     final double multiplier = (event.event() instanceof SellEvent
@@ -53,25 +52,22 @@ public class SellUtil {
         double sellAmount = (sellPrice * itemAmount * multiplier);
         totalSellAmount += sellAmount;
         player.getInventory().setItem(i, null);
-        sellAmounts.put(player, sellAmounts.getOrDefault(player, 0.0) + sellAmount);
       }
     }
 
     // Perform the selling operation if there are generator drops to sell
-    if (totalSellAmount > 0) {
-      final Economy economy = GensPlus.getInstance().getEcon();
-
-      economy.depositPlayer(player, totalSellAmount);
-
-      Messages.SUCCESSFULLY_SOLD.format(
-              "price", economy.format(totalSellAmount))
-          .send(player);
-
-    } else {
+    if (totalSellAmount <= 0) {
       Messages.NOTHING_TO_SELL.format().send(player);
+      return;
     }
 
-    sellAmounts.remove(player);
+    final Economy economy = GensPlus.getInstance().getEcon();
+
+    economy.depositPlayer(player, totalSellAmount);
+
+    Messages.SUCCESSFULLY_SOLD.format(
+            "price", economy.format(totalSellAmount))
+        .send(player);
   }
 
   /**
@@ -83,7 +79,6 @@ public class SellUtil {
   public static void sellWand(Player player, Inventory inventory, double wandMultiplier,
                               WandData.Wand wand) {
     int totalSellAmount = 0;
-    final HashMap<Player, Double> sellAmounts = new HashMap<>();
     final ActiveEvent event = EventLoop.getActiveEvent();
 
     final double multiplier = (event.event() instanceof SellEvent
@@ -113,31 +108,33 @@ public class SellUtil {
       double sellAmount = (sellPrice * itemAmount * multiplier);
       totalSellAmount += (int) sellAmount;
       inventory.removeItem(item);
-      sellAmounts.put(player, sellAmounts.getOrDefault(player, 0.0) + sellAmount);
     }
 
-    if (totalSellAmount > 0) {
-      final Economy economy = GensPlus.getInstance().getEcon();
-      wand.setUses(wand.getUses() <= -1 ? -1 : wand.getUses() - 1);
-
-      wand.setTotalEarned(wand.getTotalEarned() + totalSellAmount);
-      wand.setTotalItemsSold(wand.getTotalItemsSold() + totalItems);
-
-      economy.depositPlayer(player, totalSellAmount);
-
-      Messages.SUCCESSFULLY_SOLD.format(
-              "price", economy.format(totalSellAmount))
-          .send(player);
-      Messages.SUCCESSFULLY_SOLD.format(
-              "price", economy.format(totalSellAmount)).sendInActionBar(player);
-
-    } else {
+    if (totalSellAmount <= 0) {
       Messages.NOTHING_TO_SELL.format().send(player);
+      return;
     }
 
-    sellAmounts.remove(player);
-  }
+    final Economy economy = GensPlus.getInstance().getEcon();
+    wand.setUses(wand.getUses() <= -1 ? -1 : wand.getUses() - 1);
 
+    wand.setTotalEarned(wand.getTotalEarned() + totalSellAmount);
+    wand.setTotalItemsSold(wand.getTotalItemsSold() + totalItems);
+
+    economy.depositPlayer(player, totalSellAmount);
+
+    Messages.SUCCESSFULLY_SOLD.format(
+            "price", economy.format(totalSellAmount),
+              "amount", String.valueOf(totalItems)
+        )
+        .send(player);
+
+    Messages.SUCCESSFULLY_SOLD.format(
+            "price", economy.format(totalSellAmount),
+            "amount", String.valueOf(totalItems)
+        )
+        .sendInActionBar(player);
+  }
 
   /**
    * Sells the generator drop the player is holding.

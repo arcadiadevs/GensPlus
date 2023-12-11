@@ -37,6 +37,8 @@ public enum Messages {
   SUCCESSFULLY_UPGRADED("successfully-upgraded",
       "&9GensPlus> &7Successfully upgraded your generator to tier &a%tier%!"),
   SUCCESSFULLY_SOLD("successfully-sold", "&9GensPlus> &7Successfully sold drops for &a%price%"),
+  SUCCESSFULLY_SOLD_ACTION_BAR("successfully-sold-action-bar",
+      "&cSuccessfully sold &a%amount% &cdrops for &a%price%&c!"),
   NOT_ENOUGH_MONEY("not-enough-money",
       "&cError> &7You don't have enough money to do that! (%currentBalance%/&a%price%&7)"),
   NOTHING_TO_SELL("nothing-to-sell", "&cError> &7You don't have any drops to sell!"),
@@ -84,7 +86,10 @@ public enum Messages {
   private final String key;
 
   @Getter
-  private String defaultMessage;
+  private final String defaultMessage;
+
+  @Getter
+  private String message;
 
   /**
    * Initializes the Messages enum by loading the messages.yml file.
@@ -94,7 +99,7 @@ public enum Messages {
     final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
     for (Messages message : Messages.values()) {
-      message.defaultMessage = config.getString(message.key, message.defaultMessage);
+      message.message = config.getString(message.key, message.defaultMessage);
     }
 
     try {
@@ -124,7 +129,7 @@ public enum Messages {
    * @return A list containing the default message.
    */
   public List<String> getCached() {
-    return new ArrayList<>(Collections.singletonList(defaultMessage));
+    return new ArrayList<>(Collections.singletonList(message));
   }
 
   /**
@@ -145,11 +150,11 @@ public enum Messages {
    * @return The message with placeholders replaced.
    */
   public String getMessage(String... replacements) {
-    String message = defaultMessage;
+    String msg = message;
     for (int i = 0; i < replacements.length - 1; i += 2) {
-      message = message.replace(replacements[i], replacements[i + 1]);
+      msg = msg.replace(replacements[i], replacements[i + 1]);
     }
-    return message;
+    return msg;
   }
 
 }
