@@ -10,6 +10,7 @@ invalid-format: "&cError> &7Invalid format!"
 # [limit-settings]
 limit-reached: "&cError> &7You have reached the limit of &c%limit% &7generators!"
 cannot-place-in-world: "&cError> &7You cannot place generators in this world!"
+limit-updated: "&9GensPlus> &7You have changed %player%'s gens limit to &a%limit%&7!"
 
 # [events]
 event-started: "&9GensPlus> &7%event% has started and will end in &e&n%time%!"
@@ -39,3 +40,4 @@ generator-received: "&9GensPlus> &7You received &a%amount% &7generator(s) of tie
 # [wands]
 sell-wand-given: "&9GensPlus> &7You have been given a sell wand!"
 sell-wand-received: "&9GensPlus> &7You have received a sell wand!"
+wand-broke: "&cError> &7Your wand broke!"

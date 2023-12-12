@@ -1,12 +1,13 @@
 package xyz.arcadiadevs.gensplus.utils;
 
-import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
+
+import java.util.List;
 
 /**
  * Utility class for handling player-related operations and configurations.
@@ -60,8 +61,8 @@ public class PlayerUtil {
    * @param player The player for which to retrieve the generator limit.
    * @return The generator limit value.
    */
-  public static Integer getGeneratorLimit(Player player) {
-    return getLimit(player, Permissions.GENERATOR_LIMIT.getPermission(), "limit-settings",
+  public static Integer getGeneratorLimitPerPlayer(Player player) {
+    return getLimit(player, Permissions.GENERATOR_LIMIT.getPermission(), "limits.per-player",
         Config.LIMIT_PER_PLAYER_DEFAULT_LIMIT.getPath()).intValue();
   }
 

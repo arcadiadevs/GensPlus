@@ -10,17 +10,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
@@ -35,16 +24,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.gensplus.commands.Commands;
 import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
-import xyz.arcadiadevs.gensplus.events.BlockBreak;
-import xyz.arcadiadevs.gensplus.events.BlockInteraction;
-import xyz.arcadiadevs.gensplus.events.BlockPlace;
-import xyz.arcadiadevs.gensplus.events.CraftItem;
-import xyz.arcadiadevs.gensplus.events.EntityExplode;
-import xyz.arcadiadevs.gensplus.events.InstantBreak;
-import xyz.arcadiadevs.gensplus.events.OnInventoryOpen;
-import xyz.arcadiadevs.gensplus.events.OnJoin;
-import xyz.arcadiadevs.gensplus.events.OnWandUse;
-import xyz.arcadiadevs.gensplus.events.SmeltItem;
+import xyz.arcadiadevs.gensplus.events.*;
 import xyz.arcadiadevs.gensplus.events.skyblock.Bentobox;
 import xyz.arcadiadevs.gensplus.events.skyblock.IridiumSkyblock;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
@@ -65,6 +45,18 @@ import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.Metrics;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * The main plugin class for GensPlus.
@@ -184,8 +176,6 @@ public final class GensPlus extends JavaPlugin {
       this.papiHandler.register();
     }
 
-    loadHolograms();
-
     // Register events
     loadBukkitEvents();
 
@@ -200,6 +190,9 @@ public final class GensPlus extends JavaPlugin {
 
     // Load player data in case the plugin gets enabled manually after server start
     loadPlayers();
+
+    // Load holograms
+    loadHolograms();
   }
 
   @Override
@@ -287,7 +280,9 @@ public final class GensPlus extends JavaPlugin {
       eventLoop.runTaskTimerAsynchronously(this, 0, 20);
     }
 
-    new CleanupTask(locationsData).runTaskTimerAsynchronously(this, 0, 20);
+    CleanupTask cleanupTask = new CleanupTask(locationsData);
+    cleanupTask.run();
+    cleanupTask.runTaskTimerAsynchronously(this, 0, 20);
   }
 
   /**

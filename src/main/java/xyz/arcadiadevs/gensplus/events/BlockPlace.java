@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
 import io.github.bananapuncher714.nbteditor.NBTEditor;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -13,9 +12,11 @@ import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
-import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+
+import java.util.List;
 
 /**
  * The BlockPlace class provides functionality for handling the BlockPlaceEvent in GensPlus.
@@ -63,7 +64,7 @@ public class BlockPlace implements Listener {
     final boolean useCommands = Config.LIMIT_PER_PLAYER_USE_COMMANDS.getBoolean();
     final boolean usePermissions = Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getBoolean();
 
-    int limitPerPlayer = PlayerUtil.getGeneratorLimit(player);
+    int limitPerPlayer = PlayerUtil.getGeneratorLimitPerPlayer(player);
 
     if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean()) {
       int limitPerIsland = (int) SkyblockUtil.calculateLimit(player);
