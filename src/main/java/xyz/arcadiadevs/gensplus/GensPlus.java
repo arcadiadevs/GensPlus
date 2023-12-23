@@ -453,7 +453,7 @@ public final class GensPlus extends JavaPlugin {
         getConfig().getInt(Config.HOLOGRAMS_VIEW_DISTANCE.getPath(), 2000))
         : hologramPool;
 
-    placeholders = new Placeholders(1);
+    placeholders = new Placeholders();
 
     if (!GensPlus.getInstance().getConfig().getBoolean(Config.HOLOGRAMS_ENABLED.getPath())) {
       return;

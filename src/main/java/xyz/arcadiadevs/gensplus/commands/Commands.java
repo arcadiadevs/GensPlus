@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.gensplus.commands;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,6 +19,8 @@ import xyz.arcadiadevs.gensplus.utils.SellUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+
+import java.util.List;
 
 /**
  * The Commands class implements the CommandExecutor interface to handle custom commands in

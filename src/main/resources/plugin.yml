@@ -6,9 +6,6 @@ authors:
   - Cuftica
   - OpenSource
 
-loadbefore:
-  - Essentials
-
 depend:
   - Vault
   - ProtocolLib

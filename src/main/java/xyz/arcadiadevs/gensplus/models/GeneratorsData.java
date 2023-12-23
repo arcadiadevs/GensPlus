@@ -1,11 +1,12 @@
 package xyz.arcadiadevs.gensplus.models;
 
-import java.util.List;
-import java.util.NoSuchElementException;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * The GeneratorsData class represents the data for generators in GensPlus. It contains a list
@@ -22,7 +23,7 @@ public record GeneratorsData(@Getter List<Generator> generators) {
    */
   public Generator getGenerator(int tier) {
     return generators.stream()
-        .filter(generator -> generator.tier() == tier && !generator.onlyGive())
+        .filter(generator -> generator.tier() == tier)
         .findFirst()
         .orElse(null);
   }
