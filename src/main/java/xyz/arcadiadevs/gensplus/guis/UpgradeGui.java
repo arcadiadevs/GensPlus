@@ -137,13 +137,8 @@ public class UpgradeGui {
 
     GuiUtil.fillWithRandom(menu, itemFill);
 
-    menu.setItem(11, new GuiItem(GuiItemType.ITEM, itemStackUpgradeOne, () -> {
+    menu.setItem(13, new GuiItem(GuiItemType.ITEM, itemStackUpgradeOne, () -> {
       upgradeGenerator(player, generator, clickedBlock);
-      player.closeInventory();
-    }));
-
-    menu.setItem(15, new GuiItem(GuiItemType.ITEM, itemStackUpgradeAll, () -> {
-      upgradeAllGenerators(player, generator);
       player.closeInventory();
     }));
 
