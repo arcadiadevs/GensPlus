@@ -70,6 +70,10 @@ public class BlockInteraction implements Listener {
 
     event.setCancelled(true);
 
+    if (generator.onlyGive()) {
+      return;
+    }
+
     if (Config.GUIS_UPGRADE_GUI_ENABLED.getBoolean()) {
       UpgradeGui.open(player, generatorLocation, block);
     } else {
