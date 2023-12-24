@@ -2,21 +2,16 @@ package xyz.arcadiadevs.gensplus.events;
 
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
-import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 
 /**
  * Handles the PlayerJoinEvent triggered when a player joins the server.
@@ -37,8 +32,10 @@ public class OnJoin implements Listener {
   public void onJoin(PlayerJoinEvent event) {
     ItemUtil.upgradeGens(event.getPlayer().getInventory());
 
-    if (playerData.getData(event.getPlayer().getUniqueId()) == null) {
-      playerData.create(event.getPlayer().getUniqueId(),
+    final Player player = event.getPlayer();
+
+    if (playerData.getData(player.getUniqueId()) == null) {
+      playerData.create(player.getUniqueId(),
           config.getInt(Config.LIMIT_PER_PLAYER_DEFAULT_LIMIT.getPath()));
     }
 
@@ -46,13 +43,18 @@ public class OnJoin implements Listener {
       return;
     }
 
-    if (event.getPlayer().hasPlayedBefore()) {
+    if (!player.hasPlayedBefore()) {
+      Bukkit.getScheduler().runTaskLater(GensPlus.getInstance(), () -> {
+        player.performCommand("is create normal");
+      }, 20L);
+    }
+
+    if (player.hasPlayedBefore()) {
       return;
     }
 
-    final Player player = event.getPlayer();
-    final int tier = config.getInt(Config.ON_JOIN_GENERATOR_TIER.getPath());
-    final int amount = config.getInt(Config.ON_JOIN_GENERATOR_AMOUNT.getPath());
+    final int tier = Config.ON_JOIN_GENERATOR_TIER.getInt();
+    final int amount = Config.ON_JOIN_GENERATOR_AMOUNT.getInt();
     generatorsData.giveItemByTier(player, tier, amount);
   }
 }

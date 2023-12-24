@@ -91,8 +91,7 @@ public class TimeUtil {
   public static String millisToTime(long millis) {
     long seconds = millis / 1000L;
     long minutes = seconds / 60L;
-    long hours = minutes / 60L;
-    return String.format("%02d:%02d:%02d", hours, minutes % 60, seconds % 60);
+    return String.format("%02dm %02ds", minutes % 60, seconds % 60);
   }
 
 }
