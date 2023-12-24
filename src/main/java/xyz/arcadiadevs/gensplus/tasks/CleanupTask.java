@@ -5,7 +5,6 @@ import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.models.location.SimplifiedLocation;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 
 /**
@@ -26,13 +25,10 @@ public class CleanupTask extends BukkitRunnable {
     for (LocationsData.GeneratorLocation location : locationsData.locations()) {
       GeneratorsData.Generator generator = location.getGeneratorObject();
 
-      for (SimplifiedLocation simplifiedLocation : location.getSimplifiedBlockLocations()) {
-        if (simplifiedLocation.getLocation() == null
-            || simplifiedLocation.getLocation().getBlock().getType()
-            != generator.blockType().getType()) {
-          location.removeSimpleBlock(simplifiedLocation);
-        }
-      }
+      location.getSimplifiedBlockLocations()
+          .removeIf(simplifiedLocation -> simplifiedLocation.getLocation() == null
+              || simplifiedLocation.getLocation().getBlock().getType()
+              != generator.blockType().getType());
     }
 
     updateGens();
