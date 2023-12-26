@@ -24,6 +24,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.arcadiadevs.gensplus.commands.Commands;
 import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
+import xyz.arcadiadevs.gensplus.commands.SellCommandListener;
 import xyz.arcadiadevs.gensplus.events.*;
 import xyz.arcadiadevs.gensplus.events.skyblock.Bentobox;
 import xyz.arcadiadevs.gensplus.events.skyblock.IridiumSkyblock;
@@ -248,6 +249,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new OnInventoryOpen());
     events.add(new CraftItem());
     events.add(new SmeltItem());
+    events.add(new SellCommandListener());
 
     if (Bukkit.getPluginManager().getPlugin("BentoBox") != null) {
       events.add(new Bentobox(locationsData));
