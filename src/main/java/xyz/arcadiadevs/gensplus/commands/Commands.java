@@ -348,7 +348,7 @@ public class Commands implements CommandExecutor {
       return true;
     }
 
-    if (command.getName().equalsIgnoreCase("sell")) {
+    if (command.getName().equalsIgnoreCase("selldrops")) {
       if (!(commandSender instanceof Player player)) {
         Messages.ONLY_PLAYER_CAN_EXECUTE_COMMAND.format().send(commandSender);
         return true;
