@@ -23,6 +23,11 @@ public class CleanupTask extends BukkitRunnable {
   @Override
   public void run() {
     for (LocationsData.GeneratorLocation location : locationsData.locations()) {
+      if (location.getBlockLocations().isEmpty()) {
+        locationsData.removeLocation(location);
+        continue;
+      }
+
       GeneratorsData.Generator generator = location.getGeneratorObject();
 
       location.getSimplifiedBlockLocations()

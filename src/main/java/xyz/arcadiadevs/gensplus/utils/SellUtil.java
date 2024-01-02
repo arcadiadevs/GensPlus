@@ -67,17 +67,18 @@ public class SellUtil {
           ConfigurationSection section = config.getConfigurationSection("special-sell-items." + key);
 
           final double itemAmount = item.getAmount();
-          final double price = section.getDouble("price");
+          final Double price = (Double) section.get("price", null);
           final Double glowPrice = (Double) section.get("glow-price", null);
 
-          // && item is enchanted
-          if (glowPrice != null && !item.getEnchantments().isEmpty()) {
-            totalSellAmount += glowPrice * itemAmount * multiplier;
-          } else {
+          if (!item.getEnchantments().isEmpty()) {
+            if (glowPrice != null) {
+              totalSellAmount += glowPrice * itemAmount * multiplier;
+              player.getInventory().setItem(i, null);
+            }
+          } else if (price != null) {
             totalSellAmount += price * itemAmount * multiplier;
+            player.getInventory().setItem(i, null);
           }
-
-          player.getInventory().setItem(i, null);
         }
       }
     }
