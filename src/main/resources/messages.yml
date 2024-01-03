@@ -41,3 +41,10 @@ generator-received: "&9GensPlus> &7You received &a%amount% &7generator(s) of tie
 sell-wand-given: "&9GensPlus> &7You have been given a sell wand!"
 sell-wand-received: "&9GensPlus> &7You have received a sell wand!"
 wand-broke: "&cError> &7Your wand broke!"
+
+cannot-buy-tier-4-12: "&cError> &7You cannot buy a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+cannot-buy-tier-12-19: "&cError> &7You cannot buy a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+cannot-buy-tier-20-27: "&cError> &7You cannot buy a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+cannot-upgrade-tier-4-11: "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+cannot-upgrade-tier-12-19: "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+cannot-upgrade-tier-20-27: "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"

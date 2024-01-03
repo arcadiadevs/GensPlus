@@ -229,7 +229,8 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     }
 
     public World getWorld() {
-      return blockLocations.stream().findFirst().orElseThrow().getLocation().getWorld();
+      var world = blockLocations.stream().findFirst().orElseThrow().getLocation().getWorld();
+      return world;
     }
 
     /**

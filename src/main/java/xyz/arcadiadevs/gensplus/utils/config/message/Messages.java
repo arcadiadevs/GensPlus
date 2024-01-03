@@ -1,14 +1,15 @@
 package xyz.arcadiadevs.gensplus.utils.config.message;
 
+import lombok.Getter;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import xyz.arcadiadevs.gensplus.GensPlus;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lombok.Getter;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import xyz.arcadiadevs.gensplus.GensPlus;
 
 /**
  * The Messages class contains all the messages used in GensPlus.
@@ -80,6 +81,24 @@ public enum Messages {
       "&9GensPlus> &7You have received an upgrade wand!"
   ),
   WAND_BROKE("wand-broke", "&cError> &7Your wand broke!"),
+  CANNOT_BUY_TIER_4_11("cannot-buy-tier-4-11",
+      "&cError> &7You cannot buy a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
+  CANNOT_BUY_TIER_12_19("cannot-buy-tier-12-19",
+      "&cError> &7You cannot buy a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
+  CANNOT_BUY_TIER_20_27("cannot-buy-tier-20-27",
+      "&cError> &7You cannot buy a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
+  CANNOT_UPGRADE_TIER_4_11("cannot-upgrade-tier-4-11",
+      "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
+  CANNOT_UPGRADE_TIER_12_19("cannot-upgrade-tier-12-19",
+      "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
+  CANNOT_UPGRADE_TIER_20_27("cannot-upgrade-tier-20-27",
+      "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
   LIMIT_UPDATED("limit-updated",
       "&9GensPlus> &7You have changed %player%'s gens limit to &a%limit%&7!");
 

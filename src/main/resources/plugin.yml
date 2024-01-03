@@ -9,13 +9,13 @@ authors:
 depend:
   - Vault
   - ProtocolLib
+  - SuperiorSkyblock2
 
 softdepend:
   - Oraxen
   - Essentials
   - ItemsAdder
   - IridiumSkyblock
-  - SuperiorSkyblock2
   - ASkyBlock
   - AcidIsland
   - BentoBox

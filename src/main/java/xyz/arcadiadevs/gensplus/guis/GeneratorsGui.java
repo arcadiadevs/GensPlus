@@ -3,21 +3,22 @@ package xyz.arcadiadevs.gensplus.guis;
 import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.models.GeneratorsData;
+import xyz.arcadiadevs.gensplus.utils.GuiUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
+import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
 import xyz.arcadiadevs.guilib.ItemBuilder;
-import xyz.arcadiadevs.gensplus.models.GeneratorsData;
-import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
-import xyz.arcadiadevs.gensplus.utils.GuiUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The GeneratorsGui class provides functionality for opening the generators GUI in GensPlus.
@@ -42,7 +43,7 @@ public class GeneratorsGui {
     final var rows = config.getInt(Config.GUIS_GENERATORS_GUI_ROWS.getPath());
 
     final var menu = new Gui(
-        ChatUtil.translate(config.getString(Config.GUIS_GENERATORS_GUI_TITLE.getPath())),
+        ChatUtil.translate(Config.GUIS_GENERATORS_GUI_TITLE.getString()),
         rows,
         instance
     );
@@ -110,10 +111,37 @@ public class GeneratorsGui {
       String playerBalance = economy.format(economy.getBalance(player));
 
       menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
+        if (generator.tier() >= 4 && generator.tier() <= 11 && !player.hasPermission("gensplus.generator.tier." + generator.tier())) {
+          Messages.CANNOT_BUY_TIER_4_11.format(
+                  "tier", generator.tier(),
+                  "maxTier", 12)
+              .send(player);
+          XSound.ENTITY_VILLAGER_NO.play(player);
+          return;
+        }
+
+        if (generator.tier() >= 12 && generator.tier() <= 19 && !player.hasPermission("gensplus.generator.tier." + generator.tier())) {
+          Messages.CANNOT_BUY_TIER_12_19.format(
+                  "tier", generator.tier(),
+                  "maxTier", 20)
+              .send(player);
+          XSound.ENTITY_VILLAGER_NO.play(player);
+          return;
+        }
+
+        if (generator.tier() >= 20 && generator.tier() <= 27 && !player.hasPermission("gensplus.generator.tier." + generator.tier())) {
+          Messages.CANNOT_BUY_TIER_20_27.format(
+                  "tier", generator.tier(),
+                  "maxTier", 28)
+              .send(player);
+          XSound.ENTITY_VILLAGER_NO.play(player);
+          return;
+        }
+
         if (generator.price() > economy.getBalance(player)) {
           Messages.NOT_ENOUGH_MONEY.format(
-              "currentBalance", playerBalance,
-              "price", economy.currencyNameSingular() + generator.price())
+                  "currentBalance", playerBalance,
+                  "price", economy.currencyNameSingular() + generator.price())
               .send(player);
 
           XSound.ENTITY_VILLAGER_NO.play(player);

@@ -2,8 +2,6 @@ package xyz.arcadiadevs.gensplus.guis;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XSound;
-import java.util.ArrayList;
-import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Location;
@@ -24,6 +22,9 @@ import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
 import xyz.arcadiadevs.guilib.GuiItemType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The UpgradeGui class provides functionality for opening the upgrade GUI for generators in
@@ -216,6 +217,33 @@ public class UpgradeGui {
 
     if (nextGenerator == null) {
       Messages.REACHED_MAX_TIER.format().send(player);
+      return;
+    }
+
+    if (current.tier() >= 4 && current.tier() <= 11 && !player.hasPermission("gensplus.generator.tier." + nextGenerator.tier())) {
+      Messages.CANNOT_UPGRADE_TIER_4_11.format(
+              "tier", nextGenerator.tier(),
+              "maxTier", 12)
+          .send(player);
+      XSound.ENTITY_VILLAGER_NO.play(player);
+      return;
+    }
+
+    if (current.tier() >= 12 && current.tier() <= 19 && !player.hasPermission("gensplus.generator.tier." + nextGenerator.tier())) {
+      Messages.CANNOT_UPGRADE_TIER_4_11.format(
+              "tier", nextGenerator.tier(),
+              "maxTier", 20)
+          .send(player);
+      XSound.ENTITY_VILLAGER_NO.play(player);
+      return;
+    }
+
+    if (current.tier() >= 20 && current.tier() <= 27 && !player.hasPermission("gensplus.generator.tier." + nextGenerator.tier())) {
+      Messages.CANNOT_UPGRADE_TIER_4_11.format(
+              "tier", nextGenerator.tier(),
+              "maxTier", 28)
+          .send(player);
+      XSound.ENTITY_VILLAGER_NO.play(player);
       return;
     }
 
