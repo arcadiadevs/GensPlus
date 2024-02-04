@@ -281,7 +281,6 @@ public final class GensPlus extends JavaPlugin {
     }
 
     CleanupTask cleanupTask = new CleanupTask(locationsData);
-    cleanupTask.run();
     cleanupTask.runTaskTimerAsynchronously(this, 0, 20);
   }
 
