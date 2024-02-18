@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.commands.Commands;
 import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
 import xyz.arcadiadevs.gensplus.events.*;
@@ -142,57 +143,63 @@ public final class GensPlus extends JavaPlugin {
   public void onEnable() {
     instance = this;
 
-    saveDefaultConfig();
+    new BukkitRunnable() {
+      @Override
+      public void run() {
 
-    moveBlockData();
+        saveDefaultConfig();
 
-    saveResourceIfNotExists("data/block_data.json", false);
-    saveResourceIfNotExists("data/wands_data.json", false);
-    saveResourceIfNotExists("data/player_data.json", false);
-    saveResourceIfNotExists("messages.yml", false);
+        moveBlockData();
 
-    setupEconomy();
+        saveResourceIfNotExists("data/block_data.json", false);
+        saveResourceIfNotExists("data/wands_data.json", false);
+        saveResourceIfNotExists("data/player_data.json", false);
+        saveResourceIfNotExists("messages.yml", false);
 
-    Messages.init();
+        setupEconomy();
 
-    gson = new GsonBuilder().registerTypeAdapterFactory(RecordTypeAdapterFactory.DEFAULT)
-        .setPrettyPrinting()
-        .create();
+        Messages.init();
 
-    generatorsData = loadGeneratorsData();
+        gson = new GsonBuilder().registerTypeAdapterFactory(RecordTypeAdapterFactory.DEFAULT)
+            .setPrettyPrinting()
+            .create();
 
-    locationsData = new LocationsData(loadBlockDataFromJson());
+        generatorsData = loadGeneratorsData();
 
-    playerData = new PlayerData(loadPlayerDataFromJson());
+        locationsData = new LocationsData(loadBlockDataFromJson());
 
-    wandData = new WandData(loadWandsDataFromJson());
+        playerData = new PlayerData(loadPlayerDataFromJson());
 
-    events = loadGensPlusEvents();
+        wandData = new WandData(loadWandsDataFromJson());
 
-    new Metrics(this, 19293);
+        events = loadGensPlusEvents();
 
-    if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
-      this.papiHandler = new PapiHandler(this, locationsData, playerData, getConfig());
-      this.papiHandler.register();
-    }
+        new Metrics(instance, 19293);
 
-    // Register events
-    loadBukkitEvents();
+        if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
+          instance.papiHandler = new PapiHandler(instance, locationsData, playerData, getConfig());
+          instance.papiHandler.register();
+        }
 
-    // Register tasks
-    registerTasks();
+        // Register events
+        loadBukkitEvents();
 
-    // Register commands
-    registerCommands();
+        // Register tasks
+        registerTasks();
 
-    // Register tab completion
-    registerTabCompletion();
+        // Register commands
+        registerCommands();
 
-    // Load player data in case the plugin gets enabled manually after server start
-    loadPlayers();
+        // Register tab completion
+        registerTabCompletion();
 
-    // Load holograms
-    loadHolograms();
+        // Load player data in case the plugin gets enabled manually after server start
+        loadPlayers();
+
+        // Load holograms
+        loadHolograms();
+      }
+    }.runTaskLater(this, 20L);
   }
 
   @Override
