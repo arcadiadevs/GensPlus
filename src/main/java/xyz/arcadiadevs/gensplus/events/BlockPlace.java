@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
+import com.cryptomorin.xseries.XSound;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import lombok.AllArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -60,6 +61,37 @@ public class BlockPlace implements Listener {
     }
 
     final int tier = NBTEditor.getInt(item, "gensplus", "blocktype", "tier");
+
+    if (tier >= 4 && tier <= 11 && !player.hasPermission("gensplus.generator.tier." + tier)) {
+      Messages.CANNOT_BUY_PLACE_4_11.format(
+              "tier", tier,
+              "maxTier", 12)
+          .send(player);
+      XSound.ENTITY_VILLAGER_NO.play(player);
+      event.setCancelled(true);
+      return;
+    }
+
+    if (tier >= 12 && tier <= 19 && !player.hasPermission("gensplus.generator.tier." + tier)) {
+      Messages.CANNOT_BUY_PLACE_12_19.format(
+              "tier", tier,
+              "maxTier", 20)
+          .send(player);
+      XSound.ENTITY_VILLAGER_NO.play(player);
+      event.setCancelled(true);
+      return;
+    }
+
+    if (tier >= 20 && tier <= 27 && !player.hasPermission("gensplus.generator.tier." + tier)) {
+      Messages.CANNOT_BUY_PLACE_20_27.format(
+              "tier", tier,
+              "maxTier", 28)
+          .send(player);
+      XSound.ENTITY_VILLAGER_NO.play(player);
+      event.setCancelled(true);
+      return;
+    }
+
     final boolean enabled = Config.LIMIT_PER_PLAYER_ENABLED.getBoolean();
     final boolean useCommands = Config.LIMIT_PER_PLAYER_USE_COMMANDS.getBoolean();
     final boolean usePermissions = Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getBoolean();

@@ -48,3 +48,6 @@ cannot-buy-tier-20-27: "&cError> &7You cannot buy a generator of tier &c%tier%&7
 cannot-upgrade-tier-4-11: "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
 cannot-upgrade-tier-12-19: "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
 cannot-upgrade-tier-20-27: "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+cannot-place-tier-4-11: "&cError> &7You cannot place a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+cannot-place-tier-12-19: "&cError> &7You cannot place a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+cannot-place-tier-20-27: "&cError> &7You cannot place a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"

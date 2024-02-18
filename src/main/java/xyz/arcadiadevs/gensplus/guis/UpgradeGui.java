@@ -220,7 +220,7 @@ public class UpgradeGui {
       return;
     }
 
-    if (current.tier() >= 4 && current.tier() <= 11 && !player.hasPermission("gensplus.generator.tier." + nextGenerator.tier())) {
+    if (nextGenerator.tier() >= 4 && nextGenerator.tier() <= 11 && !player.hasPermission("gensplus.generator.tier." + nextGenerator.tier())) {
       Messages.CANNOT_UPGRADE_TIER_4_11.format(
               "tier", nextGenerator.tier(),
               "maxTier", 12)
@@ -229,7 +229,7 @@ public class UpgradeGui {
       return;
     }
 
-    if (current.tier() >= 12 && current.tier() <= 19 && !player.hasPermission("gensplus.generator.tier." + nextGenerator.tier())) {
+    if (nextGenerator.tier() >= 12 && nextGenerator.tier() <= 19 && !player.hasPermission("gensplus.generator.tier." + nextGenerator.tier())) {
       Messages.CANNOT_UPGRADE_TIER_4_11.format(
               "tier", nextGenerator.tier(),
               "maxTier", 20)

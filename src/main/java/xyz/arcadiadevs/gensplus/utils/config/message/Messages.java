@@ -90,6 +90,15 @@ public enum Messages {
   CANNOT_BUY_TIER_20_27("cannot-buy-tier-20-27",
       "&cError> &7You cannot buy a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
   ),
+  CANNOT_BUY_PLACE_4_11("cannot-buy-tier-4-11",
+      "&cError> &7You cannot place a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
+  CANNOT_BUY_PLACE_12_19("cannot-buy-tier-12-19",
+      "&cError> &7You cannot place a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
+  CANNOT_BUY_PLACE_20_27("cannot-buy-tier-20-27",
+      "&cError> &7You cannot place a generator of tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
+  ),
   CANNOT_UPGRADE_TIER_4_11("cannot-upgrade-tier-4-11",
       "&cError> &7You cannot upgrade a generator to tier &c%tier%&7! (Max tier: &c%maxTier%&7)"
   ),
