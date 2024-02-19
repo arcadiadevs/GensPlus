@@ -24,6 +24,7 @@ import xyz.arcadiadevs.gensplus.utils.config.Config;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -289,11 +290,12 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
 
       List<Item> items = new ArrayList<>();
 
-      long itemsToDrop = (EventLoop.getActiveEvent().event() instanceof DropEvent event
+      long multiplier = (EventLoop.getActiveEvent().event() instanceof DropEvent event
           ? event.getMultiplier() : 1);
 
-      if (GensPlus.getInstance().getConfig().getBoolean("holograms.enabled")) {
-        for (int i = 0; i < itemsToDrop; i++) {
+      if (Config.HOLOGRAMS_ENABLED.getBoolean()) {
+        // Drop items naturally at a single location
+        for (int i = 0; i < multiplier * blockLocations.size(); i++) {
           Item item = location.getWorld().dropItemNaturally(
               location.clone().add(0.5, 1, 0.5),
               getGeneratorObject().spawnItem()
@@ -301,17 +303,18 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
           items.add(item);
         }
       } else {
-        blockLocations.forEach(loc -> {
-          for (int i = 0; i < itemsToDrop; i++) {
-            Item item = loc.getLocation().getWorld().dropItem(
+        // Drop items at multiple locations with zero velocity
+        blockLocations.forEach(loc -> IntStream.range(0, (int) multiplier)
+            .mapToObj(i -> loc.getLocation().getWorld().dropItem(
                 loc.getLocation().clone().add(0.5, 1, 0.5),
                 getGeneratorObject().spawnItem()
-            );
-            item.setVelocity(new Vector(0, 0, 0));
-            items.add(item);
-          }
-        });
+            ))
+            .forEach(item -> {
+              item.setVelocity(new Vector(0, 0, 0));
+              items.add(item);
+            }));
       }
+
 
       final long ticks = TimeUtil.parseTime(
           GensPlus.getInstance().getConfig().getString(Config.ITEM_DESPAWN_TIME.getPath()));
