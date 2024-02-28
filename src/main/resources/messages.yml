@@ -1,7 +1,7 @@
 # [general]
 default-message: '&9GensPlus> This server is running GensPlus v%version%'
 no-permission: "&cError> &7You don't have permission to do that!"
-config-reloaded: "&9GensPlus> &7Configuration reloaded."
+plugin-reloaded: "&9GensPlus> &7Plugin reloaded."
 player-not-found: "&cError> &7Player not found!"
 not-enough-arguments: "&cError> &7Not enough arguments!"
 only-player-can-execute-command: "&cError> &7Only player can execute this command!"

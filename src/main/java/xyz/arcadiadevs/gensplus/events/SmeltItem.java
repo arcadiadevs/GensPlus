@@ -2,7 +2,6 @@ package xyz.arcadiadevs.gensplus.events;
 
 import com.cryptomorin.xseries.XMaterial;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
-import java.util.Arrays;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
 import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
+
+import java.util.Arrays;
 
 /**
  * A listener class for handling events related to smelting items.

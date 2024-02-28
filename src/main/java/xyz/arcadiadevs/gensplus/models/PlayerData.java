@@ -1,10 +1,12 @@
 package xyz.arcadiadevs.gensplus.models;
 
-import java.util.List;
-import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * The PlayerData class represents the data associated with a player in GensPlus.
@@ -46,6 +48,10 @@ public record PlayerData(List<Data> data) {
 
     public static void addToLimit(Data data, int amount) {
       data.limit += amount;
+    }
+
+    public String toString() {
+      return "Data(uuid=" + this.getUuid() + ", limit=" + this.getLimit() + ")";
     }
   }
 

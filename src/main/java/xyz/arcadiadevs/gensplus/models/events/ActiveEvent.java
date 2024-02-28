@@ -5,5 +5,4 @@ package xyz.arcadiadevs.gensplus.models.events;
  * It stores information about the event, its start time, and end time.
  */
 public record ActiveEvent(Event event, long startTime, long endTime) {
-
 }

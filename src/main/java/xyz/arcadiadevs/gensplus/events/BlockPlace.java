@@ -25,9 +25,9 @@ import java.util.List;
 @AllArgsConstructor
 public class BlockPlace implements Listener {
 
-  private final LocationsData locationsData;
-  private final PlayerData playerData;
-  private final FileConfiguration config;
+  private LocationsData locationsData;
+  private PlayerData playerData;
+  private FileConfiguration config;
 
   /**
    * Handles the BlockPlaceEvent triggered when a player places a block.

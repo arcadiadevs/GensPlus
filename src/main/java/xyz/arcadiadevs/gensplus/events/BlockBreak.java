@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -18,14 +17,16 @@ import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
 
+import java.util.ArrayList;
+
 /**
  * Handles the BlockBreakEvent triggered when a player breaks a block.
  */
 @AllArgsConstructor
 public class BlockBreak implements Listener {
 
-  private final LocationsData locationsData;
-  private final GeneratorsData generatorsData;
+  private LocationsData locationsData;
+  private GeneratorsData generatorsData;
 
   /**
    * Handles the BlockBreakEvent triggered when a player breaks a block.

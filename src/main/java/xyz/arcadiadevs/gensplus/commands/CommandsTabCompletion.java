@@ -1,8 +1,5 @@
 package xyz.arcadiadevs.gensplus.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,6 +11,10 @@ import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The CommandsTabCompletion class implements the TabCompleter interface to provide tab completion
@@ -43,7 +44,15 @@ public class CommandsTabCompletion implements TabCompleter {
           return null;
         }
 
-        return List.of("help", "give", "giveall", "wand", "setlimit", "addlimit", "startevent", "stopevent");
+        return List.of("help", "give", "giveall", "wand", "setlimit",
+            "addlimit", "startevent", "stopevent", "reload");
+      }
+
+      if (strings[0].equalsIgnoreCase("reload")) {
+        if (!(adminPermission
+            || commandSender.hasPermission(Permissions.GENERATOR_RELOAD.getPermission()))) {
+          return null;
+        }
       }
 
       if (strings[0].equalsIgnoreCase("setlimit")) {

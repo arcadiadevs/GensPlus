@@ -1,14 +1,15 @@
 package xyz.arcadiadevs.gensplus.utils.config.message;
 
+import lombok.Getter;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import xyz.arcadiadevs.gensplus.GensPlus;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lombok.Getter;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import xyz.arcadiadevs.gensplus.GensPlus;
 
 /**
  * The Messages class contains all the messages used in GensPlus.
@@ -17,7 +18,7 @@ public enum Messages {
 
   // List of Messages with their corresponding default values
   NO_PERMISSION("no-permission", "&cError> &7You don't have permission to do that!"),
-  CONFIG_RELOADED("config-reloaded", "&9GensPlus> &7Configuration reloaded."),
+  PLUGIN_RELOADED("plugin-reloaded", "&9GensPlus> &7Plugin reloaded!"),
   PLAYER_NOT_FOUND("player-not-found", "&cError> &7Player not found!"),
   INVALID_GENERATOR_TIER("invalid-generator-tier", "&cError> &7Invalid generator tier!"),
   INVALID_FORMAT("invalid-format", "&cError> &7Invalid format!"),

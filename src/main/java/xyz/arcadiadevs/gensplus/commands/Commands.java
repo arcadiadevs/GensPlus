@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.gensplus.commands;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,6 +19,8 @@ import xyz.arcadiadevs.gensplus.utils.SellUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+
+import java.util.List;
 
 /**
  * The Commands class implements the CommandExecutor interface to handle custom commands in
@@ -100,8 +101,8 @@ public class Commands implements CommandExecutor {
         PlayerData.Data data = playerData.getData(targetPlayer.getUniqueId());
         data.setLimit(Integer.parseInt(strings[2]));
         Messages.LIMIT_UPDATED.format(
-            "limit", strings[2],
-            "player", targetPlayer.getName())
+                "limit", strings[2],
+                "player", targetPlayer.getName())
             .send(commandSender);
 
         return true;
@@ -202,19 +203,19 @@ public class Commands implements CommandExecutor {
       }
 
       if (strings[0].equalsIgnoreCase("stopevent")) {
-          EventLoop.stopEvent();
+        EventLoop.stopEvent();
       }
 
-      /*if (strings[0].equalsIgnoreCase("reload")) {
-        if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_RELOAD))) {
-          ChatUtil.sendMessage(commandSender, Messages.NO_PERMISSION);
+      if (strings[0].equalsIgnoreCase("reload")) {
+        if (!(adminPermission || commandSender.hasPermission(Permissions.GENERATOR_RELOAD.getPermission()))) {
+          Messages.NO_PERMISSION.format().send(commandSender);
           return true;
         }
 
-        GensPlus.getInstance().reloadConfig();
-        ChatUtil.sendMessage(commandSender, Messages.CONFIG_RELOADED);
+        GensPlus.getInstance().reloadPlugin();
+        Messages.PLUGIN_RELOADED.format().send(commandSender);
         return true;
-      }*/
+      }
 
       if (strings[0].equalsIgnoreCase("give")) {
         if (!(adminPermission

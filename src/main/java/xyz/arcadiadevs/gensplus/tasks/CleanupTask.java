@@ -26,6 +26,7 @@ public class CleanupTask extends BukkitRunnable {
       if (location.getWorld().isChunkLoaded(0, 0)) {
         continue;
       }
+
       if (location.getBlockLocations().isEmpty()) {
         locationsData.removeLocation(location);
         continue;

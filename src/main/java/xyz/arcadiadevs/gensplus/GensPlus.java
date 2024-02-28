@@ -1,6 +1,7 @@
 package xyz.arcadiadevs.gensplus;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
+import com.cryptomorin.xseries.XMaterial;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,14 +10,18 @@ import lombok.Getter;
 import marcono1234.gson.recordadapter.RecordTypeAdapterFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.holoeasy.pool.HologramPool;
+import org.holoeasy.HoloEasy;
+import org.holoeasy.hologram.Hologram;
 import org.holoeasy.pool.IHologramPool;
 import xyz.arcadiadevs.gensplus.commands.Commands;
 import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
@@ -36,6 +41,7 @@ import xyz.arcadiadevs.gensplus.tasks.CleanupTask;
 import xyz.arcadiadevs.gensplus.tasks.DataSaveTask;
 import xyz.arcadiadevs.gensplus.tasks.EventLoop;
 import xyz.arcadiadevs.gensplus.tasks.SpawnerTask;
+import xyz.arcadiadevs.gensplus.utils.HologramsUtil;
 import xyz.arcadiadevs.gensplus.utils.ItemUtil;
 import xyz.arcadiadevs.gensplus.utils.Metrics;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
@@ -125,6 +131,11 @@ public final class GensPlus extends JavaPlugin {
    */
   private PapiHandler papiHandler;
 
+  /**
+   * Gets the metrics instance.
+   */
+  private Metrics metrics;
+
   @Override
   public void onEnable() {
     instance = this;
@@ -160,27 +171,27 @@ public final class GensPlus extends JavaPlugin {
 
         events = loadGensPlusEvents();
 
-        new Metrics(instance, 19293);
+        metrics = new Metrics(instance, 19293);
 
         if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
           instance.papiHandler = new PapiHandler(instance, locationsData, playerData, getConfig());
           instance.papiHandler.register();
         }
 
-        // Register events
-        loadBukkitEvents();
-
         // Register tasks
         registerTasks();
+
+        // Load player data in case the plugin gets enabled manually after server start
+        loadPlayers();
+
+        // Register events
+        loadBukkitEvents();
 
         // Register commands
         registerCommands();
 
         // Register tab completion
         registerTabCompletion();
-
-        // Load player data in case the plugin gets enabled manually after server start
-        loadPlayers();
 
         // Load holograms
         loadHolograms();
@@ -190,19 +201,61 @@ public final class GensPlus extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    if (this.dataSaveTask != null) {
-      dataSaveTask.saveBlockDataToJson();
-      dataSaveTask.saveWandDataToJson();
-      dataSaveTask.savePlayerDataToJson();
+
+    // Save data to JSON
+    dataSaveTask.saveBlockDataToJson();
+    dataSaveTask.saveWandDataToJson();
+    dataSaveTask.savePlayerDataToJson();
+
+    // Unregister any listeners or handlers
+    if (papiHandler != null) {
+      papiHandler.unregister();
     }
 
-    this.papiHandler.unregister();
+    // Unregister bukkit events
+    HandlerList.unregisterAll(this);
 
-    if (getConfig().getBoolean(Config.DEVELOPER_OPTIONS.getPath())) {
-      // Remove all files
-      // noinspection ResultOfMethodCallIgnored
-      new File(getDataFolder(), "data/block_data.json").delete();
+    Bukkit.getScheduler().cancelTasks(this);
+
+    // Save configuration files
+    reloadConfig();
+
+    for (LocationsData.GeneratorLocation location : locationsData.locations()) {
+      if (location.getHologram() != null) {
+        HologramsUtil.removeHologram(location.getHologram());
+      }
     }
+
+    this.locationsData.locations().clear();
+    this.locationsData = null;
+
+    this.generatorsData.generators().clear();
+    this.generatorsData = null;
+
+    this.playerData.data().clear();
+    this.playerData = null;
+
+    this.wandData.wands().clear();
+    this.wandData = null;
+
+    this.events.clear();
+    this.events = null;
+
+    this.hologramPool = null;
+    this.econ = null;
+    this.papiHandler = null;
+    this.dataSaveTask = null;
+
+    this.metrics.shutdown();
+
+    instance = null;
+
+    getLogger().info("GensPlus has been disabled.");
+  }
+
+  public void reloadPlugin() {
+    onDisable();
+    onEnable();
   }
 
   /**
@@ -438,10 +491,55 @@ public final class GensPlus extends JavaPlugin {
 
   @SuppressWarnings("unchecked")
   private void loadHolograms() {
-    hologramPool = hologramPool == null
-        ? new HologramPool(this,
-        Config.HOLOGRAMS_VIEW_DISTANCE.getInt())
-        : hologramPool;
+    hologramPool = HoloEasy.startInteractivePool(
+        this,
+        Config.HOLOGRAMS_VIEW_DISTANCE.getInt(),
+        0.5f,
+        5f
+    );
+
+    if (!GensPlus.getInstance().getConfig().getBoolean(Config.HOLOGRAMS_ENABLED.getPath())) {
+      return;
+    }
+
+    List<Map<?, ?>> generatorsConfig = instance.getConfig().getMapList("generators");
+
+    for (LocationsData.GeneratorLocation location : getLocationsData().locations()) {
+      GeneratorsData.Generator generator = generatorsData.getGenerator(location.getGenerator());
+
+      Material material = XMaterial.matchXMaterial(generator.blockType().getType().toString())
+          .orElseThrow(() -> new RuntimeException("Invalid item stack"))
+          .parseItem()
+          .getType();
+
+      Map<?, ?> matchingGeneratorConfig = generatorsConfig.stream()
+          .filter(generatorConfig -> generatorConfig.get("name").equals(generator.name()))
+          .findFirst()
+          .orElse(null);
+
+      if (matchingGeneratorConfig == null) {
+        continue;
+      }
+
+      List<String> lines = ((List<String>) matchingGeneratorConfig.get("hologramLines")).isEmpty()
+          ? GensPlus.getInstance().getConfig()
+          .getStringList(Config.DEFAULT_HOLOGRAM_LINES.getPath())
+          : (List<String>) matchingGeneratorConfig.get("hologramLines");
+
+      lines = lines
+          .stream()
+          .map(line -> line.replace("%name%", generator.name()))
+          .map(line -> line.replace("%tier%", String.valueOf(generator.tier())))
+          .map(line -> line.replace("%speed%", String.valueOf(generator.speed())))
+          .map(line -> line.replace("%spawnItem%", generator.spawnItem().getType().toString()))
+          .map(line -> line.replace("%sellPrice%", String.valueOf(generator.sellPrice())))
+          .map(ChatUtil::translate)
+          .toList();
+
+      Location center = location.getCenter();
+      Hologram hologram = HologramsUtil.createHologram(center, lines, material);
+      location.setHologram(hologram);
+    }
   }
 
   /**

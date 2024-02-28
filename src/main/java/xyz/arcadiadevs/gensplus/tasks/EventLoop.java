@@ -1,7 +1,5 @@
 package xyz.arcadiadevs.gensplus.tasks;
 
-import java.util.List;
-import java.util.Random;
 import lombok.Getter;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.GensPlus;
@@ -10,6 +8,9 @@ import xyz.arcadiadevs.gensplus.models.events.Event;
 import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * The EventLoop class is a BukkitRunnable task responsible for managing events in a loop. It

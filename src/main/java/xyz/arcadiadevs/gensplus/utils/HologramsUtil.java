@@ -35,7 +35,9 @@ public class HologramsUtil {
       for (String line : text) {
         textline(line);
       }
-      item(new ItemStack(material));
+      if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+        item(new ItemStack(material));
+      }
     });
   }
 
