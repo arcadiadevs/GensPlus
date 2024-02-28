@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.events;
 
+import com.cryptomorin.xseries.XMaterial;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,6 +14,7 @@ import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.guis.UpgradeGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
@@ -20,6 +22,8 @@ import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+
+import java.util.Arrays;
 
 @AllArgsConstructor
 public class BlockInteraction implements Listener {
@@ -120,8 +124,39 @@ public class BlockInteraction implements Listener {
     }
 
     if (event.getClickedBlock() != null
-        && event.getClickedBlock().getType() == Material.DRAGON_EGG
-        && location.getGeneratorObject().blockType().getType() == Material.DRAGON_EGG) {
+        && event.getClickedBlock().getType() == XMaterial.DRAGON_EGG.parseMaterial()
+        && location.getGeneratorObject().blockType().getType()
+        == XMaterial.DRAGON_EGG.parseMaterial()) {
+      event.setCancelled(true);
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+  public void onItemUse(PlayerInteractEvent event) {
+    if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+      return;
+    }
+
+    ItemStack[] shovels = {
+      XMaterial.WOODEN_SHOVEL.parseItem(),
+      XMaterial.STONE_SHOVEL.parseItem(),
+      XMaterial.IRON_SHOVEL.parseItem(),
+      XMaterial.GOLDEN_SHOVEL.parseItem(),
+      XMaterial.DIAMOND_SHOVEL.parseItem(),
+      XMaterial.NETHERITE_SHOVEL.parseItem()
+    };
+
+    ItemStack[] hoes = {
+      XMaterial.WOODEN_HOE.parseItem(),
+      XMaterial.STONE_HOE.parseItem(),
+      XMaterial.IRON_HOE.parseItem(),
+      XMaterial.GOLDEN_HOE.parseItem(),
+      XMaterial.DIAMOND_HOE.parseItem(),
+      XMaterial.NETHERITE_HOE.parseItem()
+    };
+
+    if (Arrays.asList(shovels).contains(event.getItem())
+        || Arrays.asList(hoes).contains(event.getItem())) {
       event.setCancelled(true);
     }
   }
@@ -163,4 +198,20 @@ public class BlockInteraction implements Listener {
       event.setCancelled(true);
     }
   }
+
+  private void cancelEvent(PlayerInteractEvent event, Material material) {
+    final LocationsData.GeneratorLocation location =
+        locationsData.getGeneratorLocation(event.getClickedBlock());
+
+    if (location == null) {
+      return;
+    }
+
+    if (event.getClickedBlock() != null
+        && event.getClickedBlock().getType() == material
+        && location.getGeneratorObject().blockType().getType() == material) {
+      event.setCancelled(true);
+    }
+  }
+
 }

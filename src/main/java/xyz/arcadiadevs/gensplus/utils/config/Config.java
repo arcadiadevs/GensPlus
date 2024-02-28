@@ -57,7 +57,7 @@ public enum Config {
   GUIS_UPGRADE_GUI_TITLE("guis.upgrade-gui.title", "Upgrade Generator"),
   GUIS_UPGRADE_GUI_ROWS("guis.upgrade-gui.rows", 3),
   HOLOGRAMS_ENABLED("holograms.enabled", false),
-  HOLOGRAMS_VIEW_DISTANCE("holograms.view-distance", 300),
+  HOLOGRAMS_VIEW_DISTANCE("holograms.view-distance", 2000),
   EVENTS_TIME_BETWEEN_EVENTS("events.time-between-events", "1h"),
   EVENTS_EVENT_DURATION("events.event-duration", "2m"),
   EVENTS_BROADCAST_ENABLED("events.broadcast.enabled", true),

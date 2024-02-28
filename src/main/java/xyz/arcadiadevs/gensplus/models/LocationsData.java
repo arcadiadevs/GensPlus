@@ -2,7 +2,6 @@ package xyz.arcadiadevs.gensplus.models;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XMaterial;
-import com.github.unldenis.hologram.Hologram;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
@@ -11,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.holoeasy.hologram.Hologram;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.events.DropEvent;
 import xyz.arcadiadevs.gensplus.models.location.SimplifiedLocation;
