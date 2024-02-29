@@ -7,10 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -47,20 +44,13 @@ public class SmeltItem implements Listener {
     InventoryType[] inventoryTypes;
 
     if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
-      inventoryTypes = new InventoryType[] {
+      inventoryTypes = new InventoryType[]{
           InventoryType.FURNACE,
           InventoryType.BLAST_FURNACE,
           InventoryType.SMOKER
       };
     } else {
-      inventoryTypes = new InventoryType[] {InventoryType.FURNACE};
-    }
-
-    if ((
-        !event.getClickedInventory().equals(event.getView().getBottomInventory())
-            || !event.isShiftClick())
-        && !event.getClickedInventory().equals(event.getView().getTopInventory())) {
-      return;
+      inventoryTypes = new InventoryType[]{InventoryType.FURNACE};
     }
 
     if (!Arrays.asList(inventoryTypes).contains(event.getView().getTopInventory().getType())) {
@@ -86,13 +76,13 @@ public class SmeltItem implements Listener {
       InventoryType[] inventoryTypes;
 
       if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
-        inventoryTypes = new InventoryType[] {
+        inventoryTypes = new InventoryType[]{
             InventoryType.FURNACE,
             InventoryType.BLAST_FURNACE,
             InventoryType.SMOKER
         };
       } else {
-        inventoryTypes = new InventoryType[] {InventoryType.FURNACE};
+        inventoryTypes = new InventoryType[]{InventoryType.FURNACE};
       }
 
       if (!Arrays.asList(inventoryTypes).contains(event.getDestination().getType())) {
@@ -115,13 +105,13 @@ public class SmeltItem implements Listener {
       InventoryType[] inventoryTypes;
 
       if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
-        inventoryTypes = new InventoryType[] {
+        inventoryTypes = new InventoryType[]{
             InventoryType.FURNACE,
             InventoryType.BLAST_FURNACE,
             InventoryType.SMOKER
         };
       } else {
-        inventoryTypes = new InventoryType[] {InventoryType.FURNACE};
+        inventoryTypes = new InventoryType[]{InventoryType.FURNACE};
       }
 
       if (!Arrays.asList(inventoryTypes).contains(event.getDestination().getType())) {
@@ -146,13 +136,13 @@ public class SmeltItem implements Listener {
     InventoryType[] inventoryTypes;
 
     if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
-      inventoryTypes = new InventoryType[] {
+      inventoryTypes = new InventoryType[]{
           InventoryType.FURNACE,
           InventoryType.BLAST_FURNACE,
           InventoryType.SMOKER
       };
     } else {
-      inventoryTypes = new InventoryType[] {InventoryType.FURNACE};
+      inventoryTypes = new InventoryType[]{InventoryType.FURNACE};
     }
 
     if (!Arrays.asList(inventoryTypes).contains(event.getView().getTopInventory().getType())) {
