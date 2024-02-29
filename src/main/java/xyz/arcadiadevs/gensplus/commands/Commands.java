@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
+import xyz.arcadiadevs.gensplus.guis.SellGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
 import xyz.arcadiadevs.gensplus.models.events.Event;
@@ -369,7 +370,7 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
-        SellUtil.sellAll(player);
+        SellUtil.sellAll(player, player.getInventory());
         return true;
       }
 
@@ -380,6 +381,16 @@ public class Commands implements CommandExecutor {
         }
 
         SellUtil.sellHand(player);
+        return true;
+      }
+
+      if (strings[0].equalsIgnoreCase("gui")) {
+        if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_GUI.getPermission())) {
+          Messages.NO_PERMISSION.format().send(commandSender);
+          return true;
+        }
+
+        SellGui.open(player);
         return true;
       }
     }

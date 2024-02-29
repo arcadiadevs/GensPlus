@@ -259,6 +259,16 @@ guis:
     # Number of rows in the gui
     rows: 3
 
+  sell-gui:
+    # If enabled is set to false, the command will not be registered.
+    enabled: true
+
+    # Title of the gui
+    title: "Sell Drops"
+
+    # Number of rows in the gui
+    rows: 3
+
 holograms:
   # If enabled is set to false, holograms will not be shown
   enabled: false

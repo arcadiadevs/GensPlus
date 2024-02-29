@@ -13,6 +13,7 @@ public enum Permissions {
   STOP_EVENT("gensplus.admin.stopevent"),
   GENERATOR_DROPS_SELL_ALL("gensplus.drop.sell.all"),
   GENERATOR_DROPS_SELL_HAND("gensplus.drop.sell.hand"),
+  GENERATOR_DROPS_SELL_GUI("gensplus.drop.sell.gui"),
   SELL_MULTIPLIER("gensplus.sell.multiplier."),
   GENERATOR_LIMIT("gensplus.limit."),
   CHUNK_RADIUS("gensplus.radius."),

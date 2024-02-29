@@ -214,12 +214,13 @@ public class CommandsTabCompletion implements TabCompleter {
       }
 
       if (!commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_ALL.getPermission())
-          || !commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND.getPermission())) {
+          || !commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_HAND.getPermission())
+          || !commandSender.hasPermission(Permissions.GENERATOR_DROPS_SELL_GUI.getPermission())) {
         return null;
       }
 
       if (strings.length == 1) {
-        return List.of("hand", "all");
+        return List.of("hand", "all", "gui");
       }
 
       return null;

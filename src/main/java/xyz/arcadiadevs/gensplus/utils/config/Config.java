@@ -1,11 +1,12 @@
 package xyz.arcadiadevs.gensplus.utils.config;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
-import java.util.ArrayList;
-import java.util.Map;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.arcadiadevs.gensplus.GensPlus;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * The ConfigManager class provides functionality for handling the configuration file in GensPlus.
@@ -56,6 +57,9 @@ public enum Config {
   GUIS_UPGRADE_GUI_UPGRADE_ALL_LORE("guis.upgrade-gui.upgradeAll.lore", new ArrayList<String>()),
   GUIS_UPGRADE_GUI_TITLE("guis.upgrade-gui.title", "Upgrade Generator"),
   GUIS_UPGRADE_GUI_ROWS("guis.upgrade-gui.rows", 3),
+  GUIS_SELL_GUI_ENABLED("guis.sell-gui.enabled", true),
+  GUIS_SELL_GUI_TITLE("guis.sell-gui.title", "Sell Items"),
+  GUIS_SELL_GUI_ROWS("guis.sell-gui.rows", 3),
   HOLOGRAMS_ENABLED("holograms.enabled", false),
   HOLOGRAMS_VIEW_DISTANCE("holograms.view-distance", 2000),
   EVENTS_TIME_BETWEEN_EVENTS("events.time-between-events", "1h"),

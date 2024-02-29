@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.gensplus.utils;
 
 import io.github.bananapuncher714.nbteditor.NBTEditor;
-import java.util.HashMap;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,7 +25,7 @@ public class SellUtil {
    *
    * @param player The player who wants to sell their generator drops.
    */
-  public static void sellAll(Player player) {
+  public static void sellAll(Player player, Inventory inventory, boolean... isGui) {
     int totalSellAmount = 0;
     final ActiveEvent event = EventLoop.getActiveEvent();
 
@@ -35,8 +34,8 @@ public class SellUtil {
         : 1.0 * PlayerUtil.getMultiplier(player));
 
     // Iterate through the player's inventory to find generator drops
-    for (int i = 0; i < player.getInventory().getSize(); i++) {
-      ItemStack item = player.getInventory().getItem(i);
+    for (int i = 0; i < inventory.getSize(); i++) {
+      ItemStack item = inventory.getItem(i);
 
       if (item == null) {
         continue;
@@ -51,7 +50,11 @@ public class SellUtil {
         final double sellPrice = generator.sellPrice();
         double sellAmount = (sellPrice * itemAmount * multiplier);
         totalSellAmount += sellAmount;
-        player.getInventory().setItem(i, null);
+        inventory.setItem(i, null);
+      } else {
+        if (isGui.length > 0 && isGui[0]) {
+          player.getInventory().addItem(item);
+        }
       }
     }
 
@@ -69,6 +72,7 @@ public class SellUtil {
             "price", economy.format(totalSellAmount))
         .send(player);
   }
+
 
   /**
    * Sells generator drops for a player.
