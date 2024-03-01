@@ -20,6 +20,7 @@ public enum Messages {
   NO_PERMISSION("no-permission", "&cError> &7You don't have permission to do that!"),
   PLUGIN_RELOADED("plugin-reloaded", "&9GensPlus> &7Plugin reloaded!"),
   PLAYER_NOT_FOUND("player-not-found", "&cError> &7Player not found!"),
+  TOO_FAST("too-fast", "&cError> &7You are doing that too fast!"),
   INVALID_GENERATOR_TIER("invalid-generator-tier", "&cError> &7Invalid generator tier!"),
   INVALID_FORMAT("invalid-format", "&cError> &7Invalid format!"),
   GENERATOR_GIVEN("generator-given",

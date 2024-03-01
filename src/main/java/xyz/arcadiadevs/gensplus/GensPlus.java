@@ -201,6 +201,7 @@ public final class GensPlus extends JavaPlugin {
 
   @Override
   public void onDisable() {
+    instance = null;
 
     // Save data to JSON
     dataSaveTask.saveBlockDataToJson();
@@ -247,8 +248,6 @@ public final class GensPlus extends JavaPlugin {
     this.dataSaveTask = null;
 
     this.metrics.shutdown();
-
-    instance = null;
 
     getLogger().info("GensPlus has been disabled.");
   }

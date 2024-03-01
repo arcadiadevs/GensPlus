@@ -1,8 +1,10 @@
 package xyz.arcadiadevs.gensplus.utils;
 
+import com.cryptomorin.xseries.messages.ActionBar;
+import org.bukkit.entity.Player;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import org.bukkit.entity.Player;
 
 public class ActionBarUtil {
   private static boolean works = true;
@@ -16,11 +18,7 @@ public class ActionBarUtil {
     if (!player.isOnline()) {
       return;
     }
-    if (version.startsWith("v1_12_")) {
-      sendActionBarPost112(player, message);
-    } else {
-      sendActionBarPre112(player, message);
-    }
+    ActionBar.sendActionBar(player, message);
   }
 
   private static void sendActionBarPost112(Player player, String message) {

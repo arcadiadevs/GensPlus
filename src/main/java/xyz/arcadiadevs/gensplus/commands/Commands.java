@@ -1,7 +1,6 @@
 package xyz.arcadiadevs.gensplus.commands;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
-import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,12 +27,26 @@ import java.util.List;
  * GensPlus. It provides functionality for various commands related to generators and the
  * plugin itself.
  */
-@AllArgsConstructor
 public class Commands implements CommandExecutor {
 
   private final GeneratorsData generatorsData;
   private final PlayerData playerData;
   private final List<Event> events;
+
+  private long lastReload = 0;
+
+  /**
+   * Constructor for initializing the Commands object.
+   *
+   * @param generatorsData Data related to generators
+   * @param playerData Player-related data
+   * @param events List of events
+   */
+  public Commands(GeneratorsData generatorsData, PlayerData playerData, List<Event> events) {
+    this.generatorsData = generatorsData;
+    this.playerData = playerData;
+    this.events = events;
+  }
 
   /**
    * Executes a command issued by a CommandSender.
@@ -213,8 +226,18 @@ public class Commands implements CommandExecutor {
           return true;
         }
 
+        long currentTime = System.currentTimeMillis();
+        long reloadCooldown = 5000;
+        if (currentTime - lastReload < reloadCooldown) {
+          Messages.TOO_FAST.format().send(commandSender);
+          return true;
+        }
+
         GensPlus.getInstance().reloadPlugin();
         Messages.PLUGIN_RELOADED.format().send(commandSender);
+
+        // Update lastReload after successful command execution
+        lastReload = currentTime;
         return true;
       }
 
