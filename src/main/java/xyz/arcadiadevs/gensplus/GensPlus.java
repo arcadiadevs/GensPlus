@@ -195,6 +195,7 @@ public final class GensPlus extends JavaPlugin {
 
         // Load holograms
         loadHolograms();
+
         getLogger().info("GensPlus has been enabled.");
       }
     }.runTaskLater(this, 20L);
@@ -492,6 +493,11 @@ public final class GensPlus extends JavaPlugin {
 
   @SuppressWarnings("unchecked")
   private void loadHolograms() {
+    if (Bukkit.getPluginManager().isPluginEnabled("HoloEasy")) {
+      getLogger().warning("HoloEasy not found. Holograms will be disabled.");
+      return;
+    }
+
     hologramPool = HoloEasy.startInteractivePool(
         this,
         Config.HOLOGRAMS_VIEW_DISTANCE.getInt(),

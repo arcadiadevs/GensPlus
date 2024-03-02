@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -28,6 +29,11 @@ public class HologramsUtil {
    */
   public static Hologram createHologram(Location location, List<String> text, Material material) {
     if (!GensPlus.getInstance().getConfig().getBoolean("holograms.enabled")) {
+      return null;
+    }
+
+    if (Bukkit.getPluginManager().isPluginEnabled("HoloEasy")) {
+      Bukkit.getLogger().warning("HoloEasy not found. Holograms will be disabled.");
       return null;
     }
 
