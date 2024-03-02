@@ -195,14 +195,13 @@ public final class GensPlus extends JavaPlugin {
 
         // Load holograms
         loadHolograms();
+        getLogger().info("GensPlus has been enabled.");
       }
     }.runTaskLater(this, 20L);
   }
 
   @Override
   public void onDisable() {
-    instance = null;
-
     // Save data to JSON
     dataSaveTask.saveBlockDataToJson();
     dataSaveTask.saveWandDataToJson();
@@ -248,6 +247,8 @@ public final class GensPlus extends JavaPlugin {
     this.dataSaveTask = null;
 
     this.metrics.shutdown();
+
+    instance = null;
 
     getLogger().info("GensPlus has been disabled.");
   }
