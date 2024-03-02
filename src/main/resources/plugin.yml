@@ -19,6 +19,7 @@ softdepend:
   - ASkyBlock
   - AcidIsland
   - BentoBox
+  - holoeasy
 
 commands:
   gensplus:

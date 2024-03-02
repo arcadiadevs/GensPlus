@@ -50,7 +50,7 @@ public class UpgradeGui {
       return;
     }
 
-    final var rows = config.getInt(Config.GUIS_UPGRADE_GUI_ROWS.getPath());
+    final var rows = Config.GUIS_UPGRADE_GUI_ROWS.getInt();
     final var menu = new Gui(
         ChatUtil.translate(config.getString(Config.GUIS_UPGRADE_GUI_TITLE.getPath())),
         rows,
