@@ -1,6 +1,7 @@
 package xyz.arcadiadevs.gensplus.tasks;
 
 import lombok.AllArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
@@ -23,12 +24,12 @@ public class CleanupTask extends BukkitRunnable {
   @Override
   public void run() {
     for (LocationsData.GeneratorLocation location : locationsData.locations()) {
-      if (location.getWorld().isChunkLoaded(0, 0)) {
+      if (location.getBlockLocations().isEmpty()) {
+        locationsData.removeLocation(location);
         continue;
       }
 
-      if (location.getBlockLocations().isEmpty()) {
-        locationsData.removeLocation(location);
+      if (location.getWorld().isChunkLoaded(0, 0)) {
         continue;
       }
 
@@ -38,6 +39,10 @@ public class CleanupTask extends BukkitRunnable {
           .removeIf(simplifiedLocation -> simplifiedLocation.getLocation() == null
               || simplifiedLocation.getLocation().getBlock().getType()
               != generator.blockType().getType());
+
+      if (location.getBlockLocations().isEmpty()) {
+        locationsData.removeLocation(location);
+      }
     }
 
     updateGens();
