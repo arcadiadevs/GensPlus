@@ -7,7 +7,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.Permissions;
@@ -208,8 +207,7 @@ public class CommandsTabCompletion implements TabCompleter {
     }
 
     if (command.getName().equalsIgnoreCase("selldrops")) {
-      if (!GensPlus.getInstance().getConfig()
-          .getBoolean(Config.SELL_COMMAND_ENABLED.getPath())) {
+      if (!(Config.SELL_COMMAND_ENABLED.getBoolean())) {
         return null;
       }
 

@@ -1,6 +1,5 @@
 package xyz.arcadiadevs.gensplus.utils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -8,6 +7,7 @@ import org.holoeasy.config.HologramKey;
 import org.holoeasy.hologram.Hologram;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,12 +28,7 @@ public class HologramsUtil {
    * @return The hologram created.
    */
   public static Hologram createHologram(Location location, List<String> text, Material material) {
-    if (!GensPlus.getInstance().getConfig().getBoolean("holograms.enabled")) {
-      return null;
-    }
-
-    if (Bukkit.getPluginManager().isPluginEnabled("HoloEasy")) {
-      Bukkit.getLogger().warning("HoloEasy not found. Holograms will be disabled.");
+    if (!Config.HOLOGRAMS_ENABLED.getBoolean()) {
       return null;
     }
 
@@ -45,6 +40,14 @@ public class HologramsUtil {
         item(new ItemStack(material));
       }
     });
+  }
+
+  public static Hologram getHologram(String id) {
+    if (id == null) {
+      return null;
+    }
+
+    return GensPlus.getInstance().getHologramPool().get(id);
   }
 
   public static void removeHologram(@NotNull Hologram hologram) {

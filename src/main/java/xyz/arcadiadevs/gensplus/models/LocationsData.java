@@ -101,7 +101,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
    * @param location The generator location to remove.
    */
   public void removeLocation(GeneratorLocation location) {
-    if (location.getHologram() != null) {
+    if (Config.HOLOGRAMS_ENABLED.getBoolean()) {
       HologramsUtil.removeHologram(location.getHologram());
     }
     locations.remove(location);
@@ -140,7 +140,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     private final ArrayList<SimplifiedLocation> blockLocations;
 
     @Setter
-    private transient Hologram hologram;
+    private transient String hologramId;
 
     /**
      * Represents a generator location.
@@ -202,7 +202,11 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
           .map(ChatUtil::translate)
           .toList();
 
-      this.hologram = HologramsUtil.createHologram(getCenter(), lines, material);
+      if (!Config.HOLOGRAMS_ENABLED.getBoolean()) {
+        return;
+      }
+
+      this.hologramId = HologramsUtil.createHologram(getCenter(), lines, material).getKey().getId();
     }
 
     public GeneratorLocation(String playerId, Integer generator, List<?> blockLocations) {
@@ -376,6 +380,14 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       }
 
       return false;
+    }
+
+    public Hologram getHologram() {
+      return HologramsUtil.getHologram(hologramId);
+    }
+
+    public void setHologram(Hologram hologram) {
+      this.hologramId = hologram.getKey().getId();
     }
   }
 

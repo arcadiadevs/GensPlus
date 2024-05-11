@@ -133,6 +133,13 @@ public class BlockInteraction implements Listener {
 
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onItemUse(PlayerInteractEvent event) {
+    final LocationsData.GeneratorLocation location =
+        locationsData.getGeneratorLocation(event.getClickedBlock());
+
+    if (location == null) {
+      return;
+    }
+
     if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
       return;
     }

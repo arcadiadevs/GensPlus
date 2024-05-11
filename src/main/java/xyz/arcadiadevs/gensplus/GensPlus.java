@@ -25,6 +25,7 @@ import org.holoeasy.hologram.Hologram;
 import org.holoeasy.pool.IHologramPool;
 import xyz.arcadiadevs.gensplus.commands.Commands;
 import xyz.arcadiadevs.gensplus.commands.CommandsTabCompletion;
+import xyz.arcadiadevs.gensplus.commands.SellCommandListener;
 import xyz.arcadiadevs.gensplus.events.*;
 import xyz.arcadiadevs.gensplus.events.skyblock.Bentobox;
 import xyz.arcadiadevs.gensplus.events.skyblock.IridiumSkyblock;
@@ -296,6 +297,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new CraftItem());
     events.add(new SmeltItem());
     events.add(new OnInventoryClose());
+    events.add(new SellCommandListener());
 
     if (Bukkit.getPluginManager().getPlugin("BentoBox") != null) {
       events.add(new Bentobox(locationsData));
@@ -493,8 +495,14 @@ public final class GensPlus extends JavaPlugin {
 
   @SuppressWarnings("unchecked")
   private void loadHolograms() {
-    if (Bukkit.getPluginManager().isPluginEnabled("HoloEasy")) {
-      getLogger().warning("HoloEasy not found. Holograms will be disabled.");
+    if (getServer().getPluginManager().getPlugin("HoloEasy") == null
+        && Config.HOLOGRAMS_ENABLED.getBoolean()) {
+      getLogger().warning("HoloEasy not found. Disabling plugin.");
+      Bukkit.getPluginManager().disablePlugin(this);
+      return;
+    }
+
+    if (!Config.HOLOGRAMS_ENABLED.getBoolean()) {
       return;
     }
 
