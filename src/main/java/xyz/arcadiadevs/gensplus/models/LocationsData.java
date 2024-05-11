@@ -372,7 +372,8 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
         Location location = simplifiedLocation.getLocation();
 
         // Check if there are any players in 10 block radius from the location
-        for (Entity entity : location.getWorld().getNearbyEntities(location, r, r, r)) {
+        int chunkRadius = (int) Math.ceil((double) r / 16); // Convert blocks to chunks (assuming each chunk is 16x16)
+        for (Entity entity : location.getWorld().getNearbyEntities(location, chunkRadius * 16, 256, chunkRadius * 16)) { // Adjust the distance to chunks
           if (entity instanceof Player) {
             return true;
           }
