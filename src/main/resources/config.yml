@@ -19,6 +19,10 @@ can-drops-be-used-in-crafting: false
 # generator blocks for smelting.
 can-items-be-used-in-smelting: false
 
+# If set to false, players will not be able to use generator drops or
+# generator blocks in enchanting.
+can-drops-be-used-in-enchanting: false
+
 # If set to true, generators will not spawn drops when
 # the owner of the generator is offline.
 disable-generators-when-offline: true

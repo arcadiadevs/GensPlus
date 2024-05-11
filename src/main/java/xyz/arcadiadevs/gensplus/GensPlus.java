@@ -294,9 +294,10 @@ public final class GensPlus extends JavaPlugin {
     events.add(new EntityExplode(locationsData, generatorsData));
     events.add(new OnWandUse(wandData, getConfig()));
     events.add(new OnInventoryOpen());
+    events.add(new OnInventoryClose());
     events.add(new CraftItem());
     events.add(new SmeltItem());
-    events.add(new OnInventoryClose());
+    events.add(new EnchantItem());
     events.add(new SellCommandListener());
 
     if (Bukkit.getPluginManager().getPlugin("BentoBox") != null) {
