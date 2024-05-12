@@ -72,10 +72,11 @@ public class ItemUtil {
     }
 
     ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
-    if (XMaterial.matchXMaterial(itemName).orElse(null) == null) {
-      SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-      skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(itemName));
-      skull.setItemMeta(skullMeta);
+
+    if (itemName.startsWith("head:")) {
+      SkullMeta meta = (SkullMeta) skull.getItemMeta();
+      meta.setOwningPlayer(Bukkit.getOfflinePlayer(itemName.substring(5)));
+      skull.setItemMeta(meta);
       return skull;
     }
 
