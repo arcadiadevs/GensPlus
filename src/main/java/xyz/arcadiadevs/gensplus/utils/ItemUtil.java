@@ -5,15 +5,18 @@ import com.cryptomorin.xseries.XMaterial;
 import dev.lone.itemsadder.api.CustomStack;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import io.th0rgal.oraxen.api.OraxenItems;
-import java.util.List;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.WandData;
 import xyz.arcadiadevs.guilib.ItemBuilder;
+
+import java.util.List;
 
 /**
  * The ItemUtils class provides utility methods for handling item-related operations.
@@ -66,6 +69,14 @@ public class ItemUtil {
       item.setItemMeta(meta);
 
       return item;
+    }
+
+    ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+    if (XMaterial.matchXMaterial(itemName).orElse(null) == null) {
+      SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+      skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(itemName));
+      skull.setItemMeta(skullMeta);
+      return skull;
     }
 
     XMaterial material = XMaterial.matchXMaterial(itemName).orElse(null);
