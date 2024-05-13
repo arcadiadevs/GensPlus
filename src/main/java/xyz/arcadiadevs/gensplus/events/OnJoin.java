@@ -43,12 +43,6 @@ public class OnJoin implements Listener {
       return;
     }
 
-    if (!player.hasPlayedBefore()) {
-      Bukkit.getScheduler().runTaskLater(GensPlus.getInstance(), () -> {
-        player.performCommand("is create normal");
-      }, 20L);
-    }
-
     if (player.hasPlayedBefore()) {
       return;
     }
