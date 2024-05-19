@@ -22,6 +22,7 @@ import xyz.arcadiadevs.gensplus.utils.TimeUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -31,6 +32,14 @@ import java.util.stream.Stream;
  * Represents the data of all the generator locations in the server.
  */
 public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
+
+  private static final Map<Block, GeneratorLocation> locationMap = new ConcurrentHashMap<>();
+
+  public LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
+    this.locations = locations;
+    // Initialize the locationMap
+    locations.forEach(location -> location.getBlockLocations().forEach(block -> locationMap.put(block, location)));
+  }
 
   public Integer getGeneratorsCountByPlayer(Player player) {
     return (int) locations.stream()
@@ -86,13 +95,14 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
         new ArrayList<>(generatorBlocks)
     );
 
-    locations.add(newLocation);
+    addLocation(newLocation);
 
     return newLocation;
   }
 
   public void addLocation(GeneratorLocation location) {
     locations.add(location);
+    location.getBlockLocations().forEach(block -> locationMap.put(block, location));
   }
 
   /**
@@ -105,6 +115,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       HologramsUtil.removeHologram(location.getHologram());
     }
     locations.remove(location);
+    location.getBlockLocations().forEach(locationMap::remove);
   }
 
   public void removeAll(List<GeneratorLocation> locations) {
@@ -118,10 +129,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
    * @return The generator location.
    */
   public GeneratorLocation getGeneratorLocation(Block location) {
-    return locations.stream()
-        .filter(l -> l.getBlockLocations().contains(location))
-        .findFirst()
-        .orElse(null);
+    return locationMap.get(location);
   }
 
   /**

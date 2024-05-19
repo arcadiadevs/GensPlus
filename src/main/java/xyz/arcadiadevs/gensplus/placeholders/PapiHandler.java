@@ -3,7 +3,6 @@ package xyz.arcadiadevs.gensplus.placeholders;
 import lombok.AllArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
@@ -23,7 +22,6 @@ public class PapiHandler extends PlaceholderExpansion {
   private final Plugin plugin;
   private final LocationsData locationsData;
   private final PlayerData playerData;
-  private final FileConfiguration config;
 
   /**
    * Checks if the placeholder expansion can be registered.
