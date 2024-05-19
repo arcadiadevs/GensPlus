@@ -1,7 +1,7 @@
 name: GensPlus
 version: '${project.version}'
 main: xyz.arcadiadevs.gensplus.GensPlus
-api-version: 1.19
+api-version: 1.13
 authors:
   - Cuftica
   - OpenSource
