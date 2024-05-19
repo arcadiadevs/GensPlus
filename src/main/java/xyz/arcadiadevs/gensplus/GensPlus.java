@@ -175,7 +175,7 @@ public final class GensPlus extends JavaPlugin {
         metrics = new Metrics(instance, 19293);
 
         if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
-          instance.papiHandler = new PapiHandler(instance, locationsData, playerData, getConfig());
+          instance.papiHandler = new PapiHandler(instance, locationsData, playerData);
           instance.papiHandler.register();
         }
 
