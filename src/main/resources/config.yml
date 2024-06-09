@@ -163,6 +163,12 @@ guis:
     # Number of rows in the gui
     rows: 6
 
+    # The material of the buttons in the gui
+    material:
+      next-page: "ARROW"
+      previous-page: "ARROW"
+      close-button: "BARRIER"
+
     border:
       # If enabled is set to false, the border won't be displayed.
       enabled: true
