@@ -73,6 +73,7 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
         getGeneratorLocation(blockLocation.getRelative(0, 0, 1))
     };
 
+
     List<GeneratorLocation> surroundingLocations = Stream.of(surroundingBlocks)
         .filter(Objects::nonNull)
         .filter(l -> l.getGenerator() == generator)
@@ -111,11 +112,15 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
    * @param location The generator location to remove.
    */
   public void removeLocation(GeneratorLocation location) {
-    if (Config.HOLOGRAMS_ENABLED.getBoolean()) {
-      HologramsUtil.removeHologram(location.getHologram());
-    }
-    locations.remove(location);
-    location.getBlockLocations().forEach(locationMap::remove);
+    try {
+      location.getBlockLocations().forEach(locationMap::remove);
+
+      if (Config.HOLOGRAMS_ENABLED.getBoolean()) {
+        HologramsUtil.removeHologram(location.getHologram());
+      }
+      locations.remove(location);
+      location.getBlockLocations().forEach(locationMap::remove);
+    } catch (Exception e) {}
   }
 
   public void removeAll(List<GeneratorLocation> locations) {

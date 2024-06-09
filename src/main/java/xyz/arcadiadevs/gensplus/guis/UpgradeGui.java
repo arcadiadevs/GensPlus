@@ -143,7 +143,7 @@ public class UpgradeGui {
     }));
 
     menu.setItem(15, new GuiItem(GuiItemType.ITEM, itemStackUpgradeAll, () -> {
-      upgradeAllGenerators(player, generator);
+      upgradeAllGenerators(player, generator, clickedBlock);
       player.closeInventory();
     }));
 
@@ -157,8 +157,8 @@ public class UpgradeGui {
    * @param currentLoc The GeneratorLocation representing the generator to be upgraded.
    */
   private static void upgradeAllGenerators(Player player,
-                                           LocationsData.GeneratorLocation currentLoc) {
-
+                                           LocationsData.GeneratorLocation currentLoc,
+                                           Block clickedBlock) {
     final LocationsData locationsData = instance.getLocationsData();
     GeneratorsData.Generator current = currentLoc.getGeneratorObject();
     GeneratorsData.Generator nextGenerator =
@@ -187,7 +187,7 @@ public class UpgradeGui {
 
     if (!response.transactionSuccess()) {
       player.sendMessage(ChatUtil.translate(
-              "Sorry, we were unable to process your transaction. Reason: "
+          "Sorry, we were unable to process your transaction. Reason: "
               + response.errorMessage));
       return;
     }
@@ -242,8 +242,8 @@ public class UpgradeGui {
 
     if (!response.transactionSuccess()) {
       player.sendMessage(ChatUtil.translate(
-              "Sorry, we were unable to process your transaction. Reason: "
-                      + response.errorMessage));
+          "Sorry, we were unable to process your transaction. Reason: "
+              + response.errorMessage));
       return;
     }
 
