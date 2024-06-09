@@ -1,12 +1,14 @@
 package xyz.arcadiadevs.gensplus.tasks;
 
 import lombok.AllArgsConstructor;
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
+
+import java.util.ArrayList;
 
 /**
  * This class represents a Bukkit task responsible for cleaning up generator locations.
@@ -29,11 +31,21 @@ public class CleanupTask extends BukkitRunnable {
         continue;
       }
 
+      GeneratorsData.Generator generator = location.getGeneratorObject();
+      ArrayList<Block> blocks = location.getBlockLocations();
+
+
+      for (Block block : location.getBlockLocations()) {
+        if (block.getType() != generator.blockType().getType()
+            || generator.blockType().getType() == Material.AIR) {
+          blocks.remove(block);
+          locationsData.removeLocation(location);
+        }
+      }
+
       if (location.getWorld().isChunkLoaded(0, 0)) {
         continue;
       }
-
-      GeneratorsData.Generator generator = location.getGeneratorObject();
 
       location.getSimplifiedBlockLocations()
           .removeIf(simplifiedLocation -> simplifiedLocation.getLocation() == null
