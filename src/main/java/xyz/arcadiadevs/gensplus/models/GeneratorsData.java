@@ -1,11 +1,12 @@
 package xyz.arcadiadevs.gensplus.models;
 
-import java.util.List;
-import java.util.NoSuchElementException;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * The GeneratorsData class represents the data for generators in GensPlus. It contains a list
@@ -77,7 +78,7 @@ public record GeneratorsData(@Getter List<Generator> generators) {
      * Drops the generator's block item naturally at the location of the specified block break
      * event.
      *
-     * @param player The player who broke the block.
+     * @param player   The player who broke the block.
      * @param location The location of the block.
      */
     public void dropItem(Player player, Location location) {
@@ -86,10 +87,10 @@ public record GeneratorsData(@Getter List<Generator> generators) {
 
     @Override
     public String toString() {
-      return "Generator{" +
-          "name='" + name + '\'' +
-          ", tier=" + tier +
-          '}';
+      return "Generator{"
+          + "name='" + name + '\''
+          + ", tier=" + tier
+          + '}';
     }
   }
 

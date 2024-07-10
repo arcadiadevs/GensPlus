@@ -29,7 +29,7 @@ public class ItemUtil {
    *
    * @return The universal item.
    */
-  public static ItemStack getUniversalItem(String itemName, boolean enableItemsAdder) {
+  public static ItemStack getUniversalItem(String itemName, boolean enableItemsAdder, boolean enableHeads) {
     // Format: oraxen:ITEM_NAME
     if (itemName.toLowerCase().startsWith("oraxen:")) {
       itemName = itemName.substring(7);
@@ -73,7 +73,7 @@ public class ItemUtil {
 
     ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
 
-    if (itemName.startsWith("head:")) {
+    if (enableHeads && itemName.startsWith("head:")) {
       SkullMeta meta = (SkullMeta) skull.getItemMeta();
       meta.setOwningPlayer(Bukkit.getOfflinePlayer(itemName.substring(5)));
       skull.setItemMeta(meta);

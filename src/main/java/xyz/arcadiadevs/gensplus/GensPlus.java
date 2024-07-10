@@ -422,8 +422,8 @@ public final class GensPlus extends JavaPlugin {
         throw new RuntimeException("Duplicate tier found: " + tier);
       }
 
-      ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem, true);
-      ItemStack blockTypeStack = ItemUtil.getUniversalItem(blockType, false);
+      ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem, true, true);
+      ItemStack blockTypeStack = ItemUtil.getUniversalItem(blockType, false, false);
 
       if (spawnItemStack == null) {
         getLogger().severe("=============================================");
