@@ -102,7 +102,7 @@ public class SellUtil {
         continue;
       }
 
-      int tier = NBTEditor.getInt(item, "gensplus", "spawnitem", "tier");
+      int tier = NBTEditor.getInt(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier");
       final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
       final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
 
