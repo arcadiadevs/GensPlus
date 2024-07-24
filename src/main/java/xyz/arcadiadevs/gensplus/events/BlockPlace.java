@@ -49,17 +49,17 @@ public class BlockPlace implements Listener {
       }
     }
 
-    if (NBTEditor.contains(item, "gensplus", "spawnitem", "tier")
+    if (NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier")
         && !Config.CAN_DROPS_BE_PLACED.getBoolean()) {
       event.setCancelled(true);
       return;
     }
 
-    if (!NBTEditor.contains(item, "gensplus", "blocktype", "tier")) {
+    if (!NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
       return;
     }
 
-    final int tier = NBTEditor.getInt(item, "gensplus", "blocktype", "tier");
+    final int tier = NBTEditor.getInt(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier");
     final boolean enabled = Config.LIMIT_PER_PLAYER_ENABLED.getBoolean();
     final boolean useCommands = Config.LIMIT_PER_PLAYER_USE_COMMANDS.getBoolean();
     final boolean usePermissions = Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getBoolean();

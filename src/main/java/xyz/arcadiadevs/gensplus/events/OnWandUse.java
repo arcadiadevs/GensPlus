@@ -3,10 +3,7 @@ package xyz.arcadiadevs.gensplus.events;
 import com.awaitquality.api.spigot.chat.formatter.Formatter;
 import com.cryptomorin.xseries.XMaterial;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
-import java.util.List;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -28,6 +25,9 @@ import xyz.arcadiadevs.gensplus.utils.SellUtil;
 import xyz.arcadiadevs.gensplus.utils.ServerVersion;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * The OnWandUse class implements the Listener interface to handle events related to the use of
@@ -67,7 +67,7 @@ public class OnWandUse implements Listener {
       return;
     }
 
-    if (NBTEditor.contains(itemInMainHand, "sell-wand-uuid")) {
+    if (NBTEditor.contains(itemInMainHand, NBTEditor.CUSTOM_DATA, "sell-wand-uuid")) {
       final boolean needsSneak = Config.SELL_WAND_ACTION_SNEAK.getBoolean();
       final String actionValue = Config.SELL_WAND_ACTION.getString();
 
@@ -82,7 +82,7 @@ public class OnWandUse implements Listener {
 
   public void onSellWandUse(Player player, ItemStack itemInMainHand, Block clickedBlock) {
     WandData.Wand wand =
-        wandData.getWand(UUID.fromString(NBTEditor.getString(itemInMainHand, "sell-wand-uuid")));
+        wandData.getWand(UUID.fromString(NBTEditor.getString(itemInMainHand, NBTEditor.CUSTOM_DATA, "sell-wand-uuid")));
 
     if ((clickedBlock.getType() == Material.CHEST
         || clickedBlock.getType() == Material.HOPPER)) {

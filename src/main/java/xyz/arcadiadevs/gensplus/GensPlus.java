@@ -475,8 +475,8 @@ public final class GensPlus extends JavaPlugin {
 
       spawnItemStack.setItemMeta(spawnItemMeta);
 
-      spawnItemStack = NBTEditor.set(spawnItemStack, tier, "gensplus", "spawnitem", "tier");
-      blockTypeStack = NBTEditor.set(blockTypeStack, tier, "gensplus", "blocktype", "tier");
+      spawnItemStack = NBTEditor.set(spawnItemStack, tier, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier");
+      blockTypeStack = NBTEditor.set(blockTypeStack, tier, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier");
 
       generators.add(new GeneratorsData.Generator(
           name,

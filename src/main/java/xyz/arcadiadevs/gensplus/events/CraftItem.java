@@ -36,8 +36,8 @@ public class CraftItem implements Listener {
       }
 
       // Check if the item has specific attributes using NBTEditor
-      if (NBTEditor.contains(stack, "gensplus", "spawnitem", "tier")
-          || NBTEditor.contains(stack, "gensplus", "blocktype", "tier")) {
+      if (NBTEditor.contains(stack, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier")
+          || NBTEditor.contains(stack, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
         event.setResult(Event.Result.DENY);
         event.setCancelled(true);
         return;

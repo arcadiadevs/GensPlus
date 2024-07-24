@@ -28,14 +28,14 @@ public class EnchantItem implements Listener {
     }
 
     ItemStack item = event.getItem();
-    if (NBTEditor.contains(item, "gensplus", "spawnitem", "tier")
-        || NBTEditor.contains(item, "gensplus", "blocktype", "tier")) {
+    if (NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier")
+        || NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
       event.setCancelled(true);
     }
 
     ItemStack secondItem = event.getView().getItem(1);
-    if (secondItem != null && (NBTEditor.contains(secondItem, "gensplus", "spawnitem", "tier")
-        || NBTEditor.contains(secondItem, "gensplus", "blocktype", "tier"))) {
+    if (secondItem != null && (NBTEditor.contains(secondItem, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier")
+        || NBTEditor.contains(secondItem, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier"))) {
       event.setCancelled(true);
     }
   }

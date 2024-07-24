@@ -41,8 +41,8 @@ public class SellUtil {
         continue;
       }
 
-      if (NBTEditor.contains(item, "gensplus", "spawnitem", "tier")) {
-        int tier = NBTEditor.getInt(item, "gensplus", "spawnitem", "tier");
+      if (NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier")) {
+        int tier = NBTEditor.getInt(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier");
         final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
         final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
 
@@ -98,7 +98,7 @@ public class SellUtil {
         continue;
       }
 
-      if (!NBTEditor.contains(item, "gensplus", "spawnitem", "tier")) {
+      if (!NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier")) {
         continue;
       }
 
@@ -156,12 +156,12 @@ public class SellUtil {
     ItemStack item = player.getInventory().getItemInMainHand();
     final boolean isAir = item.getType() == Material.AIR;
 
-    if (!NBTEditor.contains(item, "gensplus", "spawnitem", "tier") || isAir) {
+    if (!NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier") || isAir) {
       Messages.NOTHING_TO_SELL.format().send(player);
       return;
     }
 
-    int tier = NBTEditor.getInt(item, "gensplus", "spawnitem", "tier");
+    int tier = NBTEditor.getInt(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier");
     final GeneratorsData generatorsData = GensPlus.getInstance().getGeneratorsData();
     final GeneratorsData.Generator generator = generatorsData.getGenerator(tier);
 

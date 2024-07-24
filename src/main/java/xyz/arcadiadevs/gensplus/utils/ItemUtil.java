@@ -182,7 +182,7 @@ public class ItemUtil {
 
     String uuid = "sell-wand-uuid";
 
-    item = NBTEditor.set(item, wand.getUuid().toString(), uuid);
+    item = NBTEditor.set(item, wand.getUuid().toString(), NBTEditor.CUSTOM_DATA, uuid);
 
     return item;
   }
