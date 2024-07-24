@@ -6,7 +6,7 @@
 
     <groupId>xyz.arcadiadevs</groupId>
     <artifactId>GensPlus</artifactId>
-    <version>1.5.3</version>
+    <version>1.5.6</version>
     <packaging>jar</packaging>
 
     <name>GensPlus</name>
@@ -113,7 +113,7 @@
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>9.6.1.1</version>
+            <version>11.2.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
