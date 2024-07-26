@@ -125,6 +125,7 @@ public final class GensPlus extends JavaPlugin {
   /**
    * Gets the data save task.
    */
+  @Getter
   private DataSaveTask dataSaveTask;
 
   /**

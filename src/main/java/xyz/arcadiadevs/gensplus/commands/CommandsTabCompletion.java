@@ -43,7 +43,7 @@ public class CommandsTabCompletion implements TabCompleter {
           return null;
         }
 
-        return List.of("help", "give", "giveall", "wand", "setlimit",
+        return List.of("help", "list", "give", "giveall", "wand", "setlimit",
             "addlimit", "startevent", "stopevent", "reload");
       }
 

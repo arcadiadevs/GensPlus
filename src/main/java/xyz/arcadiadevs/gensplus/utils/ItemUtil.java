@@ -172,6 +172,7 @@ public class ItemUtil {
         .orElseThrow()
         .parseMaterial();
 
+
     final String formattedName = Formatter.format(wand, config.getString(configPrefix + ".name"));
 
     ItemBuilder itemBuilder = new ItemBuilder(material)

@@ -2,6 +2,7 @@ package xyz.arcadiadevs.gensplus.commands;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.guis.GeneratorsGui;
+import xyz.arcadiadevs.gensplus.guis.ListGui;
 import xyz.arcadiadevs.gensplus.guis.SellGui;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
@@ -86,6 +88,19 @@ public class Commands implements CommandExecutor {
             "&7- /selldrops hand/all: Sell all drops in your hand or inventory");
         ChatUtil.sendMessage(commandSender,
             "&7- /generators: view all generators");
+        return true;
+      }
+
+      // generators list of all players that have generators
+      if (strings[0].equalsIgnoreCase("list")) {
+        if (!adminPermission) {
+          Messages.NO_PERMISSION.format().send(commandSender);
+          return true;
+        }
+
+        OfflinePlayer player = (Player) commandSender;
+
+        ListGui.open(player.getPlayer());
         return true;
       }
 

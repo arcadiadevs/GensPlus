@@ -1,5 +1,6 @@
 package xyz.arcadiadevs.gensplus.utils;
 
+import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.messages.ActionBar;
 import org.bukkit.entity.Player;
 
@@ -18,7 +19,8 @@ public class ActionBarUtil {
     if (!player.isOnline()) {
       return;
     }
-    ActionBar.sendActionBar(player, message);
+
+    ActionBar.sendActionBar(player, ChatUtil.translate(message));
   }
 
   private static void sendActionBarPost112(Player player, String message) {

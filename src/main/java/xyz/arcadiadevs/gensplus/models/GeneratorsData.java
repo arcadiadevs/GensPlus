@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.arcadiadevs.gensplus.utils.ActionBarUtil;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -71,6 +72,12 @@ public record GeneratorsData(@Getter List<Generator> generators) {
      * @param player The player to give the item to.
      */
     public void giveItem(Player player) {
+      if (player.getInventory().firstEmpty() == -1) {
+        ActionBarUtil.sendActionBar(player, "&cYour inventory is full!");
+        player.getWorld().dropItemNaturally(player.getLocation(), blockType);
+        return;
+      }
+
       player.getInventory().addItem(blockType);
     }
 
