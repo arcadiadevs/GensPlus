@@ -77,8 +77,20 @@ public class BlockPlace implements Listener {
       }
     }
 
-    if (useCommands && !usePermissions) {
-      limitPerPlayer = playerData.getData(player.getUniqueId()).getLimit();
+    if (usePermissions) {
+      limitPerPlayer = PlayerUtil.getGeneratorLimitPerPlayer(player);
+    }
+
+    if (useCommands) {
+      int commandLimit = playerData.getData(player.getUniqueId()).getLimit();
+
+      if (usePermissions) {
+        // Combine the limits from permissions and commands
+        limitPerPlayer += commandLimit;
+      } else {
+        // Use only the command limit if permissions are not used
+        limitPerPlayer = commandLimit;
+      }
     }
 
     if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean()) {

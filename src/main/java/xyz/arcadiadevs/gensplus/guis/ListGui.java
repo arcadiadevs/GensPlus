@@ -12,7 +12,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
-import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
+import xyz.arcadiadevs.gensplus.models.PlayerData;
+import xyz.arcadiadevs.gensplus.utils.LimitUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.guilib.Gui;
 import xyz.arcadiadevs.guilib.GuiItem;
@@ -68,14 +69,19 @@ public class ListGui {
 
     ItemStack playerHead = new ItemStack(XMaterial.PLAYER_HEAD.parseItem());
 
+    boolean usePermissions = true;
+    boolean useCommands = true;
+    PlayerData playerData = instance.getPlayerData();
+
+    int combinedLimit = LimitUtil.calculateCombinedLimit(player, usePermissions, useCommands, playerData);
+
     for (OfflinePlayer p : instance.getServer().getOnlinePlayers()) {
       SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
       meta.setOwningPlayer(Bukkit.getOfflinePlayer(p.getName()));
       meta.setLore(List.of(
           ChatUtil.translate("&7&nClick to view generators"),
           ChatUtil.translate("&7Placed: &e" + instance.getLocationsData().getGeneratorsCountByPlayer(player.getPlayer())),
-          ChatUtil.translate("&7Limit: &e" + PlayerUtil.getGeneratorLimitPerPlayer(player.getPlayer())
-          ))
+          ChatUtil.translate("&7Limit: &e" + combinedLimit))
       );
       playerHead.setItemMeta(meta);
 
