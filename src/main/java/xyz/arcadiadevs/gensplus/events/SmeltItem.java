@@ -175,10 +175,13 @@ public class SmeltItem implements Listener {
       return;
     }
 
-    Player player = event.getPlayer();
     if (ServerVersion.isServerVersionBelow(ServerVersion.V1_14)
         || event.getClickedBlock() == null
         || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+      return;
+    }
+
+    if (event.getClickedBlock().getType() == XMaterial.SHORT_GRASS.parseMaterial()) {
       return;
     }
 
@@ -187,6 +190,7 @@ public class SmeltItem implements Listener {
       return;
     }
 
+    Player player = event.getPlayer();
     if (isGensItem(PlayerUtil.getHeldItem(player))
         && PlayerUtil.getHeldItem(player) != null
         && PlayerUtil.getHeldItem(player) != XMaterial.AIR.parseItem()) {
