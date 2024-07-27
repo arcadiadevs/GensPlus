@@ -2,14 +2,13 @@ package xyz.arcadiadevs.gensplus.guis;
 
 import com.awaitquality.api.spigot.chat.ChatUtil;
 import com.cryptomorin.xseries.XMaterial;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
@@ -25,7 +24,7 @@ import java.util.List;
 
 public class ListGui {
 
-  public static void open(OfflinePlayer player) {
+  public static void open(Player player) {
     final var instance = GensPlus.getInstance();
 
     final var menu = new Gui(
@@ -67,37 +66,37 @@ public class ListGui {
     menu.setItem(((6 - 1) * 9) + 4, new GuiItem(GuiItemType.CLOSE, closeButton, null));
     menu.setItem(((6 - 1) * 9) + 5, new GuiItem(GuiItemType.NEXT, nextPage, null));
 
-    ItemStack playerHead = new ItemStack(XMaterial.PLAYER_HEAD.parseItem());
-
     boolean usePermissions = true;
     boolean useCommands = true;
     PlayerData playerData = instance.getPlayerData();
 
-    int combinedLimit = LimitUtil.calculateCombinedLimit(player, usePermissions, useCommands, playerData);
-
     for (OfflinePlayer p : instance.getServer().getOnlinePlayers()) {
-      SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
-      meta.setOwningPlayer(Bukkit.getOfflinePlayer(p.getName()));
-      meta.setLore(List.of(
-          ChatUtil.translate("&7&nClick to view generators"),
-          ChatUtil.translate("&7Placed: &e" + instance.getLocationsData().getGeneratorsCountByPlayer(player.getPlayer())),
-          ChatUtil.translate("&7Limit: &e" + combinedLimit))
-      );
-      playerHead.setItemMeta(meta);
+      int combinedLimit = LimitUtil.calculateCombinedLimit(p, usePermissions, useCommands, playerData);
 
-      menu.addItem(new GuiItem(GuiItemType.ITEM, playerHead, () -> {
-        generatorListForPlayer(player.getPlayer());
+      List<String> lore = new ArrayList<>();
+      lore.add(ChatUtil.translate("&7Placed: &e" + instance.getLocationsData().getGeneratorsCountByPlayer(p.getPlayer())));
+      lore.add(ChatUtil.translate("&7Limit: &e" + combinedLimit));
+      lore.add(ChatUtil.translate("&7Click to view generators"));
+
+      final var itemBuilder = new ItemBuilder(XMaterial.PLAYER_HEAD.parseMaterial())
+          .name(ChatUtil.translate(p.getName()))
+          .lore(lore)
+          .skullOwner(p.getName())
+          .build();
+
+      menu.addItem(new GuiItem(GuiItemType.ITEM, itemBuilder, () -> {
+        generatorListForPlayer(player, p.getPlayer());
       }));
     }
 
     player.getPlayer().openInventory(menu.getInventory());
   }
 
-  private static void generatorListForPlayer(OfflinePlayer player) {
+  private static void generatorListForPlayer(Player player, OfflinePlayer targetPlayer) {
     final var instance = GensPlus.getInstance();
 
     final var menu = new Gui(
-        ChatUtil.translate("List of Generators for " + player.getName()),
+        ChatUtil.translate("List of Generators for " + targetPlayer.getName()),
         6,
         instance
     );
@@ -135,15 +134,20 @@ public class ListGui {
     menu.setItem(((6 - 1) * 9) + 4, new GuiItem(GuiItemType.CLOSE, closeButton, null));
     menu.setItem(((6 - 1) * 9) + 5, new GuiItem(GuiItemType.NEXT, nextPage, null));
 
-    instance.getLocationsData().locations().forEach(location -> {
-      ItemStack locationItem = new ItemStack(location.getGeneratorObject().blockType());
-      ItemMeta meta = locationItem.getItemMeta();
-      meta.setDisplayName(ChatUtil.translate(location.getCenter().getBlockX() + ", " + location.getCenter().getBlockY() + ", " + location.getCenter().getBlockZ()));
-      locationItem.setItemMeta(meta);
-      menu.addItem(new GuiItem(GuiItemType.ITEM, locationItem, () -> {
-        openInside(player.getPlayer(), location);
-      }));
-    });
+    instance.getLocationsData()
+        .locations()
+        .stream()
+        .filter(location -> location.getPlacedBy().equals(targetPlayer))
+        .forEach(location -> {
+          ItemStack locationItem = new ItemStack(location.getGeneratorObject().blockType());
+          ItemMeta meta = locationItem.getItemMeta();
+          meta.setDisplayName(ChatUtil.translate(location.getCenter().getBlockX() + ", " + location.getCenter().getBlockY() + ", " + location.getCenter().getBlockZ()));
+          locationItem.setItemMeta(meta);
+
+          menu.addItem(new GuiItem(GuiItemType.ITEM, locationItem, () -> {
+            openInside(player.getPlayer(), location);
+          }));
+        });
 
     player.getPlayer().openInventory(menu.getInventory());
   }
