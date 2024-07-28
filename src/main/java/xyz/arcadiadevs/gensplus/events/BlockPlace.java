@@ -11,7 +11,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.models.PlayerData;
-import xyz.arcadiadevs.gensplus.utils.PlayerUtil;
+import xyz.arcadiadevs.gensplus.utils.LimitUtil;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
 import xyz.arcadiadevs.gensplus.utils.config.Config;
 import xyz.arcadiadevs.gensplus.utils.config.message.Messages;
@@ -61,10 +61,8 @@ public class BlockPlace implements Listener {
 
     final int tier = NBTEditor.getInt(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier");
     final boolean enabled = Config.LIMIT_PER_PLAYER_ENABLED.getBoolean();
-    final boolean useCommands = Config.LIMIT_PER_PLAYER_USE_COMMANDS.getBoolean();
-    final boolean usePermissions = Config.LIMIT_PER_PLAYER_USE_PERMISSIONS.getBoolean();
 
-    int limitPerPlayer = PlayerUtil.getGeneratorLimitPerPlayer(player);
+    int combinedLimit = LimitUtil.calculateCombinedLimit(player, playerData);
 
     if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean()) {
       int limitPerIsland = (int) SkyblockUtil.calculateLimit(player);
@@ -77,28 +75,12 @@ public class BlockPlace implements Listener {
       }
     }
 
-    if (usePermissions) {
-      limitPerPlayer = PlayerUtil.getGeneratorLimitPerPlayer(player);
-    }
-
-    if (useCommands) {
-      int commandLimit = playerData.getData(player.getUniqueId()).getLimit();
-
-      if (usePermissions) {
-        // Combine the limits from permissions and commands
-        limitPerPlayer += commandLimit;
-      } else {
-        // Use only the command limit if permissions are not used
-        limitPerPlayer = commandLimit;
-      }
-    }
-
     if (Config.LIMIT_PER_ISLAND_ENABLED.getBoolean()) {
-      limitPerPlayer = (int) SkyblockUtil.calculateLimit(player);
+      combinedLimit = (int) SkyblockUtil.calculateLimit(player);
     }
 
-    if (enabled && locationsData.getGeneratorsCountByPlayer(player) >= limitPerPlayer) {
-      Messages.LIMIT_REACHED.format("limit", limitPerPlayer).send(player);
+    if (enabled && locationsData.getGeneratorsCountByPlayer(player) >= combinedLimit) {
+      Messages.LIMIT_REACHED.format("limit", combinedLimit).send(player);
       event.setCancelled(true);
       return;
     }

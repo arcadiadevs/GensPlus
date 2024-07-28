@@ -66,12 +66,10 @@ public class ListGui {
     menu.setItem(((6 - 1) * 9) + 4, new GuiItem(GuiItemType.CLOSE, closeButton, null));
     menu.setItem(((6 - 1) * 9) + 5, new GuiItem(GuiItemType.NEXT, nextPage, null));
 
-    boolean usePermissions = true;
-    boolean useCommands = true;
     PlayerData playerData = instance.getPlayerData();
 
     for (OfflinePlayer p : instance.getServer().getOnlinePlayers()) {
-      int combinedLimit = LimitUtil.calculateCombinedLimit(p, usePermissions, useCommands, playerData);
+      int combinedLimit = LimitUtil.calculateCombinedLimit(p, playerData);
 
       List<String> lore = new ArrayList<>();
       lore.add(ChatUtil.translate("&7Placed: &e" + instance.getLocationsData().getGeneratorsCountByPlayer(p.getPlayer())));
