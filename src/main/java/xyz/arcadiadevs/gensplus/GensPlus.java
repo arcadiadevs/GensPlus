@@ -300,6 +300,7 @@ public final class GensPlus extends JavaPlugin {
     events.add(new SmeltItem());
     events.add(new EnchantItem());
     events.add(new SellCommandListener());
+    events.add(new PistonEvent(locationsData));
 
     if (Bukkit.getPluginManager().getPlugin("BentoBox") != null) {
       events.add(new Bentobox(locationsData));

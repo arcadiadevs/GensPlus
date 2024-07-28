@@ -206,19 +206,4 @@ public class BlockInteraction implements Listener {
     }
   }
 
-  private void cancelEvent(PlayerInteractEvent event, Material material) {
-    final LocationsData.GeneratorLocation location =
-        locationsData.getGeneratorLocation(event.getClickedBlock());
-
-    if (location == null) {
-      return;
-    }
-
-    if (event.getClickedBlock() != null
-        && event.getClickedBlock().getType() == material
-        && location.getGeneratorObject().blockType().getType() == material) {
-      event.setCancelled(true);
-    }
-  }
-
 }
