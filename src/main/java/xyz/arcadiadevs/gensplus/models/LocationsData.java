@@ -407,6 +407,17 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     public void setHologram(Hologram hologram) {
       this.hologramId = hologram.getKey().getId();
     }
+
+    @Override
+    public String toString() {
+      return "GeneratorLocation{" +
+          "playerId='" + playerId + '\'' +
+          ", islandId='" + islandId + '\'' +
+          ", generator=" + generator +
+          ", blockLocations=" + blockLocations +
+          ", hologramId='" + hologramId + '\'' +
+          '}';
+    }
   }
 
 }
