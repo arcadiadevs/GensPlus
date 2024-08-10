@@ -69,6 +69,10 @@ public class BlockBreak implements Listener {
 
     locationsData.removeLocation(generatorLocation);
 
+    if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+      GensPlus.getInstance().getLogger().info("[BLOCKBREAK] 3. Removing location: " + generatorLocation);
+    }
+
     blocks.forEach(block -> {
       LocationsData.GeneratorLocation loc = locationsData.getGeneratorLocation(block);
 

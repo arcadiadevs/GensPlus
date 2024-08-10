@@ -3,9 +3,11 @@ package xyz.arcadiadevs.gensplus.tasks;
 import lombok.AllArgsConstructor;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.arcadiadevs.gensplus.GensPlus;
 import xyz.arcadiadevs.gensplus.models.GeneratorsData;
 import xyz.arcadiadevs.gensplus.models.LocationsData;
 import xyz.arcadiadevs.gensplus.utils.SkyblockUtil;
+import xyz.arcadiadevs.gensplus.utils.config.Config;
 
 import java.util.ArrayList;
 
@@ -38,6 +40,10 @@ public class CleanupTask extends BukkitRunnable {
           continue;
         }
 
+        if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+          GensPlus.getInstance().getLogger().info("[CLEANUPTASK] 1. Removing location: " + location);
+        }
+
         blocks.remove(block);
         locationsData.removeLocation(location);
       }
@@ -52,6 +58,10 @@ public class CleanupTask extends BukkitRunnable {
               != generator.blockType().getType());
 
       if (location.getBlockLocations().isEmpty()) {
+        if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+          GensPlus.getInstance().getLogger().info("[CLEANUPTASK] 2. Removing location: " + location);
+        }
+
         locationsData.removeLocation(location);
       }
     }

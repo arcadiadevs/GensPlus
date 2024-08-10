@@ -120,7 +120,11 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
       }
       locations.remove(location);
       location.getBlockLocations().forEach(locationMap::remove);
-    } catch (Exception e) {}
+    } catch (Exception e) {
+      if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public void removeAll(List<GeneratorLocation> locations) {
