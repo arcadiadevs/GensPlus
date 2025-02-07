@@ -281,7 +281,7 @@ guis:
 
 holograms:
   # If enabled is set to false, holograms will not be shown
-  enabled: false
+  enabled: true
 
   # The hologram view distance
   view-distance: 300

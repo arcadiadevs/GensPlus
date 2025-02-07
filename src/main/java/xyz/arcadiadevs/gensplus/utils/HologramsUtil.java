@@ -3,7 +3,6 @@ package xyz.arcadiadevs.gensplus.utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.holoeasy.config.HologramKey;
 import org.holoeasy.hologram.Hologram;
 import org.jetbrains.annotations.NotNull;
 import xyz.arcadiadevs.gensplus.GensPlus;
@@ -32,14 +31,26 @@ public class HologramsUtil {
       return null;
     }
 
-    return hologram(new HologramKey(GensPlus.getInstance().getHologramPool(), UUID.randomUUID().toString()), location, () -> {
-      for (String line : text) {
-        textline(line);
+    try {
+      Hologram[] result = new Hologram[1];
+      Location holoLocation = location.clone().subtract(0, 1, 0);
+      GensPlus.getInstance().getHologramPool().registerHolograms(() -> {
+        result[0] = hologram(holoLocation, () -> {
+          for (String line : text) {
+            textline(line);
+          }
+          if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
+            item(new ItemStack(material));
+          }
+        });
+      });
+      return result[0];
+    } catch (Exception e) {
+      if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+        e.printStackTrace();
       }
-      if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
-        item(new ItemStack(material));
-      }
-    });
+      return null;
+    }
   }
 
   public static Hologram getHologram(String id) {
@@ -47,11 +58,17 @@ public class HologramsUtil {
       return null;
     }
 
-    return GensPlus.getInstance().getHologramPool().get(id);
+    return GensPlus.getInstance().getHologramPool().get(UUID.fromString(id));
   }
 
   public static void removeHologram(@NotNull Hologram hologram) {
-    GensPlus.getInstance().getHologramPool().remove(hologram.getKey());
+    try {
+      GensPlus.getInstance().getHologramPool().remove(hologram.getId());
+    } catch (Exception e) {
+      if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+        e.printStackTrace();
+      }
+    }
   }
 
 }

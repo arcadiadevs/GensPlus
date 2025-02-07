@@ -64,6 +64,13 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
    */
   public GeneratorLocation createLocation(OfflinePlayer player, int generator,
                                           Block blockLocation) {
+    if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+      GensPlus.getInstance().getLogger().info("[DEBUG] Creating generator location:");
+      GensPlus.getInstance().getLogger().info("[DEBUG] Player: " + player.getName());
+      GensPlus.getInstance().getLogger().info("[DEBUG] Generator tier: " + generator);
+      GensPlus.getInstance().getLogger().info("[DEBUG] Location: " + blockLocation.getLocation());
+    }
+
     GeneratorLocation[] surroundingBlocks = {
         getGeneratorLocation(blockLocation.getRelative(0, 1, 0)),
         getGeneratorLocation(blockLocation.getRelative(0, -1, 0)),
@@ -223,7 +230,16 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
         return;
       }
 
-      this.hologramId = HologramsUtil.createHologram(getCenter(), lines, material).getKey().getId();
+      try {
+        Hologram hologram = HologramsUtil.createHologram(getCenter(), lines, material);
+        if (hologram != null) {
+          this.hologramId = hologram.getId().toString();
+        }
+      } catch (Exception e) {
+        if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+          e.printStackTrace();
+        }
+      }
     }
 
     public GeneratorLocation(String playerId, Integer generator, List<?> blockLocations) {
@@ -405,7 +421,9 @@ public record LocationsData(CopyOnWriteArrayList<GeneratorLocation> locations) {
     }
 
     public void setHologram(Hologram hologram) {
-      this.hologramId = hologram.getKey().getId();
+      if (hologram != null) {
+        this.hologramId = hologram.getId().toString();
+      }
     }
 
     @Override

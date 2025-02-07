@@ -41,6 +41,15 @@ public class BlockPlace implements Listener {
 
     final List<String> disabledWorlds = config.getStringList(Config.DISABLED_WORLDS.getPath());
 
+    if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+      player.sendMessage("[DEBUG] Placing item: " + item.getType());
+      player.sendMessage("[DEBUG] Has spawn NBT: " + NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier"));
+      player.sendMessage("[DEBUG] Has block NBT: " + NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier"));
+      if (NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
+        player.sendMessage("[DEBUG] Block tier: " + NBTEditor.getInt(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier"));
+      }
+    }
+
     for (String world : disabledWorlds) {
       if (event.getBlockPlaced().getWorld().getName().equals(world)) {
         Messages.CANNOT_PLACE_IN_WORLD.format("world", world).send(event.getPlayer());

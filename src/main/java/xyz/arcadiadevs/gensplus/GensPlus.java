@@ -477,8 +477,15 @@ public final class GensPlus extends JavaPlugin {
 
       spawnItemStack.setItemMeta(spawnItemMeta);
 
+      // Store tier as NBT data using the correct format
       spawnItemStack = NBTEditor.set(spawnItemStack, tier, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier");
       blockTypeStack = NBTEditor.set(blockTypeStack, tier, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier");
+
+      if (Config.DEVELOPER_OPTIONS.getBoolean()) {
+        getLogger().info("[DEBUG] Created generator item with tier " + tier);
+        getLogger().info("[DEBUG] SpawnItem NBT: " + NBTEditor.getInt(spawnItemStack, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier"));
+        getLogger().info("[DEBUG] BlockType NBT: " + NBTEditor.getInt(blockTypeStack, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier"));
+      }
 
       generators.add(new GeneratorsData.Generator(
           name,
