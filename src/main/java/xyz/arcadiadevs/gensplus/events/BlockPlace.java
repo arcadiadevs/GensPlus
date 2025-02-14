@@ -39,8 +39,6 @@ public class BlockPlace implements Listener {
     final Player player = event.getPlayer();
     final ItemStack item = event.getItemInHand();
 
-    final List<String> disabledWorlds = config.getStringList(Config.DISABLED_WORLDS.getPath());
-
     if (Config.DEVELOPER_OPTIONS.getBoolean()) {
       player.sendMessage("[DEBUG] Placing item: " + item.getType());
       player.sendMessage("[DEBUG] Has spawn NBT: " + NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier"));
@@ -50,22 +48,22 @@ public class BlockPlace implements Listener {
       }
     }
 
-    for (String world : disabledWorlds) {
-      if (event.getBlockPlaced().getWorld().getName().equals(world)) {
-        Messages.CANNOT_PLACE_IN_WORLD.format("world", world).send(event.getPlayer());
-        event.setCancelled(true);
-        return;
-      }
-    }
-
     if (NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "spawnitem", "tier")
         && !Config.CAN_DROPS_BE_PLACED.getBoolean()) {
       event.setCancelled(true);
       return;
     }
 
-    if (!NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
-      return;
+    final List<String> disabledWorlds = config.getStringList(Config.DISABLED_WORLDS.getPath());
+    for (String world : disabledWorlds) {
+      if (event.getBlockPlaced().getWorld().getName().equals(world)) {
+        if (!NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
+          return;
+        }
+        Messages.CANNOT_PLACE_IN_WORLD.format("world", world).send(event.getPlayer());
+        event.setCancelled(true);
+        return;
+      }
     }
 
     final int tier = NBTEditor.getInt(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier");

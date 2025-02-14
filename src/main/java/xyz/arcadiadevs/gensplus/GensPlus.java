@@ -257,8 +257,107 @@ public final class GensPlus extends JavaPlugin {
   }
 
   public void reloadPlugin() {
-    onDisable();
-    onEnable();
+    // Save current data
+    if (dataSaveTask != null) {
+      dataSaveTask.saveBlockDataToJson();
+      dataSaveTask.saveWandDataToJson();
+      dataSaveTask.savePlayerDataToJson();
+    }
+
+    // Unregister any listeners or handlers
+    if (papiHandler != null) {
+      papiHandler.unregister();
+    }
+
+    // Unregister bukkit events
+    HandlerList.unregisterAll(this);
+
+    Bukkit.getScheduler().cancelTasks(this);
+
+    // Save configuration files
+    reloadConfig();
+
+    // Clear holograms
+    if (locationsData != null) {
+      for (LocationsData.GeneratorLocation location : locationsData.locations()) {
+        if (location.getHologram() != null) {
+          HologramsUtil.removeHologram(location.getHologram());
+        }
+      }
+    }
+
+    // Clear data
+    if (locationsData != null) {
+      this.locationsData.locations().clear();
+      this.locationsData = null;
+    }
+
+    if (generatorsData != null) {
+      this.generatorsData.generators().clear();
+      this.generatorsData = null;
+    }
+
+    if (playerData != null) {
+      this.playerData.data().clear();
+      this.playerData = null;
+    }
+
+    if (wandData != null) {
+      this.wandData.wands().clear();
+      this.wandData = null;
+    }
+
+    if (events != null) {
+      this.events.clear();
+      this.events = null;
+    }
+
+    this.hologramPool = null;
+    this.econ = null;
+    this.papiHandler = null;
+    this.dataSaveTask = null;
+
+    if (metrics != null) {
+      this.metrics.shutdown();
+    }
+
+    // Reinitialize everything immediately
+    saveDefaultConfig();
+    moveBlockData();
+
+    saveResourceIfNotExists("data/block_data.json", false);
+    saveResourceIfNotExists("data/wands_data.json", false);
+    saveResourceIfNotExists("data/player_data.json", false);
+    saveResourceIfNotExists("messages.yml", false);
+
+    setupEconomy();
+    Messages.init();
+
+    gson = new GsonBuilder().registerTypeAdapterFactory(RecordTypeAdapterFactory.DEFAULT)
+        .setPrettyPrinting()
+        .create();
+
+    generatorsData = loadGeneratorsData();
+    locationsData = new LocationsData(loadBlockDataFromJson());
+    playerData = new PlayerData(loadPlayerDataFromJson());
+    wandData = new WandData(loadWandsDataFromJson());
+    events = loadGensPlusEvents();
+    metrics = new Metrics(instance, 19293);
+
+    if (getServer().getPluginManager().getPlugin("PlaceHolderAPI") != null) {
+      instance.papiHandler = new PapiHandler(instance, locationsData, playerData);
+      instance.papiHandler.register();
+    }
+
+    // Register everything
+    registerTasks();
+    loadPlayers();
+    loadBukkitEvents();
+    registerCommands();
+    registerTabCompletion();
+    loadHolograms();
+
+    getLogger().info("GensPlus has been reloaded!");
   }
 
   /**
