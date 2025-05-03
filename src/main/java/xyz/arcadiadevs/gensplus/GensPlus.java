@@ -511,16 +511,43 @@ public final class GensPlus extends JavaPlugin {
           ((List<String>) generator.get("lore")).isEmpty() ? getConfig().getStringList(
               Config.DEFAULT_LORE.getPath()) : (List<String>) generator.get("lore");
 
-      lore = lore.stream().map(s -> s.replace("%tier%", String.valueOf(tier)))
+      // Final variables needed for lambda expressions
+      final String currentName = name;
+      final int currentTier = tier;
+      final String finalSpawnItem = spawnItem;
+      final String finalBlockType = blockType;
+
+      lore = lore.stream()
+          .map(s -> s.replace("%tier%", String.valueOf(currentTier)))
           .map(s -> s.replace("%speed%", String.valueOf(speed)))
           .map(s -> s.replace("%price%", String.valueOf(price)))
           .map(s -> s.replace("%sellPrice%", String.valueOf(sellPrice)))
-          .map(s -> s.replace("%spawnItem%", spawnItem))
-          .map(s -> s.replace("%blockType%", blockType))
+          .map(s -> {
+            if (finalSpawnItem == null) {
+              if (s.contains("%spawnItem%")) {
+                getLogger().warning(String.format(
+                    "Generator '%s' (Tier %d) is missing 'spawnItem' in config.yml, but its lore uses %%spawnItem%%.",
+                    currentName, currentTier));
+              }
+              return s; // Return original string if spawnItem is null
+            }
+            return s.replace("%spawnItem%", finalSpawnItem);
+          })
+          .map(s -> {
+            if (finalBlockType == null) {
+              if (s.contains("%blockType%")) {
+                getLogger().warning(String.format(
+                    "Generator '%s' (Tier %d) is missing 'blockType' in config.yml, but its lore uses %%blockType%%.",
+                    currentName, currentTier));
+              }
+              return s; // Return original string if blockType is null
+            }
+            return s.replace("%blockType%", finalBlockType);
+          })
           .map(ChatUtil::translate).toList();
 
-      if (generators.stream().anyMatch(g -> g.tier() == tier)) {
-        throw new RuntimeException("Duplicate tier found: " + tier);
+      if (generators.stream().anyMatch(g -> g.tier() == currentTier)) {
+        throw new RuntimeException("Duplicate tier found: " + currentTier);
       }
 
       ItemStack spawnItemStack = ItemUtil.getUniversalItem(spawnItem, true, true);
