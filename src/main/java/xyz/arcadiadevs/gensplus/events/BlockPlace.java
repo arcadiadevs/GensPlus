@@ -75,7 +75,8 @@ public class BlockPlace implements Listener {
       int limitPerIsland = (int) SkyblockUtil.calculateLimit(player);
       String islandId = SkyblockUtil.getIslandId(event.getBlock().getLocation());
 
-      if (locationsData.getGeneratorsCountByIsland(islandId) >= limitPerIsland) {
+      if (locationsData.getGeneratorsCountByIsland(islandId) >= limitPerIsland
+          && NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
         Messages.LIMIT_REACHED.format("limit", limitPerIsland).send(player);
         event.setCancelled(true);
         return;
@@ -86,16 +87,19 @@ public class BlockPlace implements Listener {
       combinedLimit = (int) SkyblockUtil.calculateLimit(player);
     }
 
-    if (enabled && locationsData.getGeneratorsCountByPlayer(player) >= combinedLimit) {
+    if (enabled && locationsData.getGeneratorsCountByPlayer(player) >= combinedLimit
+        && NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
       Messages.LIMIT_REACHED.format("limit", combinedLimit).send(player);
       event.setCancelled(true);
       return;
     }
 
-    locationsData.createLocation(player, tier, event.getBlockPlaced());
-
-    // Send a notification to the player
-    Messages.SUCCESSFULLY_PLACED.format("tier", tier).send(player);
+    // We only want to record the location if it's a generator block.
+    if (NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "gensplus", "blocktype", "tier")) {
+      locationsData.createLocation(player, tier, event.getBlockPlaced());
+      // Send a notification to the player
+      Messages.SUCCESSFULLY_PLACED.format("tier", tier).send(player);
+    }
   }
 
 }
